@@ -1,0 +1,51 @@
+<{foreach from=$sysMenu item=item}>
+<li class="header"><{$item.name}></li>
+<{foreach from=$item.menu item=menu name=name}>
+<{if ! $menu.menu}>
+<li <{if $topdevSysData.activeMenu == $menu.name}> class="active"<{/if}>><a href="<{$menu.href}>"><i class="<{$menu.icon}>"></i> <span><{$menu.name}></span></a></li>
+<{else}>
+<li class="treeview <{if $topdevSysData.activeMenu == $menu.name}> active <{/if}>">
+  <a href="<{$menu.href}>">
+    <i class="<{$menu.icon}>"></i>
+    <span><{$menu.name}></span>
+    <span class="pull-right-container">
+      <i class="fa fa-angle-left pull-right"></i>
+    </span>
+  </a>
+  <ul class="treeview-menu <{if $topdevSysData.activeMenu == $menu.name}> menu-open<{/if}>">
+    <{foreach from=$menu.menu item=tree name="foo"}>
+    <{if $tree.menu}>
+      <li class="active">
+        <a href="#"><i class="fa fa-circle-o text-green"></i> <{$tree.name}>
+          <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+          </span>
+        </a>
+        <ul class="treeview-menu menu-open" style="display: block;">
+          <{foreach from=$tree.menu item=tree1 name="foo1"}>
+            <li>
+              <a href="<{$tree1.href}>"><i class="fa fa-circle-o"></i> <span><{$tree1.name}></span>
+                <span class="pull-right-container">
+                  <small class="label pull-right bg-green"><{$tree1.tag}></small>
+                </span>
+              </a>
+            </li>
+          <{/foreach}>
+        </ul>
+      </li>
+    <{else}>
+    <li>
+      <a href="<{$tree.href}>"><i class="fa fa-circle-o"></i> <span><{$tree.name}></span>
+        <span class="pull-right-container">
+          <small class="label pull-right bg-green"><{$tree.tag}></small>
+        </span>
+      </a>
+    </li>
+    <{/if}>
+    <{/foreach}>
+  </ul>
+</li>
+<{/if}>
+<{/foreach}>
+<{/foreach}>
+

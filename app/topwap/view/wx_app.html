@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>App下载</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+  <meta name="format-detection" content="telephone=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+</head>
+<body>
+  
+</body>
+</html>
+<{img src="tips.png" app=topwap alt="" style="position: absolute; width: 70%; right: 0; top: 60;"}>
+<script>
+  var androidUrl = '<{$android_url}>';
+  var iosUrl     = '<{$ios_url}>';
+  var schema = 'bbc://';
+  if(!isWeixin()){
+    if (navigator.userAgent.match(/(iPhone|iPod|iPad);?/i) && iosUrl) {
+        var loadDateTime = new Date();
+        window.setTimeout(function() {
+            var timeOutDateTime = new Date();
+            if (timeOutDateTime - loadDateTime < 5000) {
+                window.location = iosUrl;//ios下载地址
+            } else {
+                window.close();
+            }
+        },25);
+        window.location = schema;
+    }else if (navigator.userAgent.match(/android/i) && androidUrl) {
+        try {
+            window.location = schema;
+            setTimeout(function(){
+                window.location=androidUrl; //android下载地址
+
+            },500);
+        } catch(e) {}
+    }
+  }
+  function isWeixin(){ //判断是否是微信
+      var ua = navigator.userAgent.toLowerCase();
+      if (ua.match(/MicroMessenger/i) == "micromessenger") {
+          return true;
+      } else {
+          return false;
+      }
+  }
+</script>

@@ -1,0 +1,44 @@
+<div class="data-list">
+  <table class="table table-primary table-hover table-goods">
+    <thead>
+      <tr>
+        <td class="col-name" style="width: 8%">记录类型</td>
+        <td style="width: 15%">记录时间</td>
+        <td style="width: 10%">金额</td>
+        <td style="width: 60%;">备注</td>
+        <td>操作</td>
+      </tr>
+    </thead>
+    <tbody id="data-node">
+      <{if $oplist}>
+      <{foreach from=$oplist item=item}>
+      <tr>
+        <td><{if $item.op_type =='recharge'}>充值<{elseif $item.op_type =='expense'}>扣款<{else}>额度调整<{/if}></td>
+        <td><{$item.created_time|cdate}></td>
+        <td><{$item.money}></td>
+        <td><{$item.memo}></td>
+        <td><a href="<{url action=topshop_ctl_guaranteeMoney_list@ajaxLogDetail op_id=$item.op_id response=html}>" data-toggle="modal" data-target="#logdetail">查看</a></td>
+
+      </tr>
+      <{/foreach}>
+    </tbody>
+  </table>
+  <div class="text-right">
+  <{pagers data=$pagers}>
+    <{if $count > 0}>
+    <span class="page-number">共&nbsp;<em class="text-aqua"><{$count}></em>&nbsp;条记录</span>
+    <{/if}>
+  </div>
+  <{else}>
+  <p class="help-block text-center">暂无数据</p>
+  <{/if}>
+</div>
+
+<script>
+  $('.pagination li a').click(function(e){
+    e.preventDefault();
+    if($(this).parent().hasClass('disabled') || $(this).parent().hasClass('ellipsis')) return;
+    var urlData = $(this).attr('href');
+    $(this).parents('.data-list').empty().load(urlData)
+  })
+</script>

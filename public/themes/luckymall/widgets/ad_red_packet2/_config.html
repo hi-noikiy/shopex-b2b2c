@@ -1,0 +1,144 @@
+<div id="goods_exshow_config" class="tableform">
+  <div class="division">
+    <p>
+      <label for="">标题：</label>
+      <input type="text" name="title" value="<{$setting.title}>" >
+      <input type="color" name="title_color" value="<{$setting.title_color}>" style="background: none; padding: 0; border: 0">
+    </p>
+    <p>
+      <label>描述：</label>
+      <input type="text" name="desc" vtype="required" value="<{$setting.desc}>" >
+      <input type="color" name="desc_color" value="<{$setting.desc_color}>" style="background: none; padding: 0; border: 0">
+    </p>
+    <p>
+      <label>背景图：</label>
+      <input name='pic' class="imgsrc" id="bg-image"  value="<{$setting.pic}>">
+      <input type=button value=上传图片 class="uploadbtn">
+      <span>（建议图片尺寸：1190px*170px）</span>
+    </p>
+  </div>
+  <div class="division clearfix">
+    <{if $setting.hongbaolist}>
+    <div class="division choose-redpakcet">
+      <div>选择红包：</div>
+      <div class="mar-left-20">
+        <select id="hongbao_list">
+          <{foreach from=$setting.hongbaolist item=item}>
+          <option value="<{$item.hongbao_id}>"><{$item.name}></option>
+          <{/foreach}>
+        </select>
+      </div>
+      <div class="mar-left-20">
+        <select type="select" id="select_redpacket" multiple="true" caution="请选择红包" size="15" style="min-width:185px" class=" x-select">
+        </select>
+      </div>
+      <div class="mar-left-20">
+        <{t}>（按住ctrl 或 shift 多选）<{/t}>&nbsp;<button type="button" id="btn_add_repacket" class="btn"><span><span>添加</span></span></button>
+      </div>
+    </div>
+    <div class="division redpacket-info">
+      <div>已添加红包：(最多添加<span id="total_redpacket">10</span>个)</div>
+      <div class="choosen-list">
+        <ul>
+          <{if $setting.hongbao_list}>
+          <{foreach from=$setting.hongbao_list item=item key=hongbao_id}>
+          <{foreach from=$item item=val}>
+          <li data-id="<{$hongbao_id}>-<{$val}>">
+            <div>
+              <input type="hidden" name="hongbao_list[<{$hongbao_id}>][]" value="<{$val}>">
+              <input type="hidden" name="hongbao_name[<{$hongbao_id}>]" value="<{$setting.hongbao_name[$hongbao_id]}>">
+              <span class="redpacket-remove">
+                <{img app="desktop" src="bundle/delecate.gif"}>
+              </span>
+              <span class="packet-name red"><{$val}>元 <{$setting.hongbao_name[$hongbao_id]}></span>
+            </div>
+          </li>
+          <{/foreach}>
+          <{/foreach}>
+          <{/if}>
+        </ul>
+      </div>
+    </div>
+    <{else}>
+    <div class="division">
+      <div class="notice"> 没有可领取的红包 </div>
+    </div>
+    <{/if}>
+  </div>
+</div>
+<script>
+  var tag_type='p',tag_class='pic_items';
+  var total_redpacket = $('total_redpacket').get('html') == "" ? 10 : Number($('total_redpacket').get('html'));
+  $$(".uploadbtn").addEvent('click',function(e){bindevent(this)});
+  function bindevent(el){
+    var target=$(el).getParent(tag_type).getElement('.imgsrc');
+    var goto_url=encodeURIComponent('<{url route="shopadmin" app="image" ctl="admin_manage" act="image_broswer" type="big"}>');
+    var url='<{url route="shopadmin" app="desktop" act="alertpages" goto=""}>'+goto_url;
+    Ex_Loader('modedialog',function(){
+        return new imgDialog(url,{onCallback:function(image_id,image_src){
+                target.value=image_src;
+        }});
+    });
+  }
+
+  $("hongbao_list").addEvent('change', function(){
+    getRedpacketList(this.value);
+  }).fireEvent('change');
+  function getRedpacketList(hongbao_id) {
+    var list = JSON.parse('<{$setting.hongbaolist|json_encode}>');
+    var redpacketList = [];
+    var name = list[hongbao_id].name;
+    var selectedHongbao = JSON.parse('<{$setting.hongbao_list|json_encode}>');
+
+    list[hongbao_id].hongbao_list.each(function(hongbao) {
+      if( selectedHongbao && selectedHongbao[hongbao_id] ){
+        var index = selectedHongbao[hongbao_id].indexOf(hongbao.money);
+        if( index == -1 ){
+          redpacketList.push("<option value='" + hongbao.money + "' >" + hongbao.money + "元 " + name + "</option>");
+        }else{
+          redpacketList.push("<option value='" + hongbao.money + "'selected='selected'>" + hongbao.money + "元 " + name + "</option>");
+        }
+      }else{
+        redpacketList.push("<option value='" + hongbao.money + "' >" + hongbao.money + "元 " + name + "</option>");
+      }
+    });
+    $('select_redpacket').set('html', redpacketList.join(''));
+  }
+
+  $("btn_add_repacket").addEvent('click', function(){
+    var selectedRedpacket = $$('#select_redpacket option:selected');
+    var choosenList = $$('.choosen-list > ul > li');
+    var totalRedpacket = selectedRedpacket.length + choosenList.length;
+    if(totalRedpacket > total_redpacket) {
+      alert('最多只能选择10个红包');
+      return;
+    }
+    var choose = [];
+    var flag = true;
+    var selectedstr = $('hongbao_list').get('value')+'-';
+    for(var i = 0; i < selectedRedpacket.length; i++) {
+      for(var j = 0; j < choosenList.length; j++) {
+        if( (selectedstr + selectedRedpacket[i].get('value')) == choosenList[j].get('data-id')) {
+          flag = false;
+        }
+      }
+      if(flag) {
+        choose.push('<li data-id="' + $('hongbao_list').get('value') + '-' + selectedRedpacket[i].get('value') + '"><div><input type="hidden" name="hongbao_list['+ $('hongbao_list').get('value') +'][]" value="'+ selectedRedpacket[i].get('value') +'" /><input type="hidden" name="hongbao_name['+ $('hongbao_list').get('value') +']" value="' + $$('#hongbao_list option:selected').get('text') + '" /><span class="redpacket-remove"><{img app="desktop" src="bundle/delecate.gif"}></span><span class="packet-name red">'+ selectedRedpacket[i].get('html') +'</span></div></li>');
+      }
+    }
+    $$('.choosen-list > ul').set('html', $$('.choosen-list > ul').get('html') + choose.join(''));
+    $$('.redpacket-remove').addEvent('click', function(){
+      if(confirm('<{t}>确认删除该红包吗？<{/t}>')){
+        this.parentNode.parentNode.remove();
+        getRedpacketList($('hongbao_list').get('value'));
+      }
+    });
+  });
+
+  $$('.redpacket-remove').addEvent('click', function(){
+    if(confirm('<{t}>确认删除该红包吗？<{/t}>')){
+      this.parentNode.parentNode.remove();
+      getRedpacketList($('hongbao_list').get('value'));
+    }
+  });
+</script>

@@ -1,0 +1,12 @@
+<cronentries>
+    <cron id="sysclearing_tasks_settlement">
+        <description>分析统计更新每月结算汇总单</description>
+        <schedule> 0 1 1 * *</schedule>
+        <enabled>true</enabled>
+    </cron>
+    <cron id="sysclearing_tasks_vouchersubsidy">
+        <description>统计更新每月购物券补贴汇总单</description>
+        <schedule> 0 2 1 * *</schedule>
+        <enabled>true</enabled>
+    </cron>
+</cronentries>

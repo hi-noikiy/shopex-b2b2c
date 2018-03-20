@@ -1,0 +1,78 @@
+<form id="shoptypeForm" class="tableform" action="?app=sysshop&ctl=admin_shoptype&act=saveShoptype" method="POST">
+    <input type="hidden" name="shoptype[shoptype_id]" value="<{$shoptype.shoptype_id}>">
+    <div class="division">
+        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <th><em class="red">*</em><{t}>类型名称：<{/t}></th>
+                <td><{$shoptype.name}></td>
+            </tr>
+            <tr>
+                <th><em class="red">*</em><{t}>是否开启：<{/t}></th>
+                <td><{t}>是<{/t}><{*input type="bool" name="shoptype[status]" vtype="required" value=$shoptype.status disabled="true"*}></td>
+            </tr>
+            <tr>
+                <th><em class="red">*</em><{t}>是否排他：<{/t}></th>
+                <td>
+                  <{if $shoptype.shop_type == "flag"}>
+                  <{t}>是<{/t}>
+                  <{else}>
+                  <{t}>否<{/t}>
+                  <{/if}>
+                    <{*if $shoptype.shop_type=="flag"*}>
+                    <{*input type="bool" name="shoptype[is_exclusive]" vtype="required" value=$shoptype.is_exclusive disabled="true" *}>
+                    <{*else*}>
+                    <{*input type="bool" name="shoptype[is_exclusive]" vtype="required" value=$shoptype.is_exclusive *}>
+                    <{*/if*}>
+                </td>
+            </tr>
+            <tr>
+                <th><em class="red">*</em><{t}>类型描述：<{/t}></th>
+                <td><{input type="textarea" name="shoptype[brief]" vtype="required" value=$shoptype.brief  cols="45" rows="5" maxlength="200"}></td>
+            </tr>
+            <tr>
+                <th><em class="red">*</em><{t}>店铺名称后缀：<{/t}></th>
+                <td><{input type="text" name="shoptype[suffix]" vtype="required" value=$shoptype.suffix  maxlength='20'}></td>
+            </tr>
+            <tr>
+                <th><em class="red">*</em><{t}>默认商品上限：<{/t}></th>
+                <td><{input type="unsignedint" name="shoptype[max_item]" value=$shoptype.max_item maxlength="4"}></td>
+            </tr>
+            <{if $install_sysfinance}>
+            <tr>
+                <th><em class="red">*</em><{t}>店铺保证金：<{/t}></th>
+                <td><input style="width:50px;" vtype="unsigned&&required" class="inputstyle" value="<{if $shoptype.guarantee_money}> <{$shoptype.guarantee_money}> <{else}>0<{/if}>" name="shoptype[guarantee_money]" class="_x_ipt"/>
+                  <div class="font-gray"><{t}>店铺一次性上交至平台，确保店铺合约履行的资金，用于
+                    赔付商家的违约、商家与买家的纠纷、退货资金预支等行为<{/t}></div></td>
+            </tr>
+            <tr>
+                <th><em class="red">*</em><{t}>店铺保证金预警线：<{/t}></th>
+                <td><input style="width:50px;" vtype="unsignedint&&required" class="inputstyle" value="<{if $shoptype.guarantee_money_warningline}> <{$shoptype.guarantee_money_warningline}> <{else}>0<{/if}>" name="shoptype[guarantee_money_warningline]" class="_x_ipt"/>%
+                <div class="font-gray"><{t}>当商家保证金余额低于需交金额的xx%时，将以站内信方式通知商家<{/t}></div></td>
+            </tr>
+            <{/if}>
+        </table>
+    </div>
+    <div class="table-action">
+        <button class="btn btn-primary" type="submit"><{t}>确认<{/t}></button>
+    </div>
+</form>
+
+<script>
+
+    $('shoptypeForm').store('target',{
+        onComplete:function(rs){
+            if(!rs) return;
+            rs = JSON.decode(rs);
+            if(rs.success){
+                if(window.finderGroup) window.finderGroup['<{$env.get.finder_id}>'].refresh();
+                if($('shoptypeForm').getParent('.dialog')){
+                    var Dlg = $('shoptypeForm').getParent('.dialog').retrieve('instance');
+                    if(Dlg.update){
+                        Dlg.update.retrieve('instance').initContent();
+                    }
+                    Dlg.close();
+                }
+            }
+        }
+    });
+</script>

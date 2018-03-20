@@ -1,0 +1,29 @@
+<div class="tableform">
+    <form action="?app=sysfinance&ctl=admin_guaranteeMoney&act=setGuaranteeMoney"  method="post" id="guananteeMoney_form">
+    <input type="hidden" name="shop_id" value="<{$shop_id}>">
+    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+      <tbody>
+        <tr>
+          <th><{t}>当前保证金额度:<{/t}></th>
+          <td><{$guarantee_money}></td>
+        </tr>
+        <tr>
+          <th><{t}>设置保证金额度:<{/t}></th>
+          <td><{input type="number" vtype="required&&number" maxlength="10" name="guarantee_money" style="float:left;" }>
+        </tr>
+      </tbody>
+    </table>
+    <div class="table-action">
+      <{button type="submit" label="保存"|t:'___sysfinance' }>
+    </div>
+  </form>
+</div>
+
+<script>
+  $$('.table-action button').addEvent('click',function(e){
+    var dom = this.getParent('form');
+    $$(dom).addEvent('submit',function(e){
+      $$(dom)[0].reset();
+    })
+  })
+</script>

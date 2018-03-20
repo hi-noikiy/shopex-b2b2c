@@ -1,0 +1,146 @@
+<div class="nav-tabs-custom" id="tabs">
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation"  class="<{if $filter.is_reply=='all' }>active<{/if}>" >
+      <a href="<{url action=topshop_ctl_consultation@index}>">全部</a>
+    </li>
+    <li role="presentation" class="<{if $filter.is_reply == '0'}>active<{/if}>">
+      <a href="<{url action=topshop_ctl_consultation@index is_reply=0}>" >未回复</a>
+    </li>
+    <li role="presentation" class="<{if $filter.is_reply == '1' }>active<{/if}>">
+      <a href="<{url action=topshop_ctl_consultation@index is_reply=1}>" >已回复</a>
+    </li>
+  </ul>
+  <div class="mailbox-controls text-center with-border">
+    <form id="ajax_form" action="<{url action=topshop_ctl_consultation@screening}>" method="get" class="report-filter report-filter-large">
+      <input type="hidden" name="is_reply" value="<{$filter.is_reply|escape:"html"}>">
+      <input type="hidden" name="type" value="<{$filter.is_reply|escape:"html"}>">
+      <div class="btn-group condition" data-toggle="btn-toggle">
+        <button type="button" value="item" class="btn btn-default btn-sm <{if $filter.type=="item"}>active<{/if}>">商品</button>
+        <button type="button" value="payment" class="btn btn-default btn-sm <{if $filter.type=="payment"}>active<{/if}>">支付方式</button>
+        <button type="button" value="store_delivery" class="btn btn-default btn-sm <{if $filter.type=="store_delivery"}>active<{/if}>">库存、配送</button>
+        <button type="button" value="invoice" class="btn btn-default btn-sm <{if $filter.type=="invoice"}>active<{/if}>">发票、维修</button>
+      </div>
+    </form>
+  </div>
+  <div class="tab-content evaluation-list clearfix no-padding">
+    <{include file="topshop/consultation/list_item.html"}>
+  </div>
+</div>
+<div class="modal fade" id="reply_modal" tabindex="-1" role="dialog">
+  <div class="panel panel-default modal-dialog modal-lg">
+    <form action="<{url action=topshop_ctl_consultation@doReply}>" method="post" id="consult-form">
+      <input type="hidden" name="id" id="reply_id" value="">
+      <div class="panel-heading">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <h4 class="modal-title">回复内容</h4>
+      </div>
+      <div class="panel-body text-center">
+        <textarea name="content" class="form-control" rows="8" id="message-text"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" id="gask_submit"class="btn btn-primary">提交回复</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  $(function(){
+    $('.reservation').daterangepicker({
+      format: 'YYYY/MM/DD',
+      opens: 'right'
+    });
+
+    var condition = $('#ajax_form');
+    function submitForm() {
+      $('.evaluation-list').load(condition.attr('action'),condition.serialize());
+    }
+
+    $('.condition button').click(function() {
+      var type = $(this).val()
+      $('input[name="type"]').val(type);
+      submitForm();
+    });
+
+    $('#settle_search').click(function(e){
+      e.preventDefault();
+      submitForm();
+    })
+
+    $('#reply_modal').on('shown.bs.modal', function (event) {
+      var button = $(event.relatedTarget);
+      var id = button.attr('data-id');
+      $(this).find('#reply_id').val(id);
+    })
+
+    $('#gask_submit').click(function(){
+      var con = $('#message-text').val();
+      if(con.length>4 && con.length<201){
+        $.post('<{url action=topshop_ctl_consultation@doReply}>', $('#consult-form').serialize(), function(data) {
+          if(data.error) {
+            $('#messagebox').message(data.message);
+            return;
+          }
+          if(data.success) {
+            $('#messagebox').message(data.message, 'success');
+          }
+          if(data.redirect) {
+            location.href = data.redirect;
+          }
+        });
+      }else{
+        $('#messagebox').message('咨询内容必须在5-200个字符之间！');
+      }
+    })
+
+    $('.gask_del').click(function(e){
+      e.preventDefault();
+      var id=$(this).attr('data-id');
+      if(confirm('确定要删除当前回复吗？')){
+        $.post('<{url action=topshop_ctl_consultation@doDelete}>'+'?id='+id,function(data){
+          if(data.error) {
+            $('#messagebox').message(data.message);
+            return;
+          }
+          if(data.success) {
+            $('#messagebox').message(data.message, 'success');
+            if(data.redirect) {
+              location.href = data.redirect;
+            }
+          }
+        })
+      }
+    })
+
+    $('.gask_display').click(function(e){
+      e.preventDefault();
+      var id=$(this).attr('data-id');
+      var status=$(this).attr('data-status');
+      if(status == "true"){
+        var message = "确定要关闭咨询或回复显示至商品详情页吗?";
+      }else{
+        var message = "确定要显示咨询或回复至商品详情页吗?";
+      }
+      Modal.confirm({msg: message}).on(function(e) {
+        if(e==true) {
+          $.post('<{url action=topshop_ctl_consultation@doDisplay}>'+'?id='+id+'&status='+status,function(data){
+            if(data.error) {
+              $('#messagebox').message(data.message);
+              return;
+            }
+            if(data.success) {
+              $('#messagebox').message(data.message, 'success');
+              if(data.redirect) {
+                location.href = data.redirect;
+              }
+            }
+          })
+        }
+      });
+    })
+
+  })
+</script>
+
+

@@ -1,0 +1,91 @@
+<div class="box box-primary">
+<form class="form-horizontal" action="<{url action=topshop_ctl_shop_decorate@save widgets=showitems dialog=default}>" method="post" role="form" id="itemstab_form" data-validate-onsuccess="ajaxSubmitItemstab" >
+  <input type="hidden" name='widgets_id' value=<{$widgets_id}> >
+  <div class="box-body no-padding">
+    <div class="mailbox-controls with-border">
+      <a href="<{url action=topshop_ctl_shop_decorate@dialog widgets=showitems dialog=add }>" class="btn btn-sm btn-default">
+        <i class="fa fa-cog"></i> 新增商品展示
+      </a>
+    </div>
+    <div data-spy="scroll" data-target="#navbar-example" data-offset="0">
+      <table class="table no-margin">
+        <colgroup>
+          <col class="col-md-8">
+          <col class="col-md-2">
+          <col class="col-md-2">
+        </colgroup>
+        <thead>
+          <tr>
+            <th>商品展示名称</th>
+            <th><{t}>排序<{/t}></th>
+            <th><{t}>操作<{/t}></th>
+          </tr>
+        </thead>
+        <{if $data}>
+        <tbody>
+          <{foreach from=$data item=item name='name' key=key}>
+          <tr>
+            <td><{$key}></td>
+            <td><input type="number" name="params[data][<{$key}>][order_sort]" value="<{$item.order_sort|default:'0'}>" class="form-control input-sm" ></td>
+            <td>
+              <a href="<{url action=topshop_ctl_shop_decorate@dialog widgets=showitems dialog=add key=$key}>">编辑</a>
+              <a href="" class="remove" >删除</a>
+            </td>
+          </tr>
+          <{/foreach}>
+        </tbody>
+        <{else}>
+        <tbody id="none_goods">
+          <tr class="none-information">
+            <td colspan="5"><{t}>请先添加商品展示<{/t}></td>
+          </tr>
+        </tbody>
+        <{/if}>
+      </table>
+    </div>
+  </div>
+  <div class="box-footer">
+    <button type="submit" class="btn btn-primary"><{t}>保存<{/t}></button>
+    <button type="button" class="btn btn-default pull-right cancel" data-dismiss="modal"><{t}>取消返回<{/t}></button>
+  </div>
+</form>
+</div>
+<script>
+  $('#itemstab_form').Validator({
+    icons: {
+        valid:      'icon icon-checkmark-a',
+        invalid:    'icon icon-alert',
+        validating: 'icon icon-loading-c'
+      }
+  });
+
+  $(document).on('click', '.remove', function(e) {
+    e.preventDefault();
+    var parent = $(this).parents('tr');
+
+    Modal.confirm({msg: '确定要删除该商品展示栏目吗？'}).on(function(e) {
+      if(e==true) {
+        parent.remove();
+      }
+    });
+  });
+
+  $('.cancel').click(function(){
+    location.href= "<{url action=topshop_ctl_shop_decorate@index}>"
+  })
+
+  function ajaxSubmitItemstab(e) {
+    var form = e.target;
+    e.preventDefault();
+    $.post(form.action, $(form).serialize(), function(rs) {
+      if(rs.error) {
+        $('#messagebox').message(rs.message);
+        return;
+      }
+      if(rs.success) {
+        $('#messagebox').message(rs.message, 'success');
+        setTimeout(function(){location.href=rs.redirect;}, 500);
+      }
+  });
+}
+</script>

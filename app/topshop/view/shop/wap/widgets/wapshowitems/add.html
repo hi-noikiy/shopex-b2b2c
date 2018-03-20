@@ -1,0 +1,223 @@
+<section class="content">
+  <form action="<{url action=topshop_ctl_wap_decorate@save}>" method="post" class="form-horizontal" data-validate-onsuccess="ajaxSubmit" role="form">
+  <input type="hidden" name='widgetsId' value="<{$widgetsId|escape:"html"}>" >
+  <input type="hidden" name='widgets' value="<{$widgetsName|escape:"html"}>" >
+  <input type="hidden" name='dialog' value="<{$dialogName|escape:"html"}>" >
+  <div class="panel panel-default">
+    <div class="panel-heading">设置模块名称</div>
+    <div class="panel-body">
+      <div class="item-filter-title clearfix">
+        <div class="form-group">
+          <label for="" class="col-sm-1 control-label">设置模块名称:</label>
+          <div class="col-sm-2">
+            <input type="text" name="params[tagsname]" value="<{$data.params.tagsname}>" class="form-control">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel-default select-goods-panel">
+    <div class="panel-heading">
+      选择适用商品
+    </div>
+    <div class="panel-body">
+      <button class="btn btn-md btn-block btn-danger select-goods" data-remote="<{url action=topshop_ctl_selector_item@loadSelectGoodsModal}>" data-item_id="<{$notEndItem}>" data-textcol="title,price" data-view="" data-target="#goods_modal" data-fetchgoods="<{url action=topshop_ctl_selector_item@formatSelectedGoodsRow}>">选择商品</button>
+      <div class="selected-goods-list">
+
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel-default select-goods-panel">
+    <div class="panel-heading">
+      设置规则
+    </div>
+    <div class="panel-body">
+    <div class="form-group has-feedback">
+       <label for="" class="col-sm-2 control-label"><span class="text-red">*</span>设置该模块在首页展示商品数量：</label>
+            <div class="col-sm-3">
+              <input placeholder="上限为20" type="number" name="itemlimit" min="0" max="20" value="<{$data.params.itemlimit}>" class="form-control" data-validate-field="itemlimit"><i class="form-control-feedback" data-validate-icon-for="itemlimit" style="display: none;"></i>
+            <ins class="help-block" data-validate-validator="gt" data-validate-for="itemlimit" data-validate-result="NOT_VALIDATED" style="display: none;">请输入大于等于 %s 的数值</ins><ins class="help-block" data-validate-validator="integer" data-validate-for="itemlimit" data-validate-result="NOT_VALIDATED" style="display: none;">请输入有效的整数值</ins></div>
+          </div>
+          <div class="form-group has-feedback">
+            <label for="" class="col-sm-2 control-label"><span class="text-red">*</span>设置首页模块内商品排序方式：</label>
+            <div class="col-sm-3">
+              <select name="ordersort" required="" id="" class="form-control" data-validate-field="ordersort">
+                <option value="addtime-l" <{if $data.params.ordersort=='addtime-l'}>selected<{/if}>>按上架时间由远及近排序</option>
+                <option value="addtime-s" <{if $data.params.ordersort=='addtime-s'}>selected<{/if}>>按上架时间由近及远排序</option>
+                <option value="price-l" <{if $data.params.ordersort=='price-l'}>selected<{/if}>>按价格从高到低</option>
+                <option value="price-s" <{if $data.params.ordersort=='price-s'}>selected<{/if}>>按价格从低到高</option>
+                <option value="sell-l" <{if $data.params.ordersort=='sell-l'}>selected<{/if}>>按销量从高到低</option>
+                <option value="sell-s" <{if $data.params.ordersort=='sell-s'}>selected<{/if}>>按销量从低到高</option>
+              </select>
+              <i class="form-control-feedback" data-validate-icon-for="ordersort" style="display: none;"></i>
+            <ins class="help-block" data-validate-validator="required" data-validate-for="ordersort" data-validate-result="NOT_VALIDATED" style="display: none;">请填写必填项目</ins></div>
+          </div>
+          <div>
+            <label><input type="checkbox" name="isstart"  value="1" <{if $data.params.isstart}>checked<{/if}>> 启用</label>
+          </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4">
+
+    </div>
+    <div class="col-md-2">
+      <button type="submit" class="btn btn-primary btn-lg btn-block action-save">保存</button>
+    </div>
+
+    <div class="col-md-4">
+
+    </div>
+  </div>
+    <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="excanvas.js"></script><![endif]-->
+  </form>
+  </section>
+
+  <script>
+
+function ajaxSubmit(e) {
+  var form = e.target;
+  e.preventDefault();
+  $.post(form.action, $(form).serialize(), function(rs) {
+    if (rs.error) {
+      $('#messagebox').message(rs.message);
+      return;
+    }
+    if (rs.success) {
+      $('#messagebox').message(rs.message, 'success');
+    }
+    if (rs.redirect) {
+      location.href = rs.redirect;
+    }
+  });
+}
+
+var list = $('#op_items_list');
+var added = $('#op_items_added');
+var jsonData = '<{$notEndItem}>';
+var addedItems;
+if(jsonData == ''){
+  addedItems = []
+}else{
+  addedItems = JSON.parse(jsonData);
+}
+
+function checkNext(el) {
+  var next = el.parent().next().next().find('.add-items-select');
+  if(!next){
+    return false;
+  }else{
+    next.empty().append('<option value="">请选择</option>');
+  };
+  checkNext(next);
+}
+
+$('.action-checkall').change(function(e) {
+    checkAll(this, $(this).parents('.item-filter-table').find('.action-checkitem'));
+});
+$('.action-add-item').click(function(e) {
+    e.preventDefault();
+    var items = list.find('.action-checkitem:checked');
+    var pros = added.find('.items');
+    if(pros.length ==0){
+      added.empty();
+    }
+    items.filter(function (i) {
+          if(addedItems.indexOf(this.value) < 0) {
+              addedItems.push(this.value);
+              return true;
+          }
+          $(this).parents('.item-filter-row').remove();
+          return false;
+      })
+      .prop('checked', false)
+      .parents('.item-filter-row').find('.action-checkitem').css('display','none')
+      .parents('.item-filter-row').append('<div class="item-check del"><a class="item-del" href="#">删除</a></div>').appendTo(added);
+
+    if(!list.children().length) {
+        list.parents('.item-filter-table').find('.action-checkall').prop('checked', false);
+    }
+});
+added.on('click','.item-del',function(e){
+  e.preventDefault();
+  var delVal = $(this).parents('.item-filter-row').find('.action-checkitem').val();
+  $(this)
+  .parents('.item-filter-row').find('.action-checkitem').css('display','inline-block')
+  .parents('.item-filter-row').appendTo(list)
+  .find('.del').remove();
+  var emptyDom = '<div class="item-filter-row"><div align="center">暂未添加商品</div></div>'
+  var pros = added.find('.items');
+  if(pros.length ==0){
+    added.append(emptyDom);
+  }
+  for (var i = 0; i < addedItems.length; i++) {
+    if(delVal == addedItems[i]){
+      addedItems.splice(i);
+    }
+  };
+});
+$('.action-delete-item').click(function(e) {
+    e.preventDefault();
+    added.find('.action-checkitem:checked')
+      .filter(function (i, el) {
+          addedItems.splice(addedItems.indexOf(el.value), 1);
+          var checkbox = list.find('.action-checkitem');
+          var result = true;
+          checkbox.length && checkbox.each(function() {
+              if(this.value == el.value) {
+                  $(el).parents('.item-filter-row').remove();
+                  result = false;
+              }
+          });
+          return result;
+      })
+      .prop('checked', false)
+      .parents('.item-filter-row').appendTo(list);
+
+    if(!added.children().length) {
+        added.parents('.item-filter-table').find('.action-checkall').prop('checked', false);
+    }
+});
+
+$('.items-search').click(function(){
+  var catID = $('#cat_id').val();
+  var brandID = $('#brand_id').val();
+  var itemsName = $('#items_name').val();
+  getPro(catID, brandID, itemsName)
+});
+
+$('.conditions label').click(function() {
+  var cidx = $(this).index();
+  $('.condition-view>div').hide().eq(cidx).show();
+  if($(this).hasClass('all')){
+    $('.action-add-item').hide();
+    $('.result').hide();
+  }else{
+    $('.action-add-item').show();
+    $('.result').show();
+  }
+});
+
+$('.action-save').click(function(e) {
+    added.find('.action-checkitem').prop('checked', true);
+});
+
+$('.conditions label').click(function() {
+  var cidx = $(this).index();
+  $('.condition-view>div').hide().eq(cidx).show();
+  if($(this).hasClass('all')){
+    $('.action-add-item').hide();
+    $('.result').hide();
+  }else{
+    $('.action-add-item').show();
+    $('.result').show();
+  }
+});
+$('.action-save').click(function(e) {
+    added.find('.action-checkitem').prop('checked', true);
+});
+
+</script>

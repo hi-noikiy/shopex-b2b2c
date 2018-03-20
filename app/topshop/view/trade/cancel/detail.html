@@ -1,0 +1,208 @@
+<{if $data}>
+<div class="invoice no-touch">
+  <ol class="cd-multi-steps text-bottom count">
+    <{if $data.process == 0}>
+    <li class="current"><em>提交申请</em></li>
+    <li><em>取消处理</em></li>
+    <li><em>退款处理</em></li>
+    <li><em>完成</em></li>
+    <{elseif $data.process == 1}>
+    <li class="visited"><a href="#">提交申请</a></li>
+    <li class="current"><em>取消处理</em></li>
+    <li><em>退款处理</em></li>
+    <li><em>完成</em></li>
+    <{elseif $data.process == 2}>
+    <li class="visited"><a href="#">提交申请</a></li>
+    <li class="visited"><a href="#">取消处理</a></li>
+    <li class="current"><em>退款处理</em></li>
+    <li><em>完成</em></li>
+    <{elseif $data.process == 3}>
+    <li class="visited"><a href="#">提交申请</a></li>
+    <li class="visited"><a href="#">取消处理</a></li>
+    <li class="visited"><a href="#">退款处理</a></li>
+    <li class="current"><em>完成</em></li>
+    <{/if}>
+  </ol>
+  <div class="orderdtl-hd text-center">
+    <{if $data.refunds_status == 'WAIT_CHECK' }>
+    请审核该取消订单申请
+    <{elseif $data.refunds_status == 'WAIT_REFUND'}>
+    审核通过，等待平台进行退款处理
+    <{elseif $data.refunds_status == 'SUCCESS'}>
+    <{if $data.payed_fee && $data.payed_fee != '0.00'}>
+    订单已取消成功，并已完成退款
+    <{else}>
+    订单已取消成功
+    <{/if}>
+    <{else}>
+    订单已取消失败
+    <{/if}>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <h2 class="page-header">
+        <i class="fa fa-globe"></i> 订单信息
+        <small class="pull-right">下单时间: <{$trade.created_time|cdate}></small>
+      </h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-4">
+      <address>
+        订单号：<{$trade.tid}> <br>
+        订单状态：
+        <{if $trade.status == "WAIT_BUYER_PAY"}>
+        未支付
+        <{elseif $trade.status == "WAIT_SELLER_SEND_GOODS" && $trade.pay_type == "online"}>
+        已支付，未发货
+        <{elseif $trade.status == "WAIT_SELLER_SEND_GOODS" && $trade.pay_type == "offline"}>
+        货到付款，未发货
+        <{elseif $trade.status == "WAIT_BUYER_CONFIRM_GOODS" && $trade.pay_type == "online"}>
+        已支付，已发货
+        <{elseif $trade.status == "WAIT_BUYER_CONFIRM_GOODS" && $trade.pay_type == "offline"}>
+        货到付款，已发货
+        <{elseif $trade.status == "TRADE_FINISHED"}>
+        订单已完成
+        <{elseif $trade.status == "TRADE_CLOSED_BY_SYSTEM" || $trade.status == "TRADE_CLOSED"}>
+        订单已取消
+        <{/if}> <br>
+        <{if $trade.pay_time || $trade.trade_memo}>
+        付款时间：<{$trade.pay_time|cdate}>
+        <{/if}>
+      </address>
+    </div>
+    <div class="col-sm-4">
+      <address>
+        订单总额：<{$trade.payment|cur}> <br>
+        <strong>订单备注：</strong><br>
+        <{$trade.trade_memo}>
+      </address>
+    </div>
+    <div class="col-sm-4">
+      <address>
+        收货人：<{$trade.receiver_name}><br>
+        联系方式：<{$trade.receiver_mobile}> <br>
+        收货地址：<{$trade.receiver_state}><{$trade.receiver_city}><{$trade.receiver_district}><{$trade.receiver_address}>&nbsp;&nbsp;<{$trade.receiver_zip}> <br>
+        邮编：<{$trade.receiver_zip}>
+      </address>
+    </div>
+  </div>
+  <{include file="topshop/trade/detail_item.html"}>
+</div>
+  
+<div class="invoice">
+  <div class="row">
+    <{if $trade.status == "WAIT_BUYER_CONFIRM_GOODS" || $trade.status == "TRADE_FINISHED"}>
+    <div class="col-sm-6">
+      <p class="lead">配送信息：</p>
+      <div class="table-responsive">
+        <table class="table">
+          <tbody>
+            <{if $logi.logi_no != 0}>
+            <tr>
+              <th style="width:50%"><{t}>物流公司<{/t}>:</th>
+              <td><{$logi.logi_name}></td>
+            </tr>
+            <tr>
+              <th><{t}>配送单号<{/t}>:</th>
+              <td><{$logi.logi_no}></td>
+            </tr>
+              <{if $tracking && $tracking =='true' }>
+              <tr>
+                <th><{t}>物流跟踪<{/t}>:</th>
+                <td><a href="#" id="click_get_track" class="sp-see">查看物流</a></td>
+              </tr>
+              <{/if}>
+            <{/if}>
+            <{if $ziti == "true"}>
+              <{if $trade.ziti_memo}>
+              <tr>
+                <th><{t}>自提备注<{/t}>:</th>
+                <td><{$trade.ziti_memo}></td>
+              </tr>
+              <{/if}>
+            <{/if}>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <{/if}>
+
+    <div class="col-sm-6">
+      <p class="lead">订单取消原因：</p>
+      <address><{$data.reason}></address>
+      <{if $data.shop_reject_reason}>
+      <p class="lead">拒绝取消理由：</p>
+      <address><{$data.shop_reject_reason}></address> 
+      <{/if}>
+      <{if $data.refunds_status == 'WAIT_CHECK'}> 
+      <form action="<{url action=topshop_ctl_trade_cancel@shopCheckCancel}>" method="post" id="trade_form" data-validate-onsuccess="ajaxSubmit">
+        <div class="form-group">
+          <label>审核结果：</label>
+          <div class="radio">
+            <label>
+              <input type="radio" name="check_result" checked id="" class="results" value="true">
+              接受处理
+            </label>
+            <label>
+              <input type="radio" name="check_result" id="" class="results" value="false">
+              不同意
+            </label>
+          </div>
+        </div>
+        <div class="form-group accept" style="display:none;">
+          <label>拒绝理由</label>
+          <input type="hidden" name="cancel_id" value="<{$data.cancel_id}>">
+          <textarea name="shop_reject_reason" class="form-control" rows="3"></textarea>
+        </div>
+        <div>
+          <button type="submit" class="btn btn-info agree">提交审核</button>
+        </div>
+      </form>
+      <{/if}>
+    </div>
+  </div>
+</div>
+
+<script>
+  $('#click_get_track').click(function(e){
+    e.preventDefault()
+    $('#track-hidden').hide();
+    $('#logistics').html('加载中...');
+    $.post('<{url action=topshop_ctl_trade_detail@ajaxGetTrack}>',{'logi_no':'<{$logi.logi_no}>','corp_code':'<{$logi.corp_code}>'},function(rs){
+      if(rs.error){
+        return $('#messagebox').message(rs.message);
+      }
+      $('#logistics').html(rs);
+    });
+  });
+
+  function ajaxSubmit (e) {
+    var form = e.target;
+    e.preventDefault();
+    $.post(form.action, $(form).serialize(), function(rs) {
+      if(rs.error) {
+        $('#messagebox').message(rs.message);
+        return;
+      }
+      if(rs.success) {
+        $('#messagebox').message(rs.message, 'success');
+      }
+      if(rs.redirect) {
+        setTimeout(function(){location.href=rs.redirect;}, 800);
+      }
+    });
+  }
+
+  $('.results').on('click',function(){
+    if(this.value == "true"){
+      $('.accept').hide();//隐藏
+    }
+    else{
+      $('.accept').show();//显示
+    }
+  });
+</script>
+<{else}>
+<p class="text-muted well no-shadow text-center">无权限查看该取消订单详情</p>
+<{/if}>

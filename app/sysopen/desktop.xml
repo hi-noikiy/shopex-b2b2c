@@ -1,0 +1,23 @@
+<desktop>
+    <permissions>
+        <permission id="sysopen_develop" display='true' parent='0' workground='sysopen.wrokground.shop'>开发者相关</permission>
+        <permission id="sysopen_openShop" display='true' parent='0' workground='sysopen.wrokground.shop'>商家申请相关</permission>
+    </permissions>
+
+    <workground name="开放" id="sysopen.wrokground.shop" controller="admin_develop" action="index" order='70'>
+        <menugroup name="Prism开放">
+            <menu controller='admin_develop' action='index' permission='sysopen_develop' display='true' order='80'>开发者列表</menu>
+            <menu controller='admin_develop' action='doCreate' permission='sysopen_develop' display='false' order='80'>创建开发者</menu>
+            <menu controller='admin_shop' action='index' permission='sysopen_openShop' display='true' order='90'>店铺绑定列表</menu>
+            <menu controller='admin_shop' action='doApply' permission='sysopen_openShop' display='false' order='90'>审核申请</menu>
+            <menu controller='admin_shop' action='open' permission='sysopen_openShop' display='false' order='90'>重新开启商户开放平台</menu>
+            <menu controller='admin_shop' action='doSuspend' permission='sysopen_openShop' display='false' order='90'>暂停商户开放平台</menu>
+        </menugroup>
+        <menugroup name="Shopex矩阵开放">
+            <menu controller='admin_shopexmatrix' action='index' permission='sysopen_develop' display='true' order='80'>矩阵配置</menu>
+            <menu controller='admin_shopexmatrix' action='shopexProduct'  permission='sysopen_develop' display='true' order='80'>Shopex产品绑定</menu>
+            <menu controller='admin_platformmatrix' action='index' permission='sysopen_develop' display='true' order='80'>平台绑定关系列表</menu>
+        </menugroup>
+    </workground>
+</desktop>
+

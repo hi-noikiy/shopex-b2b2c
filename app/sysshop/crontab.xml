@@ -1,0 +1,12 @@
+<cronentries>
+  <cron id="sysshop_tasks_closeDemoShop">
+    <description>自动关闭店铺</description>
+    <schedule>* 4 * * *</schedule>
+    <enabled>false</enabled>
+  </cron>
+  <cron id="sysshop_tasks_cleansellerloginlog">
+    <description>清理商家登录日志</description>
+    <schedule>0 5 * * *</schedule>
+    <enabled>true</enabled>
+  </cron>
+</cronentries>

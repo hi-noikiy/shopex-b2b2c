@@ -1,0 +1,190 @@
+<div class="callout callout-info">
+    <h4>营销方式说明：</h4>
+
+    <p>店铺级的促销方式，同一订单内，【特定】商品售价总金额，满【特定】金额【特定】会员可享受【特定】金额优惠；商家可设置生成的优惠券总数量。会员在【特定时限】内，通过点击领取优惠券，在购物车内订单结算时使用优惠券。该促销方式与其他不互斥。</p>
+</div>
+<div class="box box-primary clearfix">
+    <div class="mailbox-controls with-border">
+      <a class="btn btn-default btn-sm act-addcat" href="<{url action=topshop_ctl_promotion_coupon@edit_coupon}>">
+        <i class="fa fa-plus-square-o"></i> 添加优惠券
+      </a>
+    </div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>前缀</th>
+            <th>状态</th>
+            <th>满减促销名称</th>
+            <th>规则</th>
+            <!-- <td>使用平台</td> -->
+            <th>领取时间</th>
+            <th>使用时间</th>
+            <th>使用情况</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <{if $couponList}>
+        <tbody>
+            <{foreach from=$couponList item=item}>
+            <tr class="<{if $item.coupon_status=='refuse' || $item.coupon_status=='cancel'}>due<{/if}>">
+                <td>
+                    <{$item.coupon_id}>
+                </td>
+                <td>
+                    <{$item.coupon_prefix}>
+                </td>
+                <td>
+                    <{if $item.coupon_status=='non-reviewed'}><span class="label label-primary">未审核</span> <{/if}>
+                    <{if $item.coupon_status=='pending'}><span class="label label-primary">待审核</span> <{/if}>
+                    <{if $item.coupon_status=='refuse'}><button type="button" class="btn btn-none" data-toggle="tooltip" data-placement="bottom" title="<{$item.reason}>"><span class="label label-default">审核拒绝</span></button> <{/if}>
+                    <{if $item.coupon_status=='agree'}>
+                        <{if $now < $item.cansend_start_time}><span class="label label-primary">待领取</span> <{/if}>
+                        <{if $now < $item.cansend_end_time && $now >$item.cansend_start_time}><span class="label label-success">可领取</span> <{/if}>
+                        <{if ($item.max_gen_quantity<=$item.send_couponcode_quantity) && ($now < $item.canuse_end_time) && ($now > $item.canuse_start_time) }><span class="label label-default">已领完</span> <{/if}>
+                        <{if $now > $item.cansend_end_time}><span class="label label-default">结束领取</span> <{/if}>
+
+                        <{if $now < $item.canuse_start_time}><span class="label label-primary">待生效</span> <{/if}>
+                        <{if ($now < $item.canuse_end_time) && ($now > $item.canuse_start_time)}><span class="label label-success">生效中</span> <{/if}>
+                        <{if $now > $item.canuse_end_time}><span class="label label-default">已失效</span> <{/if}>
+                    <{/if}>
+                    <{if $item.coupon_status=='cancel'}><span class="label label-default">已取消</span> <{/if}>
+                </td>
+                <td><{$item.coupon_name}></td>
+                <td>
+                    <button type="button" class="btn btn-none" data-toggle="tooltip" data-placement="bottom" title="<{$item.coupon_desc}>">
+                        满 <{$item.limit_money}> 减 <{$item.deduct_money}> 元 <br />
+                        总生成总数：<{$item.max_gen_quantity}> <br />
+                        用户可领数：<{$item.userlimit_quantity}> <br />
+                    </button>
+                </td>
+                <td>
+                    <{$item.cansend_start_time|cdate:'FDATE_STIME'}>
+                    <br />&nbsp;~&nbsp;<br />
+                    <{$item.cansend_end_time|cdate:'FDATE_STIME'}>
+                </td>
+                <td>
+                    <{$item.canuse_start_time|cdate:'FDATE_STIME'}>
+                    <br />&nbsp;~&nbsp;<br />
+                    <{$item.canuse_end_time|cdate:'FDATE_STIME'}>
+                </td>
+                <td>
+                    已领取总数：<{$item.send_couponcode_quantity}> <br />
+                    已使用总数：<{$item.use_couponcode_quantity}> <br />
+                </td>
+                <td>
+                <{if $examine_setting}>
+                    <{if $item.coupon_status == 'non-reviewed' || $item.coupon_status =='refuse'}>
+                    <a class="action-submit-approve" href="javascript:void(0);" data-delete-url="<{url action=topshop_ctl_promotion_coupon@submit_approve coupon_id=$item.coupon_id shop_id=$item.shop_id status='pending'}>">提交审核</a><br>
+                    <a href="<{url action=topshop_ctl_promotion_coupon@edit_coupon coupon_id=$item.coupon_id }>">编辑</a><br>
+                    <a class="action-delete-coupon" href="javascript:void(0);" data-delete-url="<{url action=topshop_ctl_promotion_coupon@delete_coupon coupon_id=$item.coupon_id }>">删除</a><br>
+                    <{else}>
+                    <a href="<{url action=topshop_ctl_promotion_coupon@show_coupon coupon_id=$item.coupon_id ac='show'}>">查看</a><br>
+                    <{/if}>
+
+                    <{if $item.coupon_status == 'pending'}>
+                    <a class="action-delete-coupon" href="javascript:void(0);" data-delete-url="<{url action=topshop_ctl_promotion_coupon@delete_coupon coupon_id=$item.coupon_id }>">删除</a><br>
+                    <{/if}>
+
+                    <{if $item.coupon_status == 'agree'}>
+                    <a class="action-cancel-coupon" href="javascript:void(0);" data-delete-url="<{url action=topshop_ctl_promotion_coupon@cancel_coupon coupon_id=$item.coupon_id}>">取消</a><br>
+                    <{/if}>
+                <{else}>
+                    <{if $item.coupon_status == 'refuse'}>
+                        <a href="<{url action=topshop_ctl_promotion_coupon@show_coupon coupon_id=$item.coupon_id ac='show'}>">查看</a><br>
+                    <{else}>
+                        <{if $item.cansend_start_time > $now}>
+                            <a href="<{url action=topshop_ctl_promotion_coupon@edit_coupon coupon_id=$item.coupon_id }>">编辑</a><br>
+                            <a class="action-delete-coupon" href="javascript:void(0);" data-delete-url="<{url action=topshop_ctl_promotion_coupon@delete_coupon coupon_id=$item.coupon_id }>">删除</a>
+                        <{else}>
+                            <a href="<{url action=topshop_ctl_promotion_coupon@show_coupon coupon_id=$item.coupon_id ac='show'}>">查看</a><br>
+
+                        <{/if}>
+
+                        <{if $item.coupon_status!='cancel' && $item.coupon_status!='refuse' && $item.canuse_end_time > $now && $item.cansend_start_time < $now}>
+                            <a class="action-cancel-coupon" href="javascript:void(0);" data-delete-url="<{url action=topshop_ctl_promotion_coupon@cancel_coupon coupon_id=$item.coupon_id}>">取消</a>
+                        <{/if}>
+                    <{/if}>
+                <{/if}>
+                </td>
+            </tr>
+            <{/foreach}>
+        </tbody>
+        <{else}>
+        <tbody>
+            <tr>
+              <td algin="center" colspan="9">
+                <p class="help-block text-center">暂无数据</p>
+              </td>
+            </tr>
+        </tbody>
+        <{/if}>
+    </table>
+    <div class="text-right">
+        <{pagers data=$pagers}>
+        <{if $total > 0}>
+        <span class="page-number">共&nbsp;<em class="text-aqua"><{$total}></em>&nbsp;条记录</span>
+        <{/if}>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+
+        $('.action-delete-coupon').on('click',function(){
+            var url = $(this).attr('data-delete-url');
+            Modal.confirm({msg: '确定要提交优惠券审核吗？'}).on(function(e) {
+                if(e==true) {
+                    $.post(url,'',function(rs){
+                        if(rs.success) {
+                            $('#messagebox').message(rs.message, 'success');
+                            setTimeout(function(){location.reload();}, 500);
+                        }
+                        if(rs.error) {
+                            $('#messagebox').message(rs.message);
+                            return;
+                        }
+                    });
+                }
+            });
+        });
+
+        $('.action-cancel-coupon').on('click',function(){
+            var url = $(this).attr('data-delete-url');
+            Modal.confirm({msg: '确定取消此条优惠券促销吗？取消后则不能恢复'}).on(function(e) {
+                if(e==true) {
+                    $.post(url,'',function(rs){
+                        if(rs.success) {
+                            $('#messagebox').message(rs.message, 'success');
+                            setTimeout(function(){location.reload();}, 500);
+                        }
+                        if(rs.error) {
+                            $('#messagebox').message(rs.message);
+                            return;
+                        }
+                    });
+                }
+            });
+        });
+
+        $('.action-submit-approve').on('click',function(){
+            var url = $(this).attr('data-delete-url');
+            Modal.confirm({msg: '确定提交此条优惠券促销吗？提交后则不能编辑'}).on(function(e) {
+                if(e==true) {
+                    $.post(url,'',function(rs){
+                        if(rs.success) {
+                            $('#messagebox').message(rs.message, 'success');
+                            setTimeout(function(){location.reload();}, 500);
+                        }
+                        if(rs.error) {
+                            $('#messagebox').message(rs.message);
+                            return;
+                        }
+                    });
+                }
+            });
+        });
+
+    })
+</script>

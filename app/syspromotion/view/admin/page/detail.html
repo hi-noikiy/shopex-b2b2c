@@ -1,0 +1,28 @@
+<div class="tableform">
+  <div class="division">
+  <{if $page.used_platform=='app'}>
+  <h4><label><{t}>请前往app端预览促销详情<{/t}></label></h4> 
+  <{else}>  
+  	<h4>促销详情</h4>
+      <table width="100%" >
+        <tr>
+          <th><label><{t}>专题链接：<{/t}></label></th> 
+          <td>
+          <{if $page.used_platform=='pc'}>
+          <em><font color="blue"><{url action=topc_ctl_promotion@ProjectPage page_id=$page.page_id}></font></em> &nbsp;&nbsp;&nbsp;&nbsp;<a href="<{url action=topc_ctl_promotion@ProjectPage page_id=$page.page_id preview=1}>" target="_blank">点击预览</a>
+          <{else}>
+          <em><font color="blue"><{url action=topwap_ctl_promotion@ProjectPage page_id=$page.page_id}></font></em> &nbsp;&nbsp;&nbsp;&nbsp;<a href="<{url action=topwap_ctl_promotion@ProjectPage page_id=$page.page_id preview=1}>" target="_blank">点击预览</a>
+          <{/if}>
+          </td>
+          
+        </tr>
+        <tr>
+        	<th><label><{t}>专题二维码：<{/t}></label></th> 
+          <td>
+          	<img src="<{$qrcode}>" />
+          </td>
+        </tr>
+      </table>
+  <{/if}>
+  </div>
+</div>

@@ -1,0 +1,368 @@
+<form id="scratchcardForm" action="?app=syspromotion&ctl=admin_scratchcard&act=save"  method="POST" class="scratchcard-box">
+  <input type="hidden" name="scratchcard_id" value="<{$scratchcard_id}>">
+  <div>
+    <span style='float:left'>
+      <div class="division" style="width:362px">
+        <div style="width:329px;height:549px;background-image:url(<{$env.statics_host_url}>/syspromotion/statics/images/iphone.jpeg);background-size:cover;padding-top:112px;padding-left:14%">
+          <div class="scratchcard-bg-img" style='width:73.5%;height:83%;background:url(<{$background_url|storager}>) center top;background-color:#f8f8f8;background-size:cover;'>
+            <div class="wraper">
+              <p class="font-red clearfix">点我再来一次<span class="font-red rule-icon fr">?</span></p>
+              <div class="box">
+                <div class="canvas-bg">
+                  <button type="button" class="shopex-btn shopex-btn-warning bbc-btn-warning action-receive" style="margin-top:1.3rem;">我要刮奖</button>
+                </div>
+              </div>
+              <span class="scratchcard-count">您还有&nbsp;<span class="font-orange">99</span>&nbsp;次刮奖机会</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </span>
+    <span style='float:left'>
+      <div class="tableform">
+        <div class="division">
+          <table width="100%" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+              <th><{t}>活动名称：<{/t}></th>
+              <td><input type="text" name="scratchcard_name" class="x-input" size=30 vtype="required" value="<{$scratchcard_name}>" maxlength='20' <{if $scratchcard_id}>disabled<{/if}>><em><font color='red'>*</font></em></td>
+            </tr>
+            <tr>
+              <th><{t}>规则描述：<{/t}></th>
+              <td><textarea name="scratchcard_desc" class="x-input" rows="5" cols="50" style="resize:none;" vtype="required" <{if $scratchcard_id}>disabled<{/if}>><{$scratchcard_desc}></textarea><em><font color='red'>*</font></em></td>
+            </tr>
+            <tr>
+              <th><{t}>覆盖区文字：<{/t}></th>
+              <td><input type="text" name="scratchcard_word" class="x-input" size=30 vtype="required" value="<{$scratchcard_word}>" maxlength='20'><em><font color='red'>*</font></em></td>
+            </tr>
+            <tr>
+              <th><{t}>按钮文字：<{/t}></th>
+              <td><input type="text" name="scratchcard_btn_word" class="x-input" size=30 vtype="required" value="<{$scratchcard_btn_word}>" maxlength='20'><em><font color='red'>*</font></em></td>
+            </tr>
+            <tr>
+              <th><{t}>获取抽奖次数方式：<{/t}></th>
+              <td>
+                <!--
+                <label><input type="radio" name ="scratchcard_type" value='0' <{if $scratchcard_type==0}> checked<{/if}> <{if $scratchcard_id}> disabled<{/if}>>全部</label>
+                <label><input type="radio" name ="scratchcard_type" value="1" <{if $scratchcard_type==1}> checked<{/if}> <{if $scratchcard_id}> disabled<{/if}>>初始可抽奖</label>
+                <label><input type="radio" name ="scratchcard_type" value="2" <{if $scratchcard_type==2}> checked<{/if}> <{if $scratchcard_id}> disabled<{/if}>>积分兑换</label>
+                -->
+                <label><input type="radio" name ="scratchcard_type" value="1"  checked disabled >初始可抽奖</label>
+              </td>
+            </tr>
+            <tr id="type_1">
+              <th><{t}>初始可抽奖次数：<{/t}></th>
+              <td><input type="number" name="scratchcard_joint_limit" class="x-input" value="<{$scratchcard_joint_limit}>" vtype="required unsignedint" size=10 <{if $scratchcard_id}>disabled<{/if}>>次<em><font color='red'>*</font></em></td>
+            </tr>
+            <!--
+            <tr id="type_2">
+              <th><{t}>积分兑换所需积分：<{/t}></th>
+              <td><input type="number" name="scratchcard_point_num" class="x-input" value="<{$scratchcard_point_num}>" vtype="required&&unsignedint" size=10 <{if $scratchcard_id}>disabled<{/if}>>点/次<em><font color='red'>*</font></em></td>
+            </tr>
+            -->
+            <tr>
+              <th><{t}>发布平台：<{/t}></th>
+              <td>
+                <select name="used_platform" <{if $scratchcard_id}>disabled="disabled"<{/if}> >
+                  <option value="0" <{if $used_platform != '1' && $used_platform != '2'}>selected<{/if}>>h5端和app端</option>
+                  <option value="1" <{if $used_platform == '1'}>selected<{/if}>>h5端</option>
+                  <option value="2" <{if $used_platform == '2'}>selected<{/if}>>app端</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <th><{t}>背景图：<{/t}></th>
+              <td><{input type='image' id='scratchard_background_url_ipt' name='scratchard_background_url' value="$background_url"}><span class="red">(建议尺寸：375px * 665px)</span></td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="division">
+          <div class="gridlist-action">
+            <{button app="desktop" label="添加奖项"|t:'syspromotion' class="addPrize" id="addPrize" icon="btn_add.gif" }>&nbsp;<span>最少添加2项，最多添加8项，所有奖项概率之和需为100%</span>
+          </div>
+          <{if $scratchcard_id}>
+          <table width="100%" border="0" cellpadding="0" cellspacing="0" id="scratchcard_rule" class="scratchcard-rule">
+            <tbody>
+              <{if $scratchcard_rules}>
+              <{foreach from=$scratchcard_rules item=item key=key}>
+              <{if $item.bonus_type=='point'}>
+              <tr>
+                <td>
+                  <{input type="hidden" name="scratchcardrules[$key][bonus_type]"  value=$item.bonus_type}>
+                  <{input type="hidden" name="scratchcardrules[key]"  value=$key}>
+                  积  分:
+                  <{input type="text" name="scratchcardrules[$key][num]" value=$item.num size=10 vtype='required&&unsignedint'}>点<em><font color="red">*</font></em>
+                </td>
+                <td>获奖概率：
+                  <{input type="text" name="scratchcardrules[$key][rate]" value=$item.rate size=10 maxlength=5 vtype='required&&unsigned'}>%<em><font color="red">*</font></em>
+                </td>
+                <td>
+                  <{img style='cursor:pointer;' onclick="move_p(this,'up')" src="bundle/icon_asc.gif" alt="向上"|t:'syscategory' class="operater" app='desktop'}>&nbsp;&nbsp;&nbsp;&nbsp;
+                  <{img style='cursor:pointer;' onclick="move_p(this,'down')" src="bundle/icon_desc.gif" alt="向下"|t:'syscategory' class="operater" app='desktop'}>&nbsp;&nbsp;&nbsp;&nbsp;
+                  <{img app=desktop src="bundle/delete.gif" class="delete"  title="删除" style="cursor:pointer;" onclick="delete_item(this)" }>
+                </td>
+              </tr>
+              <{elseif $item.bonus_type=='voucher'}>
+              <tr>
+                <td>
+                  <{input type="hidden" name="scratchcardrules[$key][bonus_type]"  value=$item.bonus_type}>
+                  <{input type="hidden" name="scratchcardrules[key]"  value=$key}>
+                  购物券:
+                  <select name="scratchcardrules[<{$key}>][voucher_id]">
+                  <{foreach from=$voucherList item=voucher key=k}>
+                    <option value="<{$voucher.voucher_id}>" <{if $item.voucher_id == $voucher.voucher_id}> selected='selected'<{/if}> <{if $voucher.cansend_end_time < $scratchcardFilter}>disabled <{/if}>><{$voucher.voucher_name}></option>
+                  }
+                  <{/foreach}>
+                  </select>
+                </td>
+                <td>获奖概率：
+                  <{input type="text" name="scratchcardrules[$key][rate]" value=$item.rate size=10 maxlength=5 vtype='required&&unsigned'}>%<em><font color="red">*</font></em>
+                </td>
+                <td>
+                  <{img style='cursor:pointer;' onclick="move_p(this,'up')" src="bundle/icon_asc.gif" alt="向上"|t:'syscategory' class="operater" app='desktop'}>&nbsp;&nbsp;&nbsp;&nbsp;
+                  <{img style='cursor:pointer;' onclick="move_p(this,'down')" src="bundle/icon_desc.gif" alt="向下"|t:'syscategory' class="operater" app='desktop'}>&nbsp;&nbsp;&nbsp;&nbsp;
+                  <{img app=desktop src="bundle/delete.gif" class="delete"  title="删除" style="cursor:pointer;" onclick="delete_item(this)" }>
+                </td>
+              </tr>
+              <{elseif $item.bonus_type=='hongbao'}>
+              <tr>
+                <td>
+                  <{input type="hidden" name="scratchcardrules[$key][bonus_type]"  value=$item.bonus_type}>
+                  <{input type="hidden" name="scratchcardrules[key]"  value=$key}>
+                  <{input type="hidden" name="scratchcardrules[$key][hongbaoid]" value=$item.hongbaoid}>
+                  <{input type="hidden" name="scratchcardrules[$key][hongbaomoney]" value=$item.hongbaomoney}>
+                  <{input type="hidden" name="scratchcardrules[$key][hongbaotype]" value=$item.hongbaotype}>
+                  红  包:
+                  <{button label="选择关联红包"|t:"syspromotion" class="chooseredpacket" onclick="choose_redpacket(this)" }><em><font color="red">*</font></em><span class="redpacket-name"><{$item.hongbaomoney}>元-红包<{$item.hongbaoid}></span>
+                </td>
+                <td>获奖概率：
+                  <{input type="text" name="scratchcardrules[$key][rate]" value=$item.rate size=10 maxlength=5 vtype='required&&unsigned'}>%<em><font color="red">*</font></em>
+                </td>
+                <td>
+                  <{img style='cursor:pointer;' onclick="move_p(this,'up')" src="bundle/icon_asc.gif" alt="向上"|t:'syscategory' class="operater" app='desktop'}>&nbsp;&nbsp;&nbsp;&nbsp;
+                  <{img style='cursor:pointer;' onclick="move_p(this,'down')" src="bundle/icon_desc.gif" alt="向下"|t:'syscategory' class="operater" app='desktop'}>&nbsp;&nbsp;&nbsp;&nbsp;
+                  <{img app=desktop src="bundle/delete.gif" class="delete"  title="删除" style="cursor:pointer;" onclick="delete_item(this)" }>
+                </td>
+              </tr>
+              <{elseif $item.bonus_type=='none'}>
+              <tr <{if $key == 0}>class="top-item"<{/if}>>
+                <{input type="hidden" name="scratchcardrules[$key][bonus_type]"  value=$item.bonus_type}>
+                <{input type="hidden" name="scratchcardrules[key]"  value=$key}>
+                <td>
+                  未中奖:<{input type="text" name="scratchcardrules[$key][bonus_desc]" value=$item.bonus_desc size=30 vtype='required'}><em><font color="red">*</font></em>
+                </td>
+                <td>获奖概率：
+                  <{input type="text" name="scratchcardrules[$key][rate]" value=$item.rate size=10 maxlength=5 vtype='required&&unsigned'}>%<em><font color="red">*</font></em>
+                </td>
+                <td>
+                  <{if $key != 0}>
+                  <{img style='cursor:pointer;' onclick="move_p(this,'up')" src="bundle/icon_asc.gif" alt="向上"|t:'syscategory' class="operater" app='desktop'}>&nbsp;&nbsp;&nbsp;&nbsp;
+                  <{img style='cursor:pointer;' onclick="move_p(this,'down')" src="bundle/icon_desc.gif" alt="向下"|t:'syscategory' class="operater" app='desktop'}>&nbsp;&nbsp;&nbsp;&nbsp;
+                  <{img app=desktop src="bundle/delete.gif" class="delete"  title="删除" style="cursor:pointer;" onclick="delete_item(this)" }>
+                  <{/if}>
+                </td>
+              </tr>
+              <{elseif $item.bonus_type=='custom'}>
+              <tr>
+                <td>
+                  <{input type="hidden" name="scratchcardrules[$key][bonus_type]"  value=$item.bonus_type}>
+                  <{input type="hidden" name="scratchcardrules[key]"  value=$key}>
+                  自定义:<{input type="text" name="scratchcardrules[$key][bonus_desc]" value=$item.bonus_desc size=30 vtype='required'}><em><font color="red">*</font></em><span class="suggest-size font-red">建议图片尺寸40px * 40px</span>
+
+                  <{input type="image" name="scratchcardrules[$key][img]" width=45 height=45 value=$item.img}>
+                  <label><input type="checkbox" name="scratchcardrules[<{$key}>][is_delivery]" <{if $item.is_delivery =='on'}>checked <{/if}>>是否需要配送<em class="red">*</em>（开启后，会员可以填写收货信息，以便接收奖品）</label>
+                </td>
+
+                <td>获奖概率：
+                  <{input type="text" name="scratchcardrules[$key][rate]" value=$item.rate size=10 maxlength=5 vtype='required&&unsigned'}>%<em><font color="red">*</font></em>
+                </td>
+                <td>
+                  <{img style='cursor:pointer;' onclick="move_p(this,'up')" src="bundle/icon_asc.gif" alt="向上"|t:'syscategory' class="operater" app='desktop'}>&nbsp;&nbsp;&nbsp;&nbsp;
+                  <{img style='cursor:pointer;' onclick="move_p(this,'down')" src="bundle/icon_desc.gif" alt="向下"|t:'syscategory' class="operater" app='desktop'}>&nbsp;&nbsp;&nbsp;&nbsp;
+                  <{img app=desktop src="bundle/delete.gif" class="delete"  title="删除" style="cursor:pointer;" onclick="delete_item(this)" }>
+                </td>
+              </tr>
+              <{/if}>
+              <{/foreach}>
+              <{/if}>
+            </tbody>
+          </table>
+          <{else}>
+          <table width="100%" border="0" cellpadding="0" cellspacing="0" id="scratchcard_rule" class="scratchcard-rule">
+            <tbody>
+              <tr class="top-item">
+                <{input type="hidden" name="scratchcardrules[0][bonus_type]"  value="none"}>
+                <{input type="hidden" name="scratchcardrules[key]"  value="0"}>
+                <td>
+                  <label>未中奖:</label><{input type="text" class="x-input" name="scratchcardrules[0][bonus_desc]" value="" size=30 vtype="required" value="感谢您的参与" }>
+                </td>
+                <td>获奖概率：
+                  <{input type="text" class="x-input" name="scratchcardrules[0][rate]" value="" size=10 maxlength=5 vtype="required&&unsigned"}>%<em><font color="red">*</font></em>
+                </td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+          <{/if}>
+        </div>
+        <div class="division">
+          <div class="notice">活动开启后不能编辑，只能先暂停活动，再进行操作</div>
+          <table width="100%" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+              <th><font color='red'><{t}>是否开启活动：<{/t}></font></th>
+              <td><input type="radio" name="status" value="active" <{if $status =='active'}>checked <{/if}> >&nbsp;&nbsp;&nbsp;开启 </td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-action">
+          <{button type="submit" id='scratchcard_form_submit' label="保存"|t:'syscategory'}>
+        </div>
+      </div>
+    </span>
+  </div>
+</form>
+
+<script>
+  var _form = $('scratchcardForm');
+  var btn =$('scratchcard_form_submit');
+  var finder = finderGroup['<{$env.get._finder.finder_id}>'];
+
+  _form.store('target',{
+    onSuccess:function(response){
+      var hash_res_obj = JSON.decode(response);
+      if (hash_res_obj.success != undefined && hash_res_obj.success != ""){
+        try{
+          var _dialogIns = btn.getParent('.dialog').retrieve('instance');
+        }catch(e){}
+
+        if(_dialogIns){
+
+          _dialogIns.close();
+          window.finderGroup['<{$env.get._finder.finder_id}>'].refresh();
+        }
+      }
+    }
+  });
+  var maxKey = getMaxKey();
+  btn.addEvent('click',function(){
+    _form.fireEvent('submit',{stop:$empty});
+  });
+  $('addPrize').addEvent('click', function(){
+    // maxKey = getMaxKey();
+    new Dialog('?app=syspromotion&ctl=admin_scratchcard&act=setPrize',
+    {
+      title:'<{t}>奖项类型<{/t}>',
+      width: 320,
+      top: 780,
+      left: 60,
+      onShow:function(){
+         this.dialog.store('callback',function(selected){
+          for(var i = 0; i < selected.length; i++) {
+            var type = $(selected[i]).get('data-item');
+            maxKey ++;
+            new Request({
+                method:'post',
+                url:'?app=syspromotion&ctl=admin_scratchcard&act=getPrizeSettingHtml',
+                data:'maxKey='+maxKey+'&type='+type,
+                onRequest:function(){},
+                onComplete:function(rs){
+                  var tr = new Element('tr', {'html': rs});
+                  $('scratchcard_rule').getElement('tbody').adopt(tr);
+                  // var id = $('scratchcard_rule').getElements('input[type="color"]').getLast().get('id');
+                  // Ex_Loader("picker",function(){
+                  //   new GoogColorPicker("c_"+id,{
+                  //     onSelect:function(hex,rgb,el){
+                  //         $(id).set("value",hex);
+                  //         el.setStyle("background-color",hex);
+                  //     }
+                  //   });
+                  // });
+                }
+            }).send();
+          }
+        });
+      }
+    });
+  });
+
+  function move_p(item,actdo){
+    var item=$(item);
+    if(!item)return;
+    var div = item.getParent('td').getParent();
+    var divp = div.getPrevious('tr');
+    var divn = div.getNext('tr');
+    switch (actdo) {
+      case 'up':
+        if(divp && !divp.hasClass('top-item')) {
+          div.injectBefore(divp);
+        }
+        return ;
+      case 'down':
+        if(divn) {
+          div.injectAfter(divn);
+        }
+        return;
+    }
+  }
+
+  function delete_item(item) {
+    $(item).getParent().getParent().remove();
+  }
+
+  function choose_redpacket(btn) {
+    new Dialog('?app=syspromotion&ctl=admin_scratchcard&act=chooseRedpacket',
+    {
+      title: '<t>选择红包</t>',
+      width: 320,
+      onShow: function() {
+        this.dialog.store('callback', function(moneyItem, hongbaoId) {
+          var money = moneyItem.getElement('input[name*=money]').get('value');
+          var hongbaotype = moneyItem.getElement('input[name*=hongbaotype]').get('value');
+          var text = moneyItem.get('text');
+          var parent = btn.getParent();
+          parent.getElement('.redpacket-name').set('text', text);
+          parent.getElement('input[name*="hongbaoid"]').set('value', hongbaoId);
+          parent.getElement('input[name*=hongbaomoney]').set('value', money);
+          parent.getElement('input[name*=hongbaotype]').set('value', hongbaotype);
+        });
+      }
+    });
+  }
+
+  $$('input[name="scratchcard_type"]').addEvent('change', function() {
+    var ischecked = this.get('checked');
+    var type = -1;
+    if(ischecked) {
+      type = Number(this.get('value'));
+    }
+    if(type >= 0) {
+
+      switch (type) {
+        case 0:
+          $('type_1').setStyle('display', 'table-row');
+          // $('type_2').setStyle('display', 'table-row');
+          break;
+        case 1:
+          $('type_1').setStyle('display', 'table-row');
+          // $('type_2').setStyle('display', 'none');
+          break;
+        case 2:
+          $('type_1').setStyle('display', 'none');
+          // $('type_2').setStyle('display', 'table-row');
+          break;
+      }
+    }
+  }).fireEvent('change');
+
+  function getMaxKey(){
+    var keys = [];
+    $('scratchcard_rule').getElements('input[name="scratchcardrules[key]"]').each(function(item, index) {
+      keys.push(Number(item.get('value')));
+    });
+    maxKey = keys.length == 0 ? 0 : Math.max.apply(null, keys);
+    return maxKey;
+  }
+  $$('input[name="scratchcard_joint_limit"]').addEvent('change', function(){
+    $$('.scratchcard-count').getElement('span').set('html', $(this).get('value'));
+  });
+</script>

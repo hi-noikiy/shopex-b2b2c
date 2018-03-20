@@ -1,0 +1,12 @@
+<cronentries>
+    <cron id="sysitem_tasks_storeSyncDB">
+        <description>将redis中改变库存的商品库存同步到数据中</description>
+        <schedule>* * * * *</schedule>
+        <enabled>true</enabled>
+    </cron>
+    <cron id="sysitem_tasks_searchweight">
+        <description>计算每个商品的排序权重</description>
+        <schedule> 0 4 * * *</schedule>
+        <enabled>true</enabled>
+    </cron>
+</cronentries>

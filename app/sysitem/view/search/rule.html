@@ -1,0 +1,71 @@
+<form id="ruleForm" action="?app=sysitem&ctl=admin_search_setting&act=saveRule"  method="POST" >
+  <input type="hidden" name="rule_id" value="<{$ruleInfo.rule_id}>">
+  <div class="tableform">
+    <div class="notice">配合系统的权重得分每天计算得到一个商品排序权重分，每一项总分1000，最低0分，然后乘以权重比例得到排序权重分</div>
+    <div class="division">
+        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+              <th><{t}>规则名称：<{/t}></th>
+              <td><{input type="text" name="name" vtype="required" value=$ruleInfo.name}><em><font color='red'>*</font></em></td>
+            </tr>
+            <tr>
+              <th><{t}>规则描述：<{/t}></th>
+              <td><{input type="textarea" name="desc" value=$ruleInfo.desc}></td>
+            </tr>
+        </table>
+    </div>
+    <div class="division">
+        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+              <th><{t}>商品质量：<{/t}></th>
+              <td><{input style="width:50px;" type="unsigned" name="rule[goods_quality]" vtype="required" value=$ruleInfo.rule.goods_quality|default:'0'}><em>%</em></td>
+            </tr>
+            <tr>
+              <th><{t}>上下架：<{/t}></th>
+              <td><{input style="width:50px;" type="unsigned" name="rule[goods_updown]" value=$ruleInfo.rule.goods_updown|default:'0'}><em>%</em></td>
+            </tr>
+            <tr>
+              <th><{t}>商品维护：<{/t}></th>
+              <td><{input style="width:50px;" type="unsigned" name="rule[goods_maintenance]" value=$ruleInfo.rule.goods_maintenance|default:'0'}><em>%</em></td>
+            </tr>
+            <tr>
+              <th><{t}>店铺：<{/t}></th>
+              <td><{input style="width:50px;" type="unsigned" name="rule[shop]" value=$ruleInfo.rule.shop|default:'0'}><em>%</em></td>
+            </tr>
+        </table>
+    </div>
+  <div class="table-action">
+    <{button type="submit" id='rule-form-submit' label="保存"|t:'sysitem'}>
+  </div>
+
+</form>
+
+<script>
+  (function(){
+    var _form = $('ruleForm');
+    var btn =$('rule-form-submit');
+    var finder = finderGroup['<{$env.get._finder.finder_id}>'];
+
+    _form.store('target',{
+      onSuccess:function(response){
+        var hash_res_obj = JSON.decode(response);
+
+        if (hash_res_obj.success != undefined && hash_res_obj.success != ""){
+          try{
+            var _dialogIns = btn.getParent('.dialog').retrieve('instance');
+          }catch(e){}
+
+          if(_dialogIns){
+            _dialogIns.close();
+            window.finderGroup['<{$env.get._finder.finder_id}>'].refresh();
+          }
+        }
+      }
+    });
+
+    btn.addEvent('click',function(){
+      _form.fireEvent('submit',{stop:$empty});
+    });
+
+  })();
+</script>

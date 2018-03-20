@@ -1,0 +1,161 @@
+<form id="distributeForm" action="?app=syspromotion&ctl=admin_distribute_main&act=doAdd"  method="POST" class="distribute-box">
+  <div class="tableform">
+    <div class="division">
+      <table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <th><{t}>活动名称：<{/t}></th>
+          <td><input type="text" name="distribute_name" size=30 vtype="required" value="<{$distribute_name}>" maxlength='20' <{if $distribute_id}>disabled<{/if}>><em><font color='red'>*</font></em></td>
+        </tr>
+        <tr>
+          <th><{t}>发放内容：<{/t}></th>
+            <td>
+              <label><input type="radio" name ="discount_type" value="hongbao" checked>红包</label>
+              <label><input type="radio" name ="discount_type" value="voucher" >购物券</label>
+            </td>
+        </tr>
+        <tr id="type_1" style='display:none'>
+          <th><{t}>红  包:<{/t}></th>
+          <td>
+
+            <{input type="hidden" name="distribute[hongbaoid]"    }>
+            <{input type="hidden" name="distribute[hongbaomoney]" }>
+            <{input type="hidden" name="distribute[hongbaotype]"  }>
+            <{button label="选择关联红包"|t:"syspromotion" class="chooseredpacket" onclick="choose_redpacket(this)" }><em><font color="red">*</font></em><span class="redpacket-name"><{$item.hongbaomoney}>元-红包<{$item.hongbaoid}></span>
+
+
+          </td>
+        </tr>
+
+        <tr id="type_2" style='display:none'>
+          <th><{t}>购物券：<{/t}></th>
+          <td><{input type='object' name="voucher_id" object="voucher" app="syspromotion" select="radio" textcol="voucher_name"}></td>
+        </tr>
+
+        <tr>
+          <th><{t}>提醒：<{/t}></th>
+          <td>
+              <label><input type="radio" name ="remind_way" value="none" checked >不提醒</label>
+              <label><input type="radio" name ="remind_way" value="sms" >短信提醒</label>
+              <label><input type="radio" name ="remind_way" value="email" >邮件提醒</label>
+              <label><input type="radio" name ="remind_way" value="both" >短信、邮件提醒</label>
+          </td>
+        </tr>
+
+        <tr>
+          <th><{t}>短信模板：<{/t}></th>
+          <td><textarea name="sms_tmpl" rows="5" cols="50" style="resize:none;" ></textarea></td>
+        </tr>
+
+        <tr>
+          <th><{t}>邮件模板：<{/t}></th>
+          <td><{input type='html' name="email_tmpl" cols=50 rows=20}></td>
+        </tr>
+
+        <tr>
+          <th><{t}>选择会员：<{/t}></th>
+          <td>
+            <{input type="object" name="user_filter[user_id|in]" object="userVirt" app="sysuser" select="checkbox" textcol="displayinfo" filter="" multiple="true" emptytext="选择会员" }>
+          </td>
+        </tr>
+
+
+      </table>
+    </div>
+
+    <div class="table-action">
+      <{button type="submit" id='distribute_form_submit' label="保存"|t:'syscategory'}>
+    </div>
+  </div>
+</form>
+
+<script>
+  var _form = $('distributeForm');
+  var btn =$('distribute_form_submit');
+  var finder = finderGroup['<{$env.get._finder.finder_id}>'];
+
+  _form.store('target',{
+    onSuccess:function(response){
+      var hash_res_obj = JSON.decode(response);
+      if (hash_res_obj.success != undefined && hash_res_obj.success != ""){
+        try{
+          var _dialogIns = btn.getParent('.dialog').retrieve('instance');
+        }catch(e){}
+
+        if(_dialogIns){
+
+          _dialogIns.close();
+          window.finderGroup['<{$env.get._finder.finder_id}>'].refresh();
+        }
+      }
+    }
+  });
+  btn.addEvent('click',function(){
+    _form.fireEvent('submit',{stop:$empty});
+  });
+
+  function move_p(item,actdo){
+    var item=$(item);
+    if(!item)return;
+    var div = item.getParent('td').getParent();
+    var divp = div.getPrevious('tr');
+    var divn = div.getNext('tr');
+    switch (actdo) {
+      case 'up':
+        if(divp && !divp.hasClass('top-item')) {
+          div.injectBefore(divp);
+        }
+        return ;
+      case 'down':
+        if(divn) {
+          div.injectAfter(divn);
+        }
+        return;
+    }
+  }
+
+  function delete_item(item) {
+    $(item).getParent().getParent().remove();
+  }
+
+  function choose_redpacket(btn) {
+    new Dialog('?app=syspromotion&ctl=admin_lottery&act=chooseRedpacket',
+    {
+      title: '<t>选择红包</t>',
+      width: 320,
+      onShow: function() {
+        this.dialog.store('callback', function(moneyItem, hongbaoId) {
+          var money = moneyItem.getElement('input[name*=money]').get('value');
+          var hongbaotype = moneyItem.getElement('input[name*=hongbaotype]').get('value');
+          var text = moneyItem.get('text');
+          var parent = btn.getParent();
+          parent.getElement('.redpacket-name').set('text', text);
+          parent.getElement('input[name*="hongbaoid"]').set('value', hongbaoId);
+          parent.getElement('input[name*=hongbaomoney]').set('value', money);
+          parent.getElement('input[name*=hongbaotype]').set('value', hongbaotype);
+        });
+      }
+    });
+  }
+
+  $$('input[name="discount_type"]').addEvent('change', function() {
+    var ischecked = this.get('checked');
+    var type;
+    if(ischecked) {
+      type = this.get('value');
+    }
+
+    switch (type) {
+
+      case 'hongbao':
+        $('type_1').setStyle('display', 'table-row');
+        $('type_2').setStyle('display', 'none');
+        break;
+      case 'voucher':
+        $('type_1').setStyle('display', 'none');
+        $('type_2').setStyle('display', 'table-row');
+        break;
+    }
+  }).fireEvent('change');
+
+
+</script>

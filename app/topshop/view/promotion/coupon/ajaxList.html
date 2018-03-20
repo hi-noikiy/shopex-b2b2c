@@ -1,0 +1,30 @@
+<div class="panel-heading">
+  <div class="clearfix">
+    <div class="pull-left">
+      <h2 class="panel-title">选择优惠券</h2>
+      <small class="text-muted">最多选择3张</small>
+    </div>
+    <div class="pull-right">
+      <button id="choose_coupons" type="button" class="btn btn-primary">确定</button>
+      <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+    </div>
+  </div>
+</div>
+<div class="panel-body">
+  <{if $list}>
+    <ul class="shop-coupon-list">
+    <{foreach from=$list item=couponlist}>
+      <li data-couponid="<{$couponlist.coupon_id}>">
+        <div class="coupon-amount"><{$couponlist.deduct_money|cur}></div>
+        <div class="coupon-rule"><{$couponlist.coupon_name}></div>
+        <div class="coupon-deadline"><{$couponlist.canuse_start_time|cdate:'FDATE_STIME'}> - <{$couponlist.canuse_end_time|cdate:'FDATE_STIME'}></div>
+      </li>
+    <{/foreach}>
+    </ul>
+  <{else}>
+    <div class="item-filter-row">
+      <div align="center">暂未添加优惠券</div>
+    </div>
+  <{/if}>
+</div>
+

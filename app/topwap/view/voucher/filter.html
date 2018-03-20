@@ -1,0 +1,25 @@
+<div class="section-white section-container filters-header">
+  <div class="filters-op reset-filters-options" >重置</div>
+  <div class="section-init">筛选</div>
+  <div id="offCanvasHide" class="filters-op">确定</div>
+</div>
+<div id="offCanvasSideScroll" class="shopex-scroll-wrapper" style="top:50px;">
+  <div class="shopex-scroll">
+
+    <{if count($screen.lv1_cat) != 1 || $activeFilter.lv1_cat_id}>
+    <{assign var="catcount" value=$screen.lv1_cat|count}>
+    <div class="filters-options shopex-content-padded clearfix">
+      <div class="clearfix"><div class="shopex-pull-left">一级券目:&nbsp;</div> <label class="font-red fontS shopex-pull-left options-choose"></label><{if $catcount > 3}><i class="shopex-pull-right shopex-icon shopex-icon-arrowdown action-all"></i><{/if}></div>
+      <{foreach from=$screen.lv1_cat item=cat_row name=name }>
+      <{if $cat_row.child_count >=1 }>
+      <{if $cat_row.cat_id == $activeFilter.lv1_cat_id ||  in_array( $cat_row.cat_id,$activeFilter.lv1_cat_id)}>
+        <span data-name="lv1_cat_id" data-value="<{$cat_row.cat_id}>" class="checked" ><{$cat_row.cat_name}> </span>
+      <{else}>
+      <span data-name="lv1_cat_id" data-value="<{$cat_row.cat_id}>" ><{$cat_row.cat_name}> </span>
+      <{/if}>
+      <{/if}>
+      <{/foreach}>
+    </div>
+    <{/if}>
+  </div>
+</div>

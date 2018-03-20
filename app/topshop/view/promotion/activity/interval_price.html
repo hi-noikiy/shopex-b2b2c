@@ -1,0 +1,15 @@
+<div>
+  <input type="number" name="item_activity_price[<{$item.item_id}>]" value="<{$item.datavalue.activity_price}>" >
+  <{if !$item.nospec && $is_select_sku == 'true'}>
+  <a href="#" class="action-sku-price" data-toggle="modal" data-discount-min="<{$item.discount_min}>" data-discount-max="<{$item.discount_max}>" data-item-id="<{$item.item_id}>">设置sku价</a>&nbsp;
+  <{/if}>
+  <span>
+    参考范围:<{$item.price*$item.discount_min|cur}>~<{$item.price*$item.discount_max|cur}>
+  </span>
+</div>
+
+<div class="sku-price-<{$item.item_id}>">
+  <{foreach from=$item.datavalue.sku_activity_price item=price key=skuid}>
+  <input type="hidden" name="sku_activity_price[<{$item.item_id}>][<{$skuid}>]" value="<{$price}>" data-key="[<{$item.item_id}>][<{$skuid}>]">
+  <{/foreach}>
+</div>

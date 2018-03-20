@@ -1,0 +1,18 @@
+<p class="lead">数据库信息</p>
+<div class="table-responsive">
+    <table class="table">
+        <tbody>
+            <{foreach from=$db item=item key=key}>
+                <tr>
+                    <th style="width:50%">
+                        <{$key}>
+                    </th>
+                    <td>
+                        <{$item}>
+                    </td>
+                </tr>
+            <{/foreach}>
+        </tbody>
+    </table>
+</div>
+

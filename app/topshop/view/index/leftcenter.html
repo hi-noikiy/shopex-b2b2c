@@ -1,0 +1,48 @@
+<!-- Small boxes (Stat box) -->
+<div class="row">
+
+  <div class="col-lg-3 col-xs-6">
+    <div class="info-box">
+      <span class="info-box-icon bg-aqua"><i class="fa fa-shopping-cart"></i></span>
+      <div class="info-box-content">
+        <span class="info-box-text"><a href="<{url action=topshop_ctl_trade_list@index}>" class="small-box-footer">待发货订单</a></span>
+        <span class="info-box-number"><{$countReadysSend}></span>
+      </div>
+    </div>
+  </div>
+  <!-- ./col -->
+  <div class="col-lg-3 col-xs-6">
+    <div class="info-box">
+      <span class="info-box-icon bg-yellow"><i class="fa fa-reorder"></i></span>
+      <div class="info-box-content">
+        <span class="info-box-text"><a href="<{url action=topshop_ctl_sysstat_stattrade@index}>" class="small-box-footer">昨日订单</a></span>
+        <span class="info-box-number"><{$yesterday.new_trade|default:0}></span>
+      </div>
+    </div>
+  </div>
+  <!-- ./col -->
+  <div class="col-lg-3 col-xs-6">
+    <div class="info-box">
+      <span class="info-box-icon bg-red"><i class="fa fa-reorder"></i></span>
+      <div class="info-box-content">
+        <span class="info-box-text"><a href="<{url action=topshop_ctl_sysstat_stattrade@index}>" class="small-box-footer">昨日订单金额</a></span>
+        <span class="info-box-number"><{$yesterday.new_fee|cur}></span>
+      </div>
+    </div>
+  </div>
+  <!-- ./col -->
+  <div class="col-lg-3 col-xs-6">
+    <div class="info-box">
+      <span class="info-box-icon bg-green"><i class="fa fa-user"></i></span>
+      <div class="info-box-content">
+        <span class="info-box-text">
+          <a href="<{if $uvConfig}>#<{else}><{url action=topshop_ctl_sysstat_systraffic@index}><{/if}>" class="small-box-footer">昨日UV</a>
+        </span>
+        <span class="info-box-number"><{$uv|default:0}></span>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /.row -->
+
+

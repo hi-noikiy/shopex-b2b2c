@@ -1,0 +1,98 @@
+<?php
+return  array(
+    'columns'=>array(
+        'id' => array(
+            'type' => 'number',
+            'autoincrement' => true,
+            'required' => true,
+            'comment' => app::get('sysclearing')->_('ID'),
+            'deny_export' => true,
+        ),
+        'voucher_id' => array(
+            'type' => 'table:voucher@syspromotion',
+            'required' => true,
+            'comment' => app::get('sysclearing')->_('购物券id'),
+            'label' => app::get('sysclearing')->_('购物券名称'),
+            'in_list' => true,
+            'default_in_list'=>true,
+        ),
+        'oid'=>array(
+            'type' => 'bigint',
+            'unsigned' => true,
+            'required' => true,
+            'comment' => app::get('sysclearing')->_('子订单编号'),
+            'label' => app::get('sysclearing')->_('子订单编号'),
+        ),
+        'tid' => array(
+            'type' => 'table:trade@systrade',
+            'required' => true,
+            'comment' => app::get('sysclearing')->_('订单编号'),
+            'label' => app::get('sysclearing')->_('订单编号'),
+            'in_list' => true,
+            'default_in_list'=>true,
+        ),
+        'shop_id' => array(
+            'type' => 'table:shop@sysshop',
+            'required' => true,
+            'comment' => app::get('sysclearing')->_('所属商家'),
+            'label' => app::get('sysclearing')->_('所属商家'),
+            'in_list' => true,
+            'default_in_list'=>true,
+        ),
+        'pay_time' => array(
+            'type' => 'time',
+            'label' => app::get('sysclearing')->_('付款时间'),
+            'in_list' => true,
+            'default_in_list'=>true,
+        ),
+        'order_fee' => array(
+            'type' => 'money',
+            'comment' => app::get('sysclearing')->_('分摊之后的实付金额'),
+            'label' => app::get('sysclearing')->_('分摊之后的实付金额'),
+            'in_list' => true,
+            'default_in_list'=>true,
+        ),
+        'voucher_discount' => array(
+            'type' => 'money',
+            'default' => '0',
+            'in_list' => true,
+            'default_in_list'=>true,
+            'label' => app::get('systrade')->_('购物券分摊'),
+        ),
+        'subsidy_proportion' => array(
+          'type' => 'money',
+          'default' => '0',
+          'label' => app::get('sysclearing')->_('购物券补贴比例'),
+          'width' => 75,
+          'in_list' => true,
+        ),
+        'subsidy_fee' => array(
+            'type' => 'money',
+            'label' => app::get('sysclearing')->_('补贴金额'),
+            'in_list' => true,
+            'default_in_list'=>true,
+        ),
+        'type' => array(
+            'type' => array(
+                '1'=>'普通补贴',
+                '2'=>'退款补贴',
+            ),
+            'default'=>'1',
+            'label' => app::get('sysclearing')->_('类型'),
+            'in_list' => true,
+            'default_in_list'=>true,
+        ),
+        'subsidy_time' => array(
+            'type' => 'time',
+            'label' => app::get('sysclearing')->_('创建时间'),
+            'in_list' => true,
+            'default_in_list'=>true,
+        ),
+    ),
+    'primary' => 'id',
+    'index' => array(
+        'ind_shop_id' => ['columns' => ['shop_id']],
+        'ind_voucher_id' => ['columns' => ['voucher_id']],
+    ),
+    'comment' => app::get('sysclearing')->_('购物券补贴明细表'),
+);

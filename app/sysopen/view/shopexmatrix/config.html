@@ -1,0 +1,30 @@
+<div class="tabs-wrap">
+  <ul>
+    <li class="tab current"><span><{t}>Shopex矩阵开放配置<{/t}></span></li>
+  </ul>
+</div>
+<form method="post" action="?app=sysopen&ctl=admin_shopexmatrix&act=index" id="whitelist">
+  <div style="text-align:right;padding:3px 30px"></div>
+  <table class="tableform" style="width:99%;">
+    <tbody>
+      <tr>
+        <th><{t}>是否开启矩阵开放配置：<{/t}></th>
+        <td>
+          <{input type="bool" name='shopexmatrix_enable' value=$shopexmatrix_enable width=100 height=100}>
+          <span class="notice-inline"> <{t}>开启后商家可以申请开通Shopex体系内的OMS等产品<{/t}></span>
+        </td>
+      </tr>
+      <tr>
+        <th><{t}>Shopex矩阵节点ID：<{/t}></th>
+        <td>
+          <{if !$node_id}>无<{else}><{$node_id}><{/if}>
+          <span class="notice-inline"> <{t}>如果Shopex矩阵节点不存在，在开启的时候会默认申请<{/t}></span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="table-action">
+    <{button type="submit"  label=$___desktop="保存"|t:'site'}>
+  </div>
+</form>
+

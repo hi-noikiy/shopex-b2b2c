@@ -1,0 +1,486 @@
+<style>
+.inhide .search-shop {
+    -webkit-transform: translateY(-11rem);
+}
+
+.inhide .top-position {
+    -webkit-transform: translateY(0);
+}
+
+.search-shop {
+    height: 11rem;
+    margin: .5rem;
+    padding: .5rem;
+    overflow: hidden;
+    border: 1px solid #ccc;
+    -webkit-transform: translateY(0);
+    -webkit-transition: all 0.5s ease;
+}
+
+.search-shop .search-shop-info {
+    display: -webkit-box;
+}
+
+.search-shop .search-shop-logo {
+    display: -webkit-box;
+    -webkit-box-align: center;
+    -webkit-box-pack: center;
+    width: 12%;
+    background: #fff;
+}
+
+.search-shop .search-shop-logo:after {
+    display: block;
+    content: "";
+    padding-top: 100%;
+}
+
+.search-shop .search-shop-logo img {
+    display: block;
+    width: 100%;
+}
+
+.search-shop .search-shop-name {
+    -webkit-box-flex: 1;
+    padding-left: .5rem;
+    padding-top: .4rem;
+}
+
+.search-shop .search-shop-name a {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+    font-size: .9rem;
+    max-width: 90%;
+}
+
+.search-shop .search-shop-img {
+    height: 7.5rem;
+    overflow: hidden;
+}
+
+.search-shop .search-shop-img img {
+    width: 100%;
+    max-height: 100%;
+}
+
+.top-position {
+    -webkit-transform: translateY(12rem);
+    -webkit-transition: all 0.5s ease;
+}
+.coupon-icon {
+    position: relative;
+    width: 3.4rem;
+    height: 2.2rem;
+    background: #f0ad4e;
+    border-radius: 10px;
+}
+.coupon-icon::before{
+    content: "券";
+    color: #fff;
+    font-size: 1.2rem;
+    padding-left: .6rem;
+    line-height: 2.2rem;
+}
+.coupon-icon::after{
+    position: absolute;
+    right: 25%;
+    content: "";
+    color: #fff;
+    height: 2.2rem;
+    border: 1px dotted #fff;
+}
+.nodata-wrapper{
+    top: 9rem;
+}
+</style>
+<div id="offCanvasWrapper" class="shopex-off-canvas-wrap shopex-draggable shopex-slide-in">
+    <!--菜单部分-->
+    <aside id="offCanvasSide" class="shopex-off-canvas-right filters">
+        <{include file="topwap/voucher/filter.html" }>
+    </aside>
+    <div class="shopex-inner-wrap">
+        <!-- <section class="container"> -->
+            <div class="shopex-bar shopex-bar-nav">
+                <header class="home-header">
+                    <i class="icon-func bbc-icon bbc-icon-back shopex-action-back"></i>
+                    <div class="main"><{$voucher.promotion_tag}>(<{$voucher.voucher_name}>)</div>
+                    <a id="offCanvasBtn" href="#offCanvasSide" class="txt-func"><{t}>筛选<{/t}></a>
+                </header>
+            </div>
+            <section class="container no-fix">
+                <div id="offCanvasContentScroll" class="shopex-content shopex-scroll-wrapper bbc-pullrefresh-top">
+                    
+                        <div class="shopex-scroll">
+                            <div class="content-bottom-padded">
+                                <div class="promotion-header box-display">
+                                    <div class="box-item-flex1 shopex-col-xs-2">
+                                        <div class="coupon-icon"></div>
+                                        <span class="tag">可跨店</span>
+                                    </div>
+                                    <div class="box-item-flex1 shopex-col-xs-10">
+                                        <div class="promotion-name"> 满
+                                            <{$voucher.limit_money|cur}>减
+                                                <{$voucher.deduct_money|cur}>活动 
+                                        </div>
+                                        <div class="promotion-exp">购买以下商品即可参加此次活动</div>
+                                        <div class="promotion-exp">该券适用于
+                                            <{$voucher.used_platform}> 平台</div>
+                                        <div class="promotion-range">活动时间：
+                                            <{$voucher.canuse_start_time|cdate: 'FDATE'}> 至
+                                                <{$voucher.canuse_end_time|cdate: 'FDATE'}>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="section-white goods-filters">
+                                <div class="goods-filters-item active" data-order="">
+                                    <{t}>综合<{/t}>
+                                </div>
+                                <div class="goods-filters-item" data-order="sold_quantity">
+                                    <{t}>销量<{/t}>
+                                </div>
+                                <div class="goods-filters-item" data-order="price">
+                                    <{t}>价格<{/t}> <i class="goods-filters-order order-asc"></i></div>
+                                <div class="goods-filters-item" data-order="modified_time">
+                                    <{t}>最新<{/t}>
+                                </div>
+                                <div id="show_style" class="goods-show-style"><i class="bbc-icon bbc-icon-thumb"></i></div>
+                            </div>
+                            <{if $items}>
+                            <ul class="shopex-table-view pro-list-grid goods-list">
+                                <{include file="topwap/voucher/itemlist.html" }>
+                            </ul>
+                            <{else}>
+                            <div class="voucher-empty">
+                                <{include file="topwap/empty/item.html" }>
+                            </div>
+                            <ul class="shopex-table-view pro-list-grid goods-list">
+                            </ul>
+                            <{/if}>
+                        </div>
+                        
+                </div>
+            </section>
+        <!-- </section> -->
+        <!-- off-canvas backdrop -->
+        <div class="shopex-off-canvas-backdrop"></div>
+    </div>
+</div>
+<script>
+shopex.init({
+    swipeBack: false,
+});
+//侧滑容器父节点
+var offCanvasWrapper = shopex('#offCanvasWrapper');
+//主界面容器
+var offCanvasInner = offCanvasWrapper[0].querySelector('.shopex-inner-wrap');
+//菜单容器
+var offCanvasSide = document.getElementById("offCanvasSide");
+//Android暂不支持整体移动动画
+// if (!shopex.os.android) {
+//   document.getElementById("move-togger").classList.remove('shopex-hidden');
+//   var spans = document.querySelectorAll('.android-only');
+//   for (var i = 0, len = spans.length; i < len; i++) {
+//     spans[i].style.display = "none";
+//   }
+// }
+//移动效果是否为整体移动
+var moveTogether = false;
+//侧滑容器的class列表，增加.shopex-slide-in即可实现菜单移动、主界面不动的效果；
+var classList = offCanvasWrapper[0].classList;
+//变换侧滑动画移动效果；
+shopex('.shopex-input-group').on('change', 'input', function() {
+    if (this.checked) {
+        offCanvasSide.classList.remove('shopex-transitioning');
+        offCanvasSide.setAttribute('style', '');
+        classList.remove('shopex-slide-in');
+        classList.remove('shopex-scalable');
+        switch (this.value) {
+            case 'main-move':
+                if (moveTogether) {
+                    //仅主内容滑动时，侧滑菜单在off-canvas-wrap内，和主界面并列
+                    offCanvasWrapper[0].insertBefore(offCanvasSide, offCanvasWrapper[0].firstElementChild);
+                    moveTogether = false;
+                }
+                break;
+            case 'main-move-scalable':
+                if (moveTogether) {
+                    //仅主内容滑动时，侧滑菜单在off-canvas-wrap内，和主界面并列
+                    offCanvasWrapper[0].insertBefore(offCanvasSide, offCanvasWrapper[0].firstElementChild);
+                }
+                classList.add('shopex-scalable');
+                break;
+            case 'menu-move':
+                classList.add('shopex-slide-in');
+                break;
+            case 'all-move':
+                moveTogether = true;
+                //整体滑动时，侧滑菜单在inner-wrap内
+                offCanvasInner.insertBefore(offCanvasSide, offCanvasInner.firstElementChild);
+                break;
+        }
+        offCanvasWrapper.offCanvas().refresh();
+    }
+});
+// document.getElementById('offCanvasShow').addEventListener('tap', function() {
+//   offCanvasWrapper.offCanvas('show');
+// });
+var hasnodata = false;
+document.getElementById('offCanvasHide').addEventListener('tap', function() {
+    offCanvasWrapper.offCanvas('close');
+
+    count = 1;
+    var reqdata = activeFilter;
+    var brandIds = [];
+    var catIds = [];
+    var propIds = [];
+    reqdata['pages'] = count;
+    $('.filters-options span.checked').each(function() {
+        var checkedFiltersOptions = $(this).hasClass('checked');
+        var name = $(this).data('name');
+        if (name == "brand_id") {
+            brandIds.push($(this).data('value'));
+        } else if (name == "cat_id") {
+            catIds.push($(this).data('value'));
+        } else if (name == "prop_index") {
+            propIds.push($(this).data('value'));
+        } else {
+            reqdata[name] = $(this).data('value');
+        }
+    });
+
+    if (brandIds.length > 0) {
+        reqdata["brand_id"] = brandIds.join(',');
+    } else {
+        delete reqdata["brand_id"];
+    }
+
+    if (catIds.length > 0) {
+        reqdata["cat_id"] = catIds.join(',');
+    } else {
+        delete reqdata["cat_id"];
+    }
+
+    if (propIds.length > 0) {
+        reqdata["prop_index"] = propIds.join(',');
+    } else {
+        delete reqdata["prop_index"];
+    }
+
+    getList(reqdata, function(rs) {
+        hasnodata = $('#offCanvasContentScroll').find('.nodata-wrapper').length > 0 ? true : false;
+        if (rs.indexOf('nodata-wrapper') > 0) {
+            if (!hasnodata) {
+                listwrapper.html('');
+                $('#offCanvasContentScroll').append(rs);
+            }
+        } else {
+            if (hasnodata) {
+                $('.nodata-wrapper').remove();
+            }
+            listwrapper.html(rs);
+        }
+        shopex('#offCanvasContentScroll').pullRefresh().scrollTo(0, 0);
+        shopex('#offCanvasContentScroll').pullRefresh().enablePullupToRefresh();
+    });
+});
+
+$('.reset-filters-options').on('tap', function() {
+    $('.filters-options span').removeClass('checked');
+    $('.filters-options .options-choose').html("");
+    activeFilter = JSON.parse('<{$activeFilter|json_encode}>');
+    var catId = activeFilter['cat_id'];
+    if (catId != "") {
+        var chkFilter = $('.filters-options').find('span[data-value="' + catId + '"]');
+        chkFilter.addClass('checked');
+        chkFilter.parent().find('.options-choose').html(chkFilter.html());
+    }
+});
+
+//主界面和侧滑菜单界面均支持区域滚动；
+shopex('#offCanvasSideScroll').scroll();
+//实现ios平台的侧滑关闭页面；
+if (shopex.os.plus && shopex.os.ios) {
+    offCanvasWrapper[0].addEventListener('shown', function(e) { //菜单显示完成事件
+        plus.webview.currentWebview().setStyle({
+            'popGesture': 'none'
+        });
+    });
+    offCanvasWrapper[0].addEventListener('hidden', function(e) { //菜单关闭完成事件
+        plus.webview.currentWebview().setStyle({
+            'popGesture': 'close'
+        });
+    });
+}
+
+var flag = localStorage.getItem('list_type');
+if (flag && flag == 'gallery') {
+    $('#show_style .bbc-icon').addClass('bbc-icon-thumb').removeClass('bbc-icon-gallery');
+    $('.goods-list').addClass('pro-list-grid').removeClass('pro-list-normal');
+} else if (flag && flag == 'thumb') {
+    $('#show_style .bbc-icon').addClass('bbc-icon-gallery').removeClass('bbc-icon-thumb');
+    $('.goods-list').addClass('pro-list-normal').removeClass('pro-list-grid');
+}
+
+$('#show_style').on('tap', function() {
+    if ($(this).find('.bbc-icon').hasClass('bbc-icon-gallery')) {
+        $(this).find('.bbc-icon').removeClass('bbc-icon-gallery').addClass('bbc-icon-thumb');
+        $('.goods-list').addClass('pro-list-grid').removeClass('pro-list-normal');
+        shopex('#offCanvasContentScroll').pullRefresh().scrollTo(0, 0);
+        localStorage.setItem('list_type', 'gallery');
+    } else if ($(this).find('.bbc-icon').hasClass('bbc-icon-thumb')) {
+        $(this).find('.bbc-icon').removeClass('bbc-icon-thumb').addClass('bbc-icon-gallery');
+        $('.goods-list').addClass('pro-list-normal').removeClass('pro-list-grid');
+        shopex('#offCanvasContentScroll').pullRefresh().scrollTo(0, 0);
+        localStorage.setItem('list_type', 'thumb');
+    }
+});
+
+var count = 1;
+var totalpage = "<{$pagers.total}>";
+var listwrapper = $('.goods-list');
+var order;
+var catFlag = "<{$catFlag}>";
+$('.goods-filters-item').on('tap', function() {
+    $(this).addClass('active').siblings().removeClass('active');
+    order = $(this).data('order');
+    var filterItem = $(this).find('.goods-filters-order')
+    if (filterItem && $(this).hasClass('active') && filterItem.hasClass('order-desc')) {
+        filterItem.removeClass('order-desc').addClass('order-asc');
+        order = order ? order + ' ' + 'desc' : '';
+    } else if (filterItem && $(this).hasClass('active') && filterItem.hasClass('order-asc')) {
+        filterItem.removeClass('order-asc').addClass('order-desc');
+        order = order ? order + ' ' + 'asc' : '';
+    }
+
+    count = 1;
+    var param = {
+        'pages': count,
+        'orderBy': order
+    }
+    var reqdata = $.extend(activeFilter, param);
+    getList(reqdata, function(rs) {
+        listwrapper.html(rs);
+        shopex('#offCanvasContentScroll').pullRefresh().scrollTo(0, 0);
+        shopex('#offCanvasContentScroll').pullRefresh().enablePullupToRefresh();
+    });
+});
+
+$('.filters-options ').on('tap', 'span', function() {
+    $(this).addClass('checked').siblings('span').removeClass('checked');
+    $(this).parent().find('label').html($(this).text());
+})
+
+shopex.init({
+    swipeBack: false,
+    pullRefresh: {
+        container: '#offCanvasContentScroll',
+        down: {
+            callback: pulldownRefresh
+        },
+        up: {
+            contentrefresh: '正在加载...',
+            callback: pullupRefresh
+        }
+    },
+    swipe: true,
+    dobluetap: true,
+    longtap: true
+});
+
+var activeFilter = JSON.parse('<{$activeFilter|json_encode}>');
+
+/**
+ * 下拉刷新具体业务实现
+ */
+function pulldownRefresh() {
+    setTimeout(function() {
+        count = 1;
+        var param = {
+            'pages': count,
+            'orderBy': order
+        }
+        var reqdata = $.extend(activeFilter, param);
+        getList(reqdata, function(rs) {
+            if (rs.indexOf('nodata-wrapper') > 0) {
+                if (!hasnodata) {
+                    listwrapper.html('');
+                    $('#offCanvasContentScroll').append(rs);
+                }
+            } else {
+                listwrapper.html(rs);
+            }
+            shopex('#offCanvasContentScroll').pullRefresh().endPulldownToRefresh()
+                // shopex('#offCanvasContentScroll').pullRefresh().enablePullupToRefresh(); //refresh completed
+        });
+    }, 1000);
+}
+/**
+ * 上拉加载具体业务实现
+ */
+function pullupRefresh() {
+    setTimeout(function() {
+        shopex('#offCanvasContentScroll').pullRefresh().endPullupToRefresh((++count > totalpage)); //参数为true代表没有更多数据了。
+        var param = {
+            'pages': count,
+            'orderBy': order
+        }
+        var reqdata = $.extend(activeFilter, param);
+        getList(reqdata, function(rs) {
+            if (rs.indexOf('nodata-wrapper') > 0) {
+                if (!hasnodata) {
+                    listwrapper.html('');
+                    $('#offCanvasContentScroll').append(rs);
+                }
+            } else {
+                listwrapper.append(rs);
+            }
+        });
+    }, 1000);
+}
+
+function getList(param, callback) {
+    hasnodata = $('#offCanvasContentScroll').find('.nodata-wrapper').length > 0 ? true : false;
+    $.ajax({
+        url: '<{url action=topwap_ctl_voucher@ajaxGetVoucherItem}>',
+        type: 'get',
+        dataType: 'html',
+        data: param,
+        success: callback
+    });
+};
+
+$('.shopex-table-view').on('tap', 'li', function() {
+    var link = $(this).data('link');
+    location.href = link;
+});
+
+$("#offCanvasContentScroll").on('swipeup', function() {
+    $('.shopex-inner-wrap').addClass('inhide');
+
+}).on('swipedown', function() {
+    $('.shopex-inner-wrap').removeClass('inhide');
+});
+
+$('.filters-options').on('tap', '.action-all', function() {
+    $(this).toggleClass('shopex-icon-arrowdown').toggleClass('shopex-icon-arrowup');
+    if ($(this).hasClass('shopex-icon-arrowdown')) {
+        $(this).parents('.filters-options').css('height', '5rem');
+    } else {
+        $(this).parents('.filters-options').css('height', 'auto');
+    }
+});
+
+(function initChooseOptions() {
+    $('.filters-options').each(function() {
+        var filters = [];
+        $(this).find('span.checked').each(function() {
+            filters.push($(this).text());
+        });
+        $(this).find('.options-choose').html(filters.join(';'));
+    });
+}());
+</script>

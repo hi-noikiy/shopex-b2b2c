@@ -1,0 +1,221 @@
+<form id="voucher_form" name="voucher_form" action="?app=syspromotion&ctl=admin_voucher&act=save"  method="POST" >
+  <input type="hidden" name="ruledata[voucher_id]" value="<{$ruleInfo.voucher_id}>">
+  <div class="tableform">
+    <div class="division">
+      <table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <th><em><font color='red'>*</font></em><{t}>购物券名称：<{/t}></th>
+          <td><{input type="text" name="ruledata[voucher_name]" style="width:120px" required="true" rows="50" maxlength="20" vtype='required' value=$ruleInfo.voucher_name}></td> </tr>
+        <tr>
+          <th><em><font color='red'>*</font></em><{t}>购物券描述：<{/t}></th>
+          <td><{input type="textarea"  style=" width:50%" class="inputstyle" name="ruledata[voucher_desc]" value=$ruleInfo.voucher_desc rows="6"}></td>
+        </tr>
+        <tr>
+          <th><em><font color='red'>*</font></em><{t}>购物券金额：<{/t}></th>
+          <td>
+            满&nbsp;<{input type="text" class="x-input" size=8 name="ruledata[limit_money]" value=$ruleInfo.limit_money}>
+            减&nbsp;<{input type="text" size=8 name="ruledata[deduct_money]" value=$ruleInfo.deduct_money}>
+          </td>
+        </tr>
+        <tr>
+          <th><em><font color='red'>*</font></em><{t}>平台补贴百分比：<{/t}></th>
+          <td><{input type="text" name="ruledata[subsidy_proportion]" size=8 required="true" maxlength="20" vtype='required' value=$ruleInfo.subsidy_proportion}>&nbsp;%</td>
+        </tr>
+        <tr>
+          <th><em><font color='red'>*</font></em><{t}>购物券总数量：<{/t}></th>
+          <td>
+            <{input type="text" size=8 name="ruledata[max_gen_quantity]" value=$ruleInfo.max_gen_quantity}>
+          </td>
+        </tr>
+        <tr>
+          <th><em><font color='red'>*</font><{t}>使用平台：<{/t}></th>
+            <td>
+              <label><input type="checkbox" name="ruledata[used_platform]_all" id="ruledata[used_platform]_all">全选</label>&nbsp;&nbsp;
+              <{foreach from=$platform item=item key=id}>
+              <label><input type="checkbox" vtype="" name="ruledata[used_platform][]" value="<{$id}>" <{if $item.checked}> checked<{/if}> class="act-custom"> <{$item.name}></label>
+              <{/foreach}>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="division">
+        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <th><em><font color='red'>*</font></em><{t}>报名时间：<{/t}></th>
+            <td>
+              <{input type="time" name="apply_begin_time" value=$ruleInfo.apply_begin_time vtype="required" size=10}>
+              &nbsp;到&nbsp;
+              <{input type="time" name="apply_end_time" value=$ruleInfo.apply_end_time vtype="required" size=10}>
+            </td>
+          </tr>
+
+          <{if $ruleInfo.shoptype}>
+          <tr>
+            <th><{t}>可报名的店铺类型：<{/t}></th>
+            <td>
+              <label><input type="checkbox" name="ruledata[shoptype]_all" id="ruledata[shoptype]_all">全选</label>&nbsp;&nbsp;
+              <{foreach from=$shoptype item=item key=id}>
+              <label><input type="checkbox" vtype="" name="ruledata[shoptype][]" value="<{$id}>" <{if $item.checked}> checked<{/if}> class="act-custom"> <{$item.name}></label>
+              <{/foreach}>
+            </td>
+          </tr>
+          <{else}>
+          <tr>
+            <th><{t}>可报名的店铺类型：<{/t}></th>
+            <td>
+              <label><input type="checkbox" name="ruledata[shoptype]_all" id="ruledata[shoptype]_all">全选</label>&nbsp;&nbsp;
+              <{foreach from=$shoptype item=item key=id}>
+              <label><input type="checkbox" vtype="" name="ruledata[shoptype][]" value="<{$id}>" class="act-custom"> <{$item.name}></label>
+              <{/foreach}>
+            </td>
+          </tr>
+          <{/if}>
+          <{if $ruleInfo.limit_cat}>
+          <tr>
+            <th><em><font color='red'>*</font></em><{t}>选择参加购物券的类目：<{/t}></th>
+            <td>
+              <label><input type="checkbox" name="ruledata[limit_cat]_all" id="ruledata[limit_cat]_all">全选</label>&nbsp;&nbsp;
+              <{foreach from=$cat item=item key=id}>
+              <label><input type="checkbox" vtype="" name="ruledata[limit_cat][]" value="<{$id}>" <{if $item.checked}> checked<{/if}> class="act-custom"> <{$item.cat_name}></label>
+              <{/foreach}>
+            </td>
+          </tr>
+          <{else}>
+          <tr>
+            <th><em><font color='red'>*</font></em><{t}>选择参加购物券的类目：<{/t}></th>
+            <td>
+              <label><input type="checkbox" name="ruledata[limit_cat]_all" id="ruledata[limit_cat]_all">全选</label>&nbsp;&nbsp;
+              <{foreach from=$cat item=item key=id}>
+              <label><input type="checkbox" vtype="" name="ruledata[limit_cat][]" value="<{$id}>" class="act-custom"> <{$item.cat_name}></label>
+              <{/foreach}>
+            </td>
+          </tr>
+          <{/if}>
+        </table>
+      </div>
+
+      <div class="division">
+        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <th><em><font color='red'>*</font></em><{t}>购物券用户领取限制数量：<{/t}></th>
+            <td>
+              <{input type="text" class="x-input" size=8 name="ruledata[userlimit_quantity]" value=$ruleInfo.userlimit_quantity}>
+            </td>
+          </tr>
+          <tr>
+            <th><em><font color='red'>*</font></em><{t}>领取时间：<{/t}></th>
+            <td>
+              <{input type="time" name="cansend_start_time" value=$ruleInfo.cansend_start_time vtype="required" size=10 }>
+              &nbsp;到&nbsp;
+              <{input type="time" name="cansend_end_time" value=$ruleInfo.cansend_end_time vtype="required" size=10 }>
+            </td>
+          </tr>
+          <tr>
+            <th><em><font color='red'>*</font></em><{t}>有效时间：<{/t}></th>
+            <td>
+              <{input type="time" name="canuse_start_time" value=$ruleInfo.canuse_start_time vtype="required" size=10 }>
+              &nbsp;到&nbsp;
+              <{input type="time" name="canuse_end_time" value=$ruleInfo.canuse_end_time vtype="required" size=10 }>
+            </td>
+          </tr>
+          <tr>
+            <th><{t}>适用会员：<{/t}></th>
+            <td>
+              <label><input type="checkbox" name="ruledata[valid_grade]_all" id="ruledata[valid_grade]_all">全选</label>&nbsp;&nbsp;
+              <{foreach from=$valid_grade item=item key=id}>
+              <label><input type="checkbox" vtype="" name="ruledata[valid_grade][]" value="<{$item.grade_id}>" <{if $item.checked}> checked<{/if}> class="act-custom"> <{$item.grade_name}></label>
+              <{/foreach}>
+            </td>
+          </tr>
+        </table>
+      </div>
+  </div>
+
+  <table cellspacing="0" cellpadding="0" class="table-action">
+    <tbody><tr valign="middle">
+        <td>
+          <br/>
+          <{button type="submit" id='brand-form-submit' label="发布并关闭窗口"|t:'syspromotion'}>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</form>
+
+<script>
+
+  (function(){
+    var _form = $('voucher_form');
+    var btn =$('brand-form-submit');
+    var finder = finderGroup['<{$env.get._finder.finder_id}>'];
+
+    _form.store('target',{
+      onSuccess:function(response){
+        var hash_res_obj = JSON.decode(response);
+
+        if (hash_res_obj.success != undefined && hash_res_obj.success != ""){
+          try{
+            var _dialogIns = btn.getParent('.dialog').retrieve('instance');
+          }catch(e){}
+
+          if(_dialogIns){
+            _dialogIns.close();
+            window.finderGroup['<{$env.get._finder.finder_id}>'].refresh();
+          }
+        }
+      }
+    });
+
+    btn.addEvent('click',function(){
+      _form.fireEvent('submit',{stop:$empty});
+    });
+
+    //全选
+    function selectAll(id, inputName){
+      name = 'input[name="' + inputName + '"]';
+      $$(name).each(function(item) {
+        if($(id).checked) {
+          item.checked = 'checked';
+        } else {
+          item.checked = '';
+        }
+      });
+
+      $$(name).each(function(item) {
+        item.addEvent('click', function() {
+          if(item.checked) {
+            var i = 0;
+            $$(name).each(function(chk) {
+              if(chk.checked == '') {
+                i += 1;
+              }
+            });
+            if(i == 0) {
+              $(id).checked = 'checked';
+            }
+          } else {
+            $(id).checked = '';
+          }
+        });
+      });
+    }
+
+    $('ruledata[valid_grade]_all').addEvent('click', function() {
+      selectAll('ruledata[valid_grade]_all', 'ruledata[valid_grade][]');
+    });
+
+    $('ruledata[used_platform]_all').addEvent('click', function() {
+      selectAll('ruledata[used_platform]_all', 'ruledata[used_platform][]');
+    });
+
+    $('ruledata[shoptype]_all').addEvent('click', function() {
+      selectAll('ruledata[shoptype]_all', 'ruledata[shoptype][]');
+    });
+
+    $('ruledata[limit_cat]_all').addEvent('click', function() {
+      selectAll('ruledata[limit_cat]_all', 'ruledata[limit_cat][]');
+    });
+
+  })();
+</script>
+

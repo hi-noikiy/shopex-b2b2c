@@ -1,0 +1,23 @@
+<desktop>
+
+    <permissions>
+        <permission id="settlement" display='true' parent="0" workground='sysfinance.workground.finance'>结算列表</permission>
+        <permission id="vouchersubsidy" display='true' parent="0" workground='sysfinance.workground.finance'>购物券补贴列表</permission>
+        <permission id="settlement_confirm" display='true' parent="settlement" workground='sysfinance.workground.finance'>确认结算单</permission>
+    </permissions>
+
+    <workground name="财务" id="sysfinance.workground.finance" controller="admin_settlement" action="index" order='90'>
+        <menugroup name="结算管理">
+            <menu controller='admin_settlement' action='index' permission='settlement' display='true' order="10" >结算汇总</menu>
+            <menu controller='admin_settlement' action='detail' permission='settlement' display='true' order="20" >结算明细</menu>
+            <menu controller='admin_settlement' action='confirm' permission='settlement_confirm' display='false' order="30" >确认结算单</menu>
+            <menu controller='admin_settlement' action='doConfirm' permission='settlement_confirm' display='false' order="40" >确认结算单</menu>
+        </menugroup>
+        <menugroup name="购物券补贴">
+            <menu controller='admin_subsidy_voucher' action='index' permission='vouchersubsidy' display='true' order="20" >购物券补贴汇总</menu>
+            <menu controller='admin_subsidy_voucher' action='detail' permission='vouchersubsidy' display='true' order="20" >购物券补贴明细</menu>
+            <menu controller='admin_subsidy_voucher' action='confirm' permission='vouchersubsidy' display='false' order="30" >确认购物券补贴单</menu>
+            <menu controller='admin_subsidy_voucher' action='doConfirm' permission='vouchersubsidy' display='false' order="40" >确认购物券补贴单</menu>
+        </menugroup>
+    </workground>
+</desktop>

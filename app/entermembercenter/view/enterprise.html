@@ -1,0 +1,28 @@
+<div class="notice"><{t}>ShopEx企业账号是客户享受ShopEx服务的唯一标识，它记录了您的商家信息，购买服务记录等重要信息。
+您还可以通过登录my.shopex.cn，进行自助服务。请妥善保管好的密码。在你的系统遇到问题时，可以通过此平台和我们进行在线交流。<{/t}></div>
+
+<div class="tableform tableform-tabs">
+<{tabber}>
+    <{tab name="企业帐号信息"|t:'entermembercenter'}>
+        <{if $entid}>
+        <div class="clear division">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <th><{t}>当前企业帐号:<{/t}></th>
+                <td><{$entid}></td>
+              </tr>
+			  <tr>
+                <th><{t}>当前登录账号:<{/t}></th>
+                <td><{$ent_loginname}></td>
+              </tr>
+            </table>
+            </div>
+        <{else}>
+            <div class="notice">
+			<{t}>
+            提示：只有在网络服务器安装的ShopEx商店系统才拥有证书功能，您的商店系统由于是在本地安装，所以无ShopEx证书，无法使用ShopEx证书下载和上传功能。如果您将本地的商店系统迁移至服务器，则会自动获得ShopEx证书。<{/t}>
+            </div>
+        <{/if}>
+    <{/tab}>
+<{/tabber}>
+</div>

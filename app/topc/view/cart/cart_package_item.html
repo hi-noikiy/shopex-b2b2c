@@ -1,0 +1,63 @@
+
+<td colspan="3">
+  <input type="checkbox" class="cart-checked-item" name="cart_id[<{$goods.cart_id}>]" value="1" <{if $goods.is_checked=='1'}>checked="true"<{/if}> <{if !$goods.valid}>disabled <{/if}>>
+  <input type="checkbox" class="check-item hide" name="cart_id[<{$goods.cart_id}>]" value="0" <{if $goods.is_checked=='0'}>checked="true"<{/if}> <{if !$goods.valid}>disabled <{/if}>>
+  <span class="item-describe-tag">组合促销</span><{$goods.title}>
+</td>
+<td class="text-center">
+  <{$goods.price.price|cur}>
+</td>
+<td class="text-center">
+  <!--div class="number is-stockout"-->
+  <span class="number">
+    <{if $goods.valid }>
+    <span class="number-increase-decrease">
+      <a href="javascript:void(0);" class="btn btn-flat decrease" data-min="1" data-cart-id='<{$goods.cart_id}>'>-</a>
+      <input type="text" value="<{$goods.quantity}>" name="cart_num[<{$goods.cart_id}>]" class="cart-num" min="1" max="<{$goods.store}>">
+      <a href="javascript:void(0);" class="btn btn-flat increase" data-max="<{$goods.store}>" data-cart-id="<{$goods.cart_id}>">+</a>
+    </span>
+    <!--div class="number-stockout">限购6件</div-->
+    <{else}>
+    <{t}>已失效<{/t}>
+    <{/if}>
+  </span>
+</td>
+<td class="text-center">
+  <span><{$goods.price.total_price|cur}></span>
+</td>
+<td class="col-operate">
+  <div><a href="javascript:void(0);" rel="_request">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></div>  
+  <div><a href="javascript:void(0);" class="delete-item" data-cart-id="<{$goods.cart_id}>">删除</a></div>
+</td>
+<!-- 组合促销的商品-start -->
+<{foreach from=$goods.skuList item=skuList}>
+<tr class="cart-row  <{if !$goods.valid}>is-disabled<{/if}>">
+  <td class="bd-t-0"></td>
+  <td>
+    <div class="table-goods-pic">
+    <{if $skuList.image_default_id }>
+    <img width="64" height="64" src="<{$skuList.image_default_id|storager:t}>">
+    <{else}>
+    <img width="64" height="64" src="<{$defaultImageId.T.default_image}>">
+    <{/if}>
+    </div>
+  </td>
+  <td>
+      <div>
+        <a class="cart-goods-name" href="<{url action=topc_ctl_item@index item_id=$skuList.item_id }>" >
+        <{$skuList.title}>
+      </a>
+      </div>
+      <span><{if $skuList.spec_info}><{$skuList.spec_info}><{/if}></span>
+  </td>
+  <td>
+    <{$skuList.price.price|cur}>&nbsp;(<del><{$skuList.price.old_price|cur}></del>)
+  </td>
+  <td></td>
+  <td></td>
+  <td class="col-operate">
+    <div><a href="<{url action=topc_ctl_collect@ajaxFav}>" data-ajax-data="item_id=<{$skuList.item_id}>" rel="_request">收藏</a></div>
+  </td>
+</tr>
+<{/foreach}>
+<!-- 组合促销的商品-end -->

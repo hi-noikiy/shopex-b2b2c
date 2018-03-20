@@ -1,0 +1,71 @@
+<div class="tableform">
+  <form id="push_all_notify_form" action="?app=sysapp&ctl=admin_push_clients&act=pushAllDo"  method="post">
+    <div class="division">
+      <table width="100%" cellspacing="0" cellpadding="0" border="0">
+        <tbody>
+          <tr>
+            <td><{t}>标题：<{/t}></td>
+            <td><{input type="text" vtype="required"  name="title" }></td>
+          </tr>
+          <tr>
+            <td><{t}>内容：<{/t}></td>
+            <td><{input type="text" vtype="required"  name="message" }></td>
+          </tr>
+          <!--
+          <tr>
+            <td><{t}>开启功能：<{/t}></td>
+            <td><{input type="checkbox" name="withParams" value='true' id='with_params_checkbox' }>启用消息功能</td>
+          </tr>
+          <tr>
+            <td><{t}>功能选项：<{/t}></td>
+            <td>
+              <table>
+                <tr>
+                  <td>
+                    <input type="radio" name="params[type]" value='jump_to_link' checked >跳转链接
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td><{t}>链接选择：<{/t}></td>
+            <td>
+              <{input type="applink" name="params[link]" linktypename="params[linktype]"}>
+            </td>
+          </tr>
+          -->
+        </tbody>
+      </table>
+    </div>
+
+    <table cellspacing="0" cellpadding="0" class="table-action">
+      <tbody>
+        <tr valign="middle">
+          <td>
+            <{button label="发送消息"|t:'sysshop' class="btn-primary" type="button" }>
+            <{button label="关  闭"|t:'content' class="btn-secondary" type="button" isclosedialogbtn="1"}>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </form>
+</div>
+<script>
+  $$('.btn-primary').addEvent('click',function(event){
+
+    var _form=$('push_all_notify_form');
+
+    var target={
+      onComplete:function(rs){
+        if(rs&&!!JSON.decode(rs).success){
+          window.finderGroup['<{$env.get.finder_id}>'].refresh();
+          _form.getParent('.dialog').retrieve('instance').close();
+        }
+      }};
+    _form.store('target',target);
+    _form.fireEvent('submit',new Event(event));
+
+  });
+</script>
+

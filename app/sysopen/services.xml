@@ -1,0 +1,8 @@
+<services>
+    <service id="desktop_finder.sysopen_mdl_keys">
+        <class>sysopen_finder_keys</class>
+    </service>
+    <service id="openapi.shopex_product_bind">
+        <class>sysopen_shopex_bind</class>
+    </service>
+</services>

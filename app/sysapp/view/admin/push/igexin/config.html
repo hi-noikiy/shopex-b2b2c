@@ -1,0 +1,55 @@
+<div class="tableform">
+  <form id="igexin_config_form" action="?app=sysapp&ctl=admin_push_igexin&act=saveConfig"  method="post">
+    <div class="division">
+      <table width="100%" cellspacing="0" cellpadding="0" border="0">
+        <tbody>
+          <tr>
+            <th><{t}>AppId：<{/t}></th>
+            <td><{input type="text" vtype="required"  name="igexin[appid]" value=$igexin.appid}></td>
+          </tr>
+          <tr>
+            <th><{t}>AppKey：<{/t}></th>
+            <td><{input type="text" vtype="required"  name="igexin[appkey]" value=$igexin.appkey}></td>
+          </tr>
+          <tr>
+            <th><{t}>AppSecret：<{/t}></th>
+            <td><{input type="text" vtype="required"  name="igexin[appsecret]" value=$igexin.appsecret}></td>
+          </tr>
+          <tr>
+            <th><{t}>MasterSecret：<{/t}></th>
+            <td><{input type="text" vtype="required"  name="igexin[mastersecret]" value=$igexin.mastersecret}></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <table cellspacing="0" cellpadding="0" class="table-action">
+      <tbody>
+        <tr valign="middle">
+          <td>
+            <{button label="保存设置"|t:'sysshop' class="btn-primary" type="button" }>
+            <{button label="关  闭"|t:'content' class="btn-secondary" type="button" isclosedialogbtn="1"}>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </form>
+</div>
+<script>
+  $$('.btn-primary').addEvent('click',function(event){
+
+    var _form=$('igexin_config_form');
+
+    var target={
+      onComplete:function(rs){
+        if(rs&&!!JSON.decode(rs).success){
+          window.finderGroup['<{$env.get.finder_id}>'].refresh();
+          _form.getParent('.dialog').retrieve('instance').close();
+        }
+      }};
+    _form.store('target',target);
+    _form.fireEvent('submit',new Event(event));
+
+  });
+</script>
+

@@ -1,0 +1,483 @@
+<aside class="control-sidebar control-sidebar-light" style="height: 100%;">
+  <!-- Create the tabs -->
+  <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
+    <li class=""><a href="#">筛选</a></li>
+    <li class=""><a href="#" data-toggle="control-sidebar"><i class="glyphicon glyphicon-remove"></i></a></li>
+  </ul>
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <form action="<{url action=topshop_ctl_item@searchItem}>" method="post" id="search-form">
+      <input type="hidden" value="<{$filter.status}>" id="filter_status">
+      <input type="hidden" value="<{$filter.status}>" id="filter_status">
+      <div class="box-body">
+        <!-- Date range -->
+        <div class="form-group">
+          <label>发布终端：</label>
+          <select name="use_platform" class="form-control select-reset">
+            <option value="-1">请选择</option>
+            <option value="0" <{if $use_platform=='0'}>selected<{/if}>>pc端和wap端</option>
+            <option value="1" <{if $use_platform=='1'}>selected<{/if}>>pc端</option>
+            <option value="2" <{if $use_platform=='2'}>selected<{/if}>>wap端</option>
+          </select>
+        </div>
+        <!-- /.form group -->
+
+        <!-- text input -->
+        <div class="form-group">
+          <label>商品名称：</label>
+          <input type="text" name="item_title" class="form-control" <{if $search_keywords}> value="<{$search_keywords|escape:"html"}>" <{/if}> placeholder="请输入 ...">
+        </div>
+        <div class="form-group">
+          <label>商品货号：</label>
+          <input type="text" name="item_no" class="form-control" value="<{$item_no|escape:"html"}>" placeholder="请输入 ...">
+        </div>
+
+        <!-- select -->
+        <div name="status" class="form-group">
+          <label>商品分类：</label>
+          <select name="item_cat" class="form-control select-reset">
+            <option value="-1">请选择</option>
+            <{foreach from=$item_cat item=cat_item}>
+            <option value="<{$cat_item.cat_id}>" <{if $cat_item.cat_id==$item_cat_id}>selected<{/if}>><{$cat_item.cat_name}></option>
+            <{/foreach}>
+          </select>
+        </div>
+
+        <!-- text input -->
+        <div class="form-group">
+          <label>价格区间：</label>
+          <div class="row">
+            <div class="col-xs-6">
+              <input type="text" class="form-control" value="<{$min_price|escape:"html"}>" name="min_price">
+            </div>
+            <div class="col-xs-6">
+              <input type="text" class="form-control" value="<{$max_price|escape:"html"}>" name="max_price">
+            </div>
+          </div>
+        </div>
+
+        <!-- select -->
+        <div class="form-group">
+          <label>运费模板：</label>
+          <select name="dlytmpl_id" class="form-control select-reset">
+            <option value="-1">请选择</option>
+            <{foreach from=$dlytmpl.data item=dlytmpl}>
+            <option value="<{$dlytmpl.template_id}>" <{if $dlytmpl.template_id==$dlytmpl_id}>selected<{/if}>><{$dlytmpl.name}></option>
+            <{/foreach}>
+          </select>
+        </div>
+
+      </div>
+      <!-- /.box-body -->
+      <div class="box-footer">
+        <button id="reset-form" type="button" class="btn btn-default">重置</button>
+        <button type="submit" class="btn btn-info pull-right">搜索</button>
+      </div>
+      <!-- /.box-footer -->
+    </form>
+  </div>
+</aside>
+
+<div class="row">
+  <div class="col-xs-12 col-sm-12">
+    <div class="nav-tabs-custom" id="tabs">
+      <ul class="nav nav-tabs">
+        <{if !$is_search}>
+        <li role="presentation" class="<{if !$status }>active<{/if}>"><a href="<{url action=topshop_ctl_item@itemList}>">全部</a></li>
+        <li role="presentation" class="<{if $status=='onsale'}>active<{/if}>"><a href="<{url action=topshop_ctl_item@itemList status=onsale}>">上架中</a></li>
+        <li role="presentation" class="<{if $status=='instock'}>active<{/if}>"><a href="<{url action=topshop_ctl_item@itemList status=instock}>">仓库中</a></li>
+        <li role="presentation" class="<{if $status=='oversku'}>active<{/if}>"><a href="<{url action=topshop_ctl_item@itemList status=oversku}>">库存报警</a></li>
+        <{if $setting}>
+        <li role="presentation" class="<{if $status=='pending'}>active<{/if}>"><a href="<{url action=topshop_ctl_item@itemList status=pending}>">待审核</a></li>
+        <li role="presentation" class="<{if $status=='refuse'}>active<{/if}>"><a href="<{url action=topshop_ctl_item@itemList status=refuse}>">审核失败</a></li>
+        <{/if}>
+       <{else}>
+        <li role="presentation" class="<{if !$status }>active<{/if}>"><a href="<{url action=topshop_ctl_item@searchItem}>">全部</a></li>
+        <{foreach from=$search_arr item=search}>
+        <li role="presentation" class="<{if $status==$search.status}>active<{/if}>"><a href="<{$search.url}>"><{$search.label}></a></li>
+        <{/foreach}>
+       <{/if}>
+       <li class="pull-right header">
+         <div class="btn-group">
+            <button data-toggle="control-sidebar" class="btn btn-default">
+              <div class="text-light-blue">
+              <i class="fa fa-search"></i>
+               搜索
+              </div>
+            </button>
+          </div>
+       </li>
+      </ul>
+      <div class="tab-content no-padding clearfix" id="data_node">
+        <div class="mailbox-controls">
+          <!-- Check all button -->
+          <button type="button" id="selectAll" class="btn btn-default btn-sm checkbox-toggle"><i class="fa fa-square-o"></i>
+          </button>
+          <div class="btn-group">
+            <button type="button" id="action-remove" class="btn btn-default btn-sm" data-toggle="tooltip" ><i class="fa fa-trash-o"></i>删除</button>
+            <button type="button" id="action-onsale" class="btn btn-default btn-sm" data-toggle="tooltip" ><i class="fa fa-cloud-upload"></i>上架</button>
+            <button type="button" id="action-instock" class="btn btn-default btn-sm" data-toggle="tooltip" ><i class="fa fa-cloud-download"></i>下架</button>
+          </div>
+          <!-- /.btn-group -->
+          <div class="btn-group">
+            <button type="button" class="btn btn-default btn-sm" onclick="exportModal();" data-toggle="tooltip" ><i class="glyphicon glyphicon-export"></i>导出</button>
+            <button type="button" class="btn btn-default btn-sm" onclick="importModal();" data-toggle="tooltip" ><i class="glyphicon glyphicon-import"></i>导入</button>
+          </div>
+          <button type="button" class="btn btn-default btn-sm" id="action-freigthtemplate" data-toggle="modal">运费模板</button>
+          <!-- /.pull-right -->
+        </div>
+        <table class="table table-striped">
+          <tbody>
+            <tr>
+              <th class="col-checkbox"></th>
+              <th class="col-name">商品</th>
+              <th>库存</th>
+              <th>状态</th>
+              <th>运费模板</th>
+              <th>时间</th>
+              <th class="text-center">操作</th>
+            </tr>
+            <{if $item_list}>
+
+            <{foreach from=$item_list item=gitem}>
+            <tr>
+              <td>
+                <label class="checkbox-inline">
+                  <input type="checkbox" name=item_ids value=<{$gitem.item_id}>>&nbsp;
+                </label>
+              </td>
+              <td>
+                <div class="goods">
+                  <a href="<{url action=topc_ctl_item@index item_id=$gitem.item_id}>" target="_blank">
+                    <img src="<{$gitem.image_default_id|default:$image_default_id.S.default_image|storager:t}>" alt="">
+                    <{$gitem.title}>
+                  </a><br>
+                  <span class="text-orange"><{$gitem.price|cur}></span>
+                </div>
+              </td>
+              <td>
+                <{$gitem.store}>
+              </td>
+              <td>
+              <{if $gitem.approve_status == "instock"}>
+                <i class="text-danger">未上架</i>
+              <{elseif $gitem.approve_status == "pending"}>
+                <i class="text-danger">待审核</i>
+              <{elseif $gitem.approve_status == "refuse"}>
+                <i class="text-danger">审核驳回</i>
+              <{elseif $gitem.approve_status}>
+                <i class="text-success">已上架</i>
+              <{/if}>
+              <br /><{if !$gitem.nospec}><i class="text-danger">[多规格]</i><{/if}></td>
+              <td>
+                <{if $gitem.dlytmpl_id}><i class="text-success">已设置</i><{else}><i class="text-danger">未设置<i><{/if}>
+              </td>
+              <td>
+                <{if $gitem.list_time}>
+                  <{$gitem.list_time|cdate:FDATE_STIME}>(发布)
+                <{/if}><br/>
+                <{$gitem.modified_time|cdate:FDATE_STIME}>(修改)
+              </td>
+              <td class="text-center">
+              <{if $gitem.approve_status != "pending"}><a href="<{url action=topshop_ctl_item@edit item_id=$gitem.item_id}>">编辑</a><{else}><a href="<{url action=topshop_ctl_item@edit item_id=$gitem.item_id}>">查看商品</a><{/if}> <a href="javascript:void(0);" class="text-remove" data-id="<{$gitem.item_id}>">删除</a></td>
+            </tr>
+            <{/foreach}>
+            <{else}>
+            <tr>
+              <td algin="center" colspan="11">
+                <p class="help-block text-center">暂无数据</p>
+              </td>
+            </tr>
+            <{/if}>
+          </tbody>
+        </table>
+        <div class="pull-right">
+            <{pagers data=$pagers}>
+            <{if $total > 0 }>
+            <span class="page-number">共&nbsp;<em class="text-aqua"><{$total}></em>&nbsp;条记录</span>
+            <{/if}>
+          </div>
+      </div>
+      <!-- /.tab-content -->
+    </div>
+    <!-- /.nav-tabs-custom -->
+  </div>
+</div>
+
+<!--运费模板弹框-->
+<div class="modal fade" id="freigthTemplate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" style="width:440px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">选择运费模板</h4>
+      </div>
+      <form action="<{url action=topshop_ctl_item@updateItemDlytmpl}>" method="post" data-validate-onsuccess="ajaxSubmit">
+        <div class="modal-body">
+          <div class="form-group">
+            <select name="dlytmpl_id" id="dlytmpl_id" class="form-control select-reset" data-validate-field="" required>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-info pull-left">保存</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- 导出弹窗 -->
+<div class="modal fade" id="export" tabindex="-1" role="dialog" aria-labelledby="export">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="gridSystemModalLabel">商品导出</h4>
+			</div>
+			<div class="modal-body">
+        <div class="export-list">
+        </div>
+      </div>
+		</div>
+	</div>
+</div>
+<!-- import 弹窗 -->
+<div class="modal fade" id="import" tabindex="-1" role="dialog" aria-labelledby="import">
+</div>
+
+<script type="text/javascript">
+  // import
+  function importModal(){
+    var importViewUrl = '<{url action=topshop_ctl_item_importexport@importView}>';
+    $.get(importViewUrl, function(rs){
+      if(rs.error)
+      {
+       $('#messagebox').message(rs.message);
+        return;
+      }
+
+      $('#import').html(rs.html);
+      $('#import').modal('show');
+    })
+  }
+	// 导出弹窗
+	var itemTotal = <{$total}>;
+	var exportLimit = <{$exportLimit}>;
+	var totalPage = Math.ceil(itemTotal/exportLimit);
+	var filterStatus = '<{$status}>';
+	function exportModal(){
+		var html='<div>共' + itemTotal + '纪录，请选择导出：</div>';
+		if(totalPage > 0)
+		{
+			if(totalPage >1)
+			{
+				for(var i=1; i<=totalPage; i++)
+				{
+					if(i != totalPage){
+            html += '<button type="button" class="export-button btn btn-default"><a class="export-begin" data-exportpage="'+i+'" href="javascript:void(0);">'+((i-1)*exportLimit+1)+'-'+i*exportLimit+'条</a></button>';
+					}else{
+            html += '<button type="button" class="export-button btn btn-default"><a class="export-begin" data-exportpage="'+i+'" href="javascript:void(0);">'+((i-1)*exportLimit+1)+'-'+itemTotal+'条</a></button>';
+					}
+				}
+
+			} else {
+				html = '<button type="button" class="export-button btn btn-default"><a class="export-begin" data-exportpage="1" href="javascript:void(0);">1-'+itemTotal+'条</a></button>';
+			}
+		}
+		else
+		{
+			html = '<div><span>没有数据</span></div>'
+		}
+
+		$('.export-list').html(html);
+		$('#export').modal('show');
+		// 注册导出动作
+		exportAction();
+	}
+
+	// 开始导出
+	function exportAction(){
+		// 开始导出
+		var exportUrl = '<{url action=topshop_ctl_item_importexport@export}>';
+		var isSearch = '<{$is_search}>';
+		$('.export-button').each(function(){
+			var $this = $(this);
+			$this.on('click',function(){
+				var exportPage = $this.children('.export-begin').attr('data-exportpage');
+				//var exportPage = $this.attr('data-exportpage');
+				var exportFilter = $("#search-form").serialize()+'&exportpage='+exportPage+'&exportlimit='+exportLimit+'&is_search='+isSearch;
+				if(filterStatus != '')
+				{
+					exportFilter = exportFilter+'&status='+filterStatus;
+				}
+				window.location.href = exportUrl+'?'+exportFilter;
+
+			});
+		});
+	}
+
+  $('.export-list').on('click', '> .btn', function(){
+    $(this).append(' <i class="fa fa-check"></i>');
+  });
+
+  $('#selectAll').click(function(){
+    var clicks = $(this).data('clicks');
+    if (clicks) {
+      //Uncheck all checkboxes
+      $('#data_node input[type=checkbox]').prop('checked', false);
+      $(".fa", this).removeClass("fa-check-square-o").addClass('fa-square-o');
+    } else {
+      //Check all checkboxes
+      $('#data_node input[type=checkbox]').prop('checked', true);
+      $(".fa", this).removeClass("fa-square-o").addClass('fa-check-square-o');
+    }
+    $(this).data("clicks", !clicks);
+  });
+
+  $('#action-onsale').on('click',function(){
+      var itemIds = new Array();
+      var status = '<{$status}>';
+      if($("#data_node input[name='item_ids']:checked").length <= 0) {
+        $('#messagebox').message("请选择要上架的商品！");
+        return;
+      }
+      $($("#data_node input[name='item_ids']:checked")).each(function(){
+          $.post('<{url action=topshop_ctl_item@setItemStatus}>', 'type=tosale&item_id='+$(this).val(), function(rs){
+            if(rs.error) {
+              $('#messagebox').message(rs.message);
+              return;
+            }
+            if(rs.success) {
+              $('#messagebox').message(rs.message, 'success');
+              setTimeout(function(){location.href = rs.redirect +'?status='+status;}, 800);
+            }
+          });
+          // itemIds.push($(this).val());//向数组中添加商品id
+      });
+      // if(itemIds.length>0){
+      //     var itemIdsStr=itemIds.join(',');//将商品id数组元素连接起来以构建一个字符串
+      // }else{
+      //     return false;
+      // }
+  });
+  $('#action-instock').on('click',function(){
+      var itemIds = new Array();
+      if($("#data_node input[name='item_ids']:checked").length <= 0) {
+        $('#messagebox').message("请选择要下架的商品！");
+        return;
+      }
+      $($("#data_node input[name='item_ids']:checked")).each(function(){
+          $.post('<{url action=topshop_ctl_item@setItemStatus}>', 'type=tostock&item_id='+$(this).val(), function(rs){
+            if(rs.error) {
+              $('#messagebox').message(rs.message);
+              return;
+            }
+            if(rs.success) {
+              $('#messagebox').message(rs.message, 'success');
+              setTimeout(function(){location.href = rs.redirect +'?status='+'<{$status}>';}, 800);
+            }
+          });
+      });
+  });
+
+  $('#action-remove').on('click',function(){
+    var _this = $(this);
+    var itemIds = new Array();
+    if($("#data_node input[name='item_ids']:checked").length <= 0) {
+      $('#messagebox').message("请选择要删除的商品！");
+      return;
+    }
+    Modal.confirm({msg: '确定删除该商品？'}).on(function(e) {
+        if(e==true) {
+          $($("#data_node input[name='item_ids']:checked")).each(function(){
+              delItemById($(this).val());
+          });
+        }
+    });
+  });
+
+  $('.text-remove').on('click', function(){
+    var _this = $(this);
+    Modal.confirm({msg: "确定删除该商品？"}).on(function(e) {
+      if(e==true) {
+        delItemById(_this.attr('data-id'));
+      }
+    });
+  });
+
+  //删除商品
+  function delItemById(gid) {
+    $.post('<{url action=topshop_ctl_item@deleteItem}>', 'item_id='+gid, function(rs){
+      if(rs.error) {
+        $('#messagebox').message(rs.message);
+        return;
+      }
+      if(rs.success) {
+        $('#messagebox').message(rs.message, 'success');
+        setTimeout(function(){location.reload();}, 800);
+      }
+    });
+  }
+
+  //获取运费模板
+  $.get("<{url action=topshop_ctl_item@ajaxGetDlytmpls}>", function(rs) {
+    if(rs.data) {
+      var items = rs.data;
+      var strTemplate = "<option value='-1'>请选择</option>";
+      for (var i = 0; i< items.length; i++) {
+        strTemplate +="<option value='"+items[i].template_id+"' data-shop-id='"+items[i].shop_id+"'>"+items[i].name+"</option>";
+      };
+      $("#dlytmpl_id").html(strTemplate);
+    }
+  });
+  var chooseItemIds = new Array();
+  $('#action-freigthtemplate').on('click', function() {
+    chooseItemIds = [];
+    if($("#data_node input[name='item_ids']:checked").length <= 0) {
+      $('#messagebox').message("请选择商品！");
+      return;
+    }
+    $("#freigthTemplate").modal();
+    $($("#data_node input[name='item_ids']:checked")).each(function(){
+        chooseItemIds.push($(this).val());
+    });
+  });
+
+  function ajaxSubmit (e) {
+    var form = e.target;
+    e.preventDefault();
+    var template_id = $('#dlytmpl_id').val();
+    if(template_id == '-1'){
+      $('#messagebox').message("请选择运费模板！");
+      return false;
+    }
+    $.post(form.action, {'dlytmpl_id':template_id,'itemids':chooseItemIds}, function(rs) {
+      if(rs.error) {
+        $('#messagebox').message(rs.message);
+      }
+      if(rs.success) {
+        $('#messagebox').message(rs.message, 'success',2000,function(){
+          if(rs.redirect){
+            location.href = rs.redirect;
+          }
+        });
+        $("#freigthTemplate").modal('hide');
+      }
+
+    });
+  }
+
+  $(document).ready(
+    function() {
+      $(".sidebar .sidebar-menu li a i.glyphicon").eq(1).removeClass("glyphicon-list-alt").addClass("glyphicon-edit");
+    }
+
+  );
+
+  // 重置表单
+  $('#reset-form').on('click',function(){
+    $('input:visible').val('');
+   $('.select-reset').val(-1);
+  });
+</script>

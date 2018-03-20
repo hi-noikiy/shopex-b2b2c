@@ -1,0 +1,75 @@
+<!-- Left side column. contains the logo and sidebar -->
+<aside class="main-sidebar">
+  <!-- sidebar: style can be found in sidebar.less -->
+  <section class="sidebar">
+    <!-- Sidebar user panel --> <div class="user-panel">
+      <div class="pull-left">
+        <img src="<{$topshop.seller.shop_logo}>" width="45" height="45" class="img-circle" alt="User Image">
+      </div>
+      <div class="pull-left info">
+        <p><{$topshop.seller.shoptype}></p>
+        <a href="#"><i class="fa fa-circle text-success"></i><{if $topshop.seller.seller_type == 0 }>管理员<{else}>子账号<{/if}></a>
+      </div>
+    </div>
+    <!-- /.search form -->
+    <!-- sidebar menu: : style can be found in sidebar.less -->
+    <ul class="sidebar-menu">
+      <li class="header">菜单</li>
+      <{foreach from=$topshop.allMenu item=item_navbar}>
+      <{if $item_navbar.display}>
+      <li class="treeview <{if $item_navbar.default}>active<{/if}>">
+        <a href="<{url action=$item_navbar.action}>">
+          <i class="<{$item_navbar.icon}>"></i> <span><{$item_navbar.label}></span>
+          <{if $item_navbar.menu }>
+          <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+          </span>
+          <{/if}>
+        </a>
+        <{if $item_navbar.menu }>
+        <ul class="treeview-menu">
+          <{foreach from=$item_navbar.menu item=row}>
+          <{if $row.display}>
+          <li <{if $row.default}>class="active"<{/if}> >
+          <{if $row.action=="topshop_ctl_wap_decorate@index"}>
+          <a <{if (!$topshopNewSetup && $openNewWapdecorate !='open')||(!$topshopNewSetup && $openNewAppdecorate !='open')}> href="#" data-toggle="modal" data-target="#new_decorate_setting"<{else}> href="<{if $row.action}><{url action=$row.action}><{else}>#<{/if}>"  <{/if}>>
+            <i class="fa fa-circle-o <{if $row.default}>text-aqua<{/if}>"></i> <{$row.label}>
+            <{if $row.text_icon}>
+            <span class="pull-right-container">
+              <small class="label pull-right <{$row.bg}>"><{$row.text_icon}></small>
+            </span>
+            <{/if}>
+          </a>
+          <{elseif $row.action=="topshop_ctl_shop_newDecorate@edit" || $row.action=="topshop_ctl_shop_appDecorate@edit" }>
+          <a href="<{if $row.action}><{url action=$row.action}><{else}>#<{/if}>" target="_blank"><i class="fa fa-circle-o <{if $row.default}>text-aqua<{/if}>"></i> <{$row.label}>
+            <{if $row.text_icon}>
+            <span class="pull-right-container">
+              <small class="label pull-right <{$row.bg}>"><{$row.text_icon}></small>
+            </span>
+            <{/if}>
+          </a>
+          <{else}>
+          <a href="<{if $row.action}><{url action=$row.action}><{else}>#<{/if}>"><i class="fa fa-circle-o <{if $row.default}>text-aqua<{/if}>"></i> <{$row.label}>
+            <{if $row.text_icon}>
+            <span class="pull-right-container">
+              <small class="label pull-right <{$row.bg}>"><{$row.text_icon}></small>
+            </span>
+            <{/if}>
+          </a>
+          <{/if}>
+          </li>
+          <{/if}>
+          <{/foreach}>
+        </ul>
+        <{/if}>
+      </li>
+      <{/if}>
+      <{/foreach}>
+      <li class="header">意见反馈</li>
+      <li><a href="#" data-toggle="modal" data-target="#feedback"><i class="fa fa-circle-o text-yellow"></i> <span>意见反馈</span></a></li>
+    </ul>
+  </section>
+  <!-- /.sidebar -->
+</aside>
+<{include file="topshop/common/feedback.html"}>
+<{include file="topshop/shop/new_decorate_setting.html"}>

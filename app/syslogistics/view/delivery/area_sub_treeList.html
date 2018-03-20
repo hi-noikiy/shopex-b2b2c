@@ -1,0 +1,37 @@
+<table cellspacing="0" cellpadding="0" style="width:100%">
+  <col class="Colauto"></col>
+  <!--col class="Coloption_1b"></col-->
+  <col class="Coloption_1b" ></col>
+  <col class="Coloption_1b"></col>
+  <col class="Coloption_1b"></col>
+  <col></col>
+  <tbody>
+    <{foreach from=$childData item=item key=id name="item"}>
+    <{if $item.disabled}><{continue}><{/if}>
+    <tr parentid="<{$id}>" class="provice-bg">
+      <td style="text-align:left; width:320px;" nowrap>
+        <div style="padding-left:<{$step*25}>px">
+          <{if $item.is_child}>
+          <i class="fa fa-plus-square-o" onclick="clickTree(this);" id="<{$id}>" level="<{$level}>"></i>
+          <{else}>
+          <i class="fa fa-minus-square-o" id="<{$id}>" level="<{$level}>"></i>
+          <{/if}>
+          <{$item.value}>
+        </div>
+      </td>
+      <td style="width:100px;">
+        <{if $level <= 3}>
+        <a href='?app=syslogistics&ctl=admin_regions&act=showNewArea&regionId=<{$id}>' class="text-gray" target="dialog::{title:'<{t}>添加子地区<{/t}>',height:260}"><i class="fa fa-plus"></i></a>
+        <{/if}>
+      </td>
+      <td style="width:60px;">
+        <a class="text-gray" href='?app=syslogistics&ctl=admin_regions&act=detailDlArea&regionId=<{$id}>' target="dialog::{title:'<{t}>编辑地区<{/t}>',height:260}"><i class="fa fa-cog"></i></a>
+      </td>
+      <td style="width:60px;">
+        <span class="text-danger" onclick="javascript: if(confirm('<{t}>您确定要删除<{/t}>&nbsp;[<{$item.value}>]&nbsp;？')){ W.page('?app=syslogistics&ctl=admin_regions&act=toRemoveArea&regionId=<{$id}>',{method:'get'});}" style="cursor:pointer"><i class="fa fa-trash-o"></i></span>
+      </td>
+      <td></td>
+    </tr>
+    <{/foreach}>
+  </tbody>
+</table>

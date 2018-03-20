@@ -1,0 +1,172 @@
+<form id="catSetting" action="?app=sysaftersales&ctl=setting&act=saveCatSetting"  method="POST" class="tableform">
+  <div class="division clearfix">
+    <div class="division choose-redpakcet">
+      <div class="mar-left-10">
+        <select id="lv1" name="lv1[cat_id]">
+          <!-- <option value="-1">请选择类目</option> -->
+          <{foreach from=$selectNode item=selectNode}>
+            <option value="<{$selectNode.cat_id}>"><{$selectNode.cat_name}></option>
+          <{/foreach}>
+        </select>
+        <select id="lv2" name="lv2[cat_id]"></select>
+      </div>
+      <div class="mar-left-10">
+        <select type="select" id="lv3" multiple="true" caution="请选择类目" size="15" style="width:100%; height: 140px;" class="x-select"></select>
+      </div>
+      <div class="mar-left-10">
+        <{t}>（按住ctrl 或 shift 多选）<{/t}>&nbsp;
+        <button type="button" id="btn_add_catpacket" class="btn btn-default">添加</button>
+      </div>
+    </div>
+
+    <div class="division redpacket-info">
+      <div class="choosen-list">
+        <ul>
+          <{if $catSetting}>
+          <{foreach from=$catSetting item=item}>
+          <li data-id="<{$item.cat_id}>">
+            <div>
+              <input type="hidden" name="aftersales[cat][<{$item.cat_id}>][cat_id]" value="<{$item.cat_id}>">
+              <input type="hidden" name="aftersales[cat][<{$item.cat_id}>][cat_name]" value="<{$item.cat_name}>">
+              <span class="catpacket-remove">
+                <i class="fa fa-times-circle"></i>
+              </span>
+              <span class="packet-name"><{$item.cat_name}> 
+                <{if $aftersaletype=='changing' && $item.changing_days>-1 }>
+                <input  required type="number"  min=0 max="9999" name="aftersales[cat][<{$item.cat_id}>][changing_days]" value="<{$item.changing_days}>">
+                <{elseif $aftersaletype=='refund' && $item.refund_days>-1}>
+                <input required type="number" min=0 max="9999" name="aftersales[cat][<{$item.cat_id}>][refund_days]" value="<{$item.refund_days}>">
+                <{/if}>
+                 天
+              </span> 
+            </div>
+          </li>
+          <{/foreach}>
+          <{/if}>
+        </ul>
+      </div>
+    </div>
+    <{input type="hidden" name="aftersales[type]" value=$aftersaletype}>
+
+  </div>
+    
+  <div class="table-action">
+    <{button type="submit" class="btn-primary" id='cancel-form-submit' label="确定"}>
+    <{button type="button" class="btn-default" isclosedialogbtn="1" label="取消"}>
+  </div>
+</form>
+<script>
+  var editData = JSON.decode('<{$catData}>');
+  var aftersaletype = "<{$aftersaletype}>";
+  var lv2, lv3;
+  if(editData) {
+    if(editData['lv1'] != undefined) {
+      $('lv1').getElement('option[value="'+ editData['lv1'].cat_id +'"]').set('selected', 'selected');
+    }
+    if(editData['lv2'] != undefined) {
+      lv2 =  editData['lv2'];
+    }
+    if(editData['lv3'] != undefined) {
+      lv3 =  editData['lv3'];
+    }
+  }
+  if($('lv1')){
+    $('lv1').addEvent('change',function(){
+      var catId = this.value;
+      if(catId > 0){
+        req('cat_id=' + catId, 'lv2');
+      } else {
+        var str = "<option value='-1'>请选择类目</option>";
+        $('lv2').set('html', str);
+        $('lv3').set('html', str);
+      }
+    }).fireEvent('change');
+
+    $('lv2').addEvent('change', function() {
+      var catId = this.value;
+      if(catId > 0){
+        req('cat_id=' + catId, 'lv3');
+      } else {
+        $('lv3').set('html', "<option value='-1'>请选择类目</option>");
+      }
+    });
+  }
+
+  function req(data, loadEle){
+    new Request({
+      url:'<{url action=toputil_ctl_themesAjax@getChildrenCatList}>',
+        onSuccess: function(rs){
+          var s = [];
+          if(rs) {
+            var catJSON=JSON.decode(rs);
+            var catList = catJSON.data.options;
+            var subCatStr = "";
+            subCatStr += '';
+            if(catList) {
+              for(var item in catList) {
+                subCatStr += "<option value='"+ catList[item].value +"'>"+ catList[item].text +"</option>";
+              }
+            }
+            if(loadEle == 'lv2'){
+              $('lv2').set('html', subCatStr);
+              if(lv2 != "" && lv2 != undefined) {
+                var selectEle = $('lv2').getElement('option[value="'+ lv2.cat_id +'"]');
+                if(selectEle != null) {
+                  selectEle.set('selected', 'selected');
+                }
+              }
+              req('cat_id=' + $('lv2').value, 'lv3');
+            }
+            else if(loadEle == 'lv3') {
+              $('lv3').setHTML(subCatStr);
+              if(lv3 != "" && lv3 != undefined) {
+                var selectEle = $('lv3').getElement('option[value="'+ lv3.cat_id +'"]');
+                if(selectEle != null) {
+                  selectEle.set('selected', 'selected');
+                }
+                req('cat_id=' + $('lv3').value);
+              }
+            }
+          }
+        }
+    }).post(data);
+  }
+
+  $("btn_add_catpacket").addEvent('click', function(){
+    var selectedCat = $$('#lv3 option:selected');
+    var choosenList = $$('.choosen-list > ul > li');
+  
+    var choose = [];
+    var flag = true;
+    var selectedstr = $('lv3').get('value')+'-';
+    for(var i = 0; i < selectedCat.length; i++) {
+      for(var j = 0; j < choosenList.length; j++) {
+        if( (selectedstr + selectedCat[i].get('value')) == choosenList[j].get('data-id')) {
+          flag = false;
+        }
+      }
+      if(flag) {
+        if(aftersaletype =='refund'){
+          choose.push('<li data-id="' + $('lv3').get('value') + '-' + selectedCat[i].get('value') + '"><div><input type="hidden" name="aftersales[cat][' + selectedCat[i].get('value') +'][cat_id]" value="' + selectedCat[i].get('value') + '" /><input type="hidden" name="aftersales[cat][' + selectedCat[i].get('value') +'][cat_name]" value="' + selectedCat[i].get('html') + '" /><span class="catpacket-remove"><i class="fa fa-times-circle"></i></span> <span class="packet-name">'+ selectedCat[i].get('html') +'</span> <input required type="number" min="0" max="9999" name="aftersales[cat][' + selectedCat[i].get('value') + '][refund_days]">&nbsp;天</div></li>');
+        }else if(aftersaletype =='changing'){
+          choose.push('<li data-id="' + $('lv3').get('value') + '-' + selectedCat[i].get('value') + '"><div><input type="hidden" name="aftersales[cat][' + selectedCat[i].get('value') + '][cat_id]" value="' + selectedCat[i].get('value') + '" /><input type="hidden" name="aftersales[cat][' + selectedCat[i].get('value') +'][cat_name]" value="' + selectedCat[i].get('html') + '" /><span class="catpacket-remove"><i class="fa fa-times-circle"></i></span> <span class="packet-name">'+ selectedCat[i].get('html') +'</span> <input required type="number" min=0 max="9999" name="aftersales[cat][' + selectedCat[i].get('value') + '][changing_days]">&nbsp;天</div></li>');
+        }
+        
+      }
+    }
+    $$('.choosen-list > ul').set('html', $$('.choosen-list > ul').get('html') + choose.join(''));
+  });
+  $$('.catpacket-remove').addEvent('click', function(){
+    if(confirm('<{t}>确认删除该类目吗？<{/t}>')){
+      this.parentNode.parentNode.remove();
+    }
+  });
+
+  $('catSetting').store('target',{
+    onComplete:function(rs){
+        rs = JSON.decode(rs);
+        if($('catSetting').getParent('.dialog') && rs.success)
+        $('catSetting').getParent('.dialog').retrieve('instance').close();
+    }
+  });
+</script>

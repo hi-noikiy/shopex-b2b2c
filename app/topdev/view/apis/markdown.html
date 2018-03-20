@@ -1,0 +1,133 @@
+# 聚合API，适用于APP
+
+返回数据结构约定：errorcode为0则代表请求正确，其他值则有报错，msg为报错提示信息，data为数据主体
+
+正确返回格式
+
+```
+data只要有返回值都要有键值，不允许data内直接返回数组
+data为空：{"errorcode": 0,"msg": "","data": {}}
+data为空{"errorcode": 0,"msg": "","data": null}
+data不为空{"errorcode": 0,"msg": "","data": {"键":"值"}}
+data中有列表和翻页 {"errorcode": 0,"msg": "","data": {"list": [{},{}],"pagers": {"total": 3}}}
+list(列表主体数据)、pagers、total(总条数)都是关键字，要保持一致
+```
+
+错误返回格式
+
+```
+{"errorcode": 0,"msg": "","data": "true"}
+{"errorcode": 0,"msg": "","data": [{},{}]}
+{"errorcode": 0,"msg": "","data": [ ]}
+```
+
+## 目录
+
+<{foreach from=$topapisList item=group key=groupname}>
+- [<{$group.name}>](#<{$group.name}>)
+<{/foreach}>
+
+<{foreach from=$topapisList item=group key=groupname}>
+
+<a name="<{$group.name}>"></a>
+### <{$group.name}>
+
+<{foreach from=$group.list key=key1 item=item}>
+
+[`<{$key1}>` <{$item.apidesc}>](#<{$key1}>)
+
+<{/foreach}>
+
+<{/foreach}>
+
+
+## API详细列表
+<{foreach from=$topapisList item=group key=groupname}>
+
+<{foreach from=$group.list key=key item=item}>
+
+<a name="<{$key}>"></a>
+#### `<{$key}>`<{$item.apidesc}>
+
+
+>系统参数
+
+| *字段* | *数据类型* | *验证条件* | *示例值* | *详细说明* |
+| ------------- | ------------- | ------------- | ------------- | ------------- |
+<{foreach from=$item.system_params item="column" key="columnName"}>
+| <{$column.field}> | <{$column.type}> | <{$column.validate}> | <{$column.example}> | <{$column.desc}> |
+<{/foreach}>
+
+
+>业务参数
+
+<{if $item.params}>
+| *字段* | *数据类型* | *验证条件* | *示例值* | *详细说明* |
+| ------------- | ------------- | ------------- | ------------- | ------------- |
+<{foreach from=$item.params item="column" key="columnName"}>
+<{if $column.type  == "jsonArray" || $column.type  == "jsonObject" }>
+| [<{$column.field}>](#<{$key}>_<{$column.field}>) | <{$column.type}> | <{$column.validate}> | <{$column.example}> | <{$column.desc}> |
+<{else}>
+| <{$column.field}> | <{$column.type}> | <{$column.validate}>  | <{$column.example}>  | <{$column.desc}>  |
+<{/if}>
+<{/foreach}>
+<{else}>
+
+无业务参数
+
+<{/if}>
+
+<{foreach from=$item.params item="column" key="columnName"}>
+
+
+<{if $column.type  == "jsonArray" || $column.type  == "jsonObject" }>
+
+
+<a name="<{$key}>_<{$column.field}>"></a>
+`<{$column.field}>`参数的详细结构
+
+| *字段* | *数据类型* | *验证条件* | *详细说明* |
+| ------------- | ------------- | ------------- | ------------- |
+<{foreach from=$column.params item=item key=key}>
+| <{$key}> | <{$item.type}> | <{$item.valid}> | <{$item.desc}> |
+<{/foreach}>
+
+<{/if}>
+
+<{/foreach}>
+
+
+>返回结果
+
+<{if $item.response || $item.returnJson }>
+
+<{if $item.response}>
+
+| *返回字段* | *类型* | *说明* |
+| ------------- | ------------- | ------------- |
+<{foreach from=$item.response item="rcolumn" key="rcolumnName"}>
+| <{$rcolumn[1]}> | <{$rcolumn[0]}> | <{$rcolumn[2]}> |
+<{/foreach}>
+<{/if}>
+
+<{if $item.returnJson}>
+
+返回JSON数据结构
+
+```
+<{$item.returnJson}>
+
+```
+
+<{/if}>
+
+<{else}>
+
+未定义返回结果
+
+<{/if}>
+
+<{/foreach}>
+
+<{/foreach}>
+

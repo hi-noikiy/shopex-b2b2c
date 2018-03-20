@@ -1,0 +1,11 @@
+Product-Name = ShopEx-ONex-B2b2c-Source
+Registered-To = Developers
+Max-Concurrent = 5
+Lease-Expiration = 60
+Wait-For-Lease = no
+Expires = Never
+Hardware-Locked = No
+Edition = Develop
+Tech-Edition = ALL
+Produced-By = ShopEx
+Verification-Code = wFbgAJ9wEwQUt/7jlYNfe5WKmpBBAhR/2UoKgJKrRNRQvLrZycY0T2oOZQ==

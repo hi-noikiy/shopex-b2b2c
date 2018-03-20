@@ -1,0 +1,37 @@
+<div class="tableform">
+  <div class="division">
+    <{if $pay_type == "offline"}>
+    <h3>货到付款</h3><hr>
+    <{if $op_name}><label><{t}>商家操作员：<{/t}></label> <{$op_name}><{/if}>
+    <{elseif $pay_type == online}>
+      <table width="100%" >
+        <tr>
+          <th><label><{t}>支付方式：<{/t}></label></th>
+          <td><{if $pay_app_id}> <{$pay_app_id}> <{if $pay_name}>(<{$pay_name}>)<{/if}><{/if}></td>
+          <th><label><{t}>支付账户：<{/t}></label></th>
+          <td><{if $pay_account}> <{$pay_account}><{else}>暂无<{/if}></td>
+          <th><label><{t}> 第三方交易流水号：<{/t}></label></th>
+          <td><{if $trade_no}><{$trade_no}><{else}>暂无<{/if}></td>
+        </tr>
+        <tr>
+          <th><label><{t}> 支付ip：<{/t}></label></th>
+          <td><{if $ip}><{$ip}><{else}>暂无<{/if}></td>
+          <th><label><{t}> 支付备注：<{/t}></label></th>
+          <td><{if $memo}><{$memo}><{else}>暂无<{/if}></td>
+          <th><label><{t}> 第三方支付账户：<{/t}></label></th>
+          <td><{if $thirdparty_account}><{$thirdparty_account}><{else}>暂无<{/if}></td>
+        </tr>
+        <tr>
+          <th><label><{t}>操作员：<{/t}></label></th>
+          <td><{if $op_name}><{$op_name}><{else}>暂无<{/if}></td>
+          <th><label><{t}>支付网关费用：<{/t}></label></th>
+          <td><{if $paycost}><{$paycost|cur}><{else}>暂无<{/if}></td>
+          <th><label><{t}> 订单所属会员：<{/t}></label></th>
+          <td><{if $user_name}><{$user_name}><{else}>暂无<{/if}></td>
+        </tr>
+      </table>
+    <{else}>
+    <div>此支付单信息有误</div>
+    <{/if}>
+  </div>
+</div>

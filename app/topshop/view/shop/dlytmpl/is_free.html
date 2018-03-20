@@ -1,0 +1,30 @@
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>运费模板名称</th>
+      <th>配送地区</th>
+      <th>运费</th>
+      <th>状态</th>
+      <th>最后修改时间</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <{foreach from=$data item=item}>
+    <{if $item.is_free}>
+    <tr data-templateId="<{$item.template_id}>">
+      <td rowspan="<{$env.foreach.name.total}>"><{$item.name}></td>
+      <td><{t}>全国<{/t}></td>
+      <td>包邮</td>
+      <td><{if $item.status == 'on'}>启用<{else}>禁用<{/if}></td>
+      <td><{$item.modifie_time|cdate:"FDATE"}></td>
+      <td>
+        <a href="<{url action=topshop_ctl_shop_dlytmpl@editView template_id=$item.template_id}>">修改</a>
+        <a href="javascript:void(0);" class="action-delete dlytmpl-delete" data-templateId="<{$item.template_id}>">删除</a>
+      </td>
+    </tr>
+    <{/if}>
+    <{/foreach}>
+  </tbody>
+</table>
+

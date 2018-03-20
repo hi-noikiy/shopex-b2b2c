@@ -1,0 +1,24 @@
+<p class="lead">服务器信息</p>
+<div class="table-responsive">
+    <table class="table">
+        <tbody>
+            <{if $server}>
+                <{foreach from=$server item=item}>
+                    <tr>
+                        <th style="width:50%">
+                            <{$item.name}>
+                        </th>
+                        <td>
+                            <{$item.value}>
+                        </td>
+                    </tr>
+                <{/foreach}>
+            <{else}>
+                <td>
+                     <{t}>你悲剧了,你没有安装XHProf扩展<{/t}>
+                </td>
+            <{/if}>
+        </tbody>
+    </table>
+</div>
+

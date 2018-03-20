@@ -1,0 +1,129 @@
+<style type="text/css">
+	html, body { height: 100%; }
+</style>
+<{if $scratchcard.scratchcard.status == 'active'}>
+<header class="icons-header">
+    <i class="header-left icon-func bbc-icon bbc-icon-back shopex-action-back"></i>
+</header>
+<section class="container scratchcard-box" <{if $scratchcard.scratchcard.background_url}>style='background:url("<{$scratchcard.scratchcard.background_url|storager}>") no-repeat center top;background-size: cover;'<{/if}>>
+	<div class="wraper">
+    <p class="font-red content-center"><span class="tap-again">点我再来一次</span><!-- 这里可以有一个按键 --></p>
+    <span class="shopex-icon shopex-icon-help font-red action-rule"></span>
+    <div class="box">
+      <div id="wipe" class="wipe"></div>
+      <div class="canvas-bg">
+        <button type="button" class="shopex-btn shopex-btn-warning bbc-btn-warning action-receive" style="margin-top:2rem;" data-getprize="0" <{if $loginStatus == 'false' || $scratchcard.userInfo.timesLimit<=0 }> disabled<{/if}>><{$scratchcard.scratchcard.scratchcard_btn_word}></button>
+      </div>
+      <div class="scratchcard-result"></div>
+    </div>
+    <div class="content-center" style="padding: 1.5rem 0 .5rem 0;">
+      <{if $loginStatus == 'true' && $scratchcard.userInfo.timesLimit>0 }>
+      <span class="scratchcard-count font-white">您还有&nbsp;<span class="font-orange"><{$scratchcard.userInfo.timesLimit}></span>&nbsp;次刮奖机会</span>
+      <{elseif $loginStatus == 'true'}>
+      <span class="scratchcard-count font-white">机会已经用完了</span>
+      <{else}>
+      <span class="scratchcard-count font-white"><a href="<{$loginUrl}>" style="color:red">登录</a>后查看刮奖机会</span>
+      <{/if}>
+
+    </div>
+  </div>
+</section>
+<div class="bg-shade"></div>
+<div class="shopex-content-padded scratchcard-rule-box">
+  <div class="title"><{$scratchcard.scratchcard.scratchcard_name}></div>
+	<div class="rule-item">
+		<ol>
+      <{$scratchcard.scratchcard.scratchcard_desc}>
+      <!--
+			<li>中奖信息可进入"会员中心"－我的奖品中查看</li>
+			<li>本次活动最终解释权归商派所有</li>
+      -->
+		</ol>
+	</div>
+	<div class="close">
+		<span class="icon-close action-close"></span>
+	</div>
+</div>
+<{else}>
+   <{include file="topwap/empty/activity_scratchcard.html" }>
+<{/if}>
+
+<script>
+  var receiveUrl = "<{$receiveUrl}>";
+  var exchangeUrl = "<{$exchangeUrl}>";
+  var wipeCleanFlag = 0;
+  var scratchcardResultId = 0;
+  var flag = true;
+  var msgtxt = "";
+	var wipe = new Wipe({
+    el: '#wipe',
+    fg: "<{$env.app.topwap.res_url}>/images/cratchcart_bg.jpg",
+    txt: '<{$scratchcard.scratchcard.scratchcard_word}>',
+    size: 40,
+    debug: true,
+    autoWipe: false,
+    data: null,
+    onswiping: function (percent) {
+      $('.tap-again').addClass('action-tap');
+      if(flag) {
+        $.post(exchangeUrl, {
+          'scratchcard_result_id' : scratchcardResultId
+        }, function(rs) {
+          if(rs && $('.action-receive').attr('data-getprize') == '1') {
+            msgtxt = $('.scratchcard-result').html();
+            shopex.alert(msgtxt);
+            wipe.clear();
+          } else {
+            shopex.alert("领取失败");
+          }
+        });
+        flag = false;
+      }
+    	if (percent > 40) {
+       	wipe.clear();
+   		}
+    }
+	});
+ 
+	$('.action-rule').on('tap', function() {
+		$('.bg-shade').show();
+		$('.scratchcard-rule-box').show();
+	});
+	$('.close').on('tap', '.action-close', function(){
+		$('.bg-shade').hide();
+		$('.scratchcard-rule-box').hide();
+	});
+
+  $('.action-receive').on('tap', function(){
+    var that = $(this);
+    $('.canvas-bg').hide();
+     $.post(receiveUrl, {
+      'scratchcard_id' : '<{$scratchcard.scratchcard.scratchcard_id}>'
+    }, function(rs) {
+      $('.scratchcard-count span').text(rs.leftTimes);
+      if(rs.error){
+        $('.scratchcard-result').html('很遗憾，没有中奖');
+        that.attr('data-getprize', '0');
+        return ;
+      }
+      that.attr('data-getprize', '1');
+      if(rs.prizeInfo.bonus_type == 'none'){
+        $('.scratchcard-result').html(rs.prizeInfo.bonus_desc);
+      } else {
+        prizeresult = '恭喜您，获得' + rs.prizeInfo.bonus_desc;
+        $('.scratchcard-result').html(prizeresult);
+        scratchcardResultId = rs.scratchcard_result.result_id;
+      }
+    });
+  });
+
+  $('.scratchcard-box').on('tap', '.action-tap', function(){
+    var ua = window.navigator.userAgent.toLowerCase().match(/MicroMessenger/i);
+    if(ua) {
+      window.location.href = window.location.href+"?id=" + 10000*Math.random();
+    } else {
+      window.location.reload();
+    }
+    $(this).removeClass('action-tap');
+  });
+</script>

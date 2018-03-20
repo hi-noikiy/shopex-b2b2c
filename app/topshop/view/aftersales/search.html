@@ -1,0 +1,46 @@
+<form action="<{url action=topshop_ctl_aftersales@search}>" method="post" role="form" data-validate-onsuccess="ajaxSuccess">
+  <div class="box-body">
+    <div class="form-group">
+      <label>申请时间：</label>
+      <div class="input-group">
+        <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+        <input type="text" class="form-control pull-right reservation" name="created_time" id="" value="">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>退换货编号：</label>
+      <input class="form-control" type="text" name="aftersales_bn">
+    </div>
+    <div class="form-group">
+      <label>订单编号：</label>
+      <input class="form-control" type="text" name="tid">
+    </div>
+    <div class="form-group">
+      <label>退换货类型：</label>
+      <select name="aftersales_type" class="form-control">
+        <option value="">全部</option>
+        <{foreach from=$refund_type item=typevalue key=typekey}>
+        <option value="<{$typekey}>"><{$typevalue}></option>
+        <{/foreach}>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>商品名称：</label>
+      <input class="form-control" type="text" name="title">
+    </div>
+    <div class="form-group">
+      <label>申请处理进度：</label>
+      <select name="progress" class="form-control">
+        <option value="all">全部</option>
+        <{foreach from=$progress item=progressvalue key=progresskey}>
+        <option value="<{$progresskey}>"><{$progressvalue}></option>
+        <{/foreach}>
+      </select>
+      <input type="hidden" value="<{$filter.progress}>" id="filter_progress">
+    </div>
+  </div>
+  <div class="box-footer">
+    <button type="reset" class="btn btn-default">重置</button>
+    <button type="submit" class="btn btn-info pull-right">搜索</button>
+  </div>
+</form>

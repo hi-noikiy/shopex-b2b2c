@@ -1,0 +1,9 @@
+<div class="box box-primary">
+    <div class="mailbox-read-info text-center">
+        <h3><{$noticeInfo.notice_title}></h3>
+        <span class="mailbox-read-time"><{$noticeInfo.createtime|cdate:FDATE_STIME}></span>
+    </div>
+    <div class="mailbox-read-message">
+        <{$noticeInfo.notice_content}>
+    </div>
+</div>

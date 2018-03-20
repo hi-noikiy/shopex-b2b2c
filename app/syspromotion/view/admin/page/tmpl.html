@@ -1,0 +1,58 @@
+
+<div id="x-g-basic" class="goods-detail">
+    <div class="tableform">
+        <form action="?app=syspromotion&ctl=admin_pagetmpl&act=save" method="post" name="aEditor" id="aEditor">
+        <{input type="hidden"  name="tmpl[ptmpl_id]"  value=$ptmpl_id }>
+        <div class="division">
+            <table border="0" cellpadding="0" cellspacing="0">
+            	<tbody>
+                <tr>
+                    <th><em><font color="red">*</font></em><{t}>模板名称：<{/t}></th>
+                    <td>
+                        <{input type="text" name="tmpl[ptmpl_name]" required="true" vtype='required' value=$ptmpl_name }>
+                    </td>
+                </tr>
+                <tr>
+                    <th><{t}>模板内容：<{/t}></th>
+                    <td>
+                        <{input type="html" name="tmpl[content]" value=$content}>
+                    </td>
+                </tr>
+            </table>
+            </tbody>
+        </div>
+        <div class="table-action">
+            <{button type="submit" id='brand-form-submit' label="保存"|t:'syscontent'}>
+        </div>
+        </form>
+    </div>
+</div>
+<script>
+(function(){
+    var _form = $('aEditor');
+    var btn =$('brand-form-submit');
+    var finder = finderGroup['<{$env.get._finder.finder_id}>'];
+
+    _form.store('target',{
+      onSuccess:function(response){
+        var hash_res_obj = JSON.decode(response);
+
+        if (hash_res_obj.success != undefined && hash_res_obj.success != ""){
+          try{
+            var _dialogIns = btn.getParent('.dialog').retrieve('instance');
+          }catch(e){}
+
+          if(_dialogIns){
+            _dialogIns.close();
+            window.finderGroup['<{$env.get._finder.finder_id}>'].refresh();
+          }
+        }
+      }
+    });
+
+    btn.addEvent('click',function(){
+      _form.fireEvent('submit',{stop:$empty});
+    });
+
+  })();
+</script>

@@ -1,0 +1,104 @@
+<{if $setting.open == 'true'}>
+<div id="app_download" class="shopex-popover bbc-popover">
+  <div class="content-padded content-center">
+    <div class="wrapper-center img-block no-border content-vertical-padded">
+      <img src="../images/app.png" height="220" width="220" alt="">
+    </div>
+    <p><{$setting.desc}></p>
+    <div class="content-padded">
+      <button id="shopex-bbc-app-download" class="shopex-btn shopex-btn-warning shopex-btn-block bbc-btn-warning">立即下载</button>
+    </div>
+  </div>
+</div>
+<script>
+  function setCookie(c_name,value,expiredays){
+    var exdate = new Date();
+    exdate.setDate(exdate.getDate() + expiredays);
+    document.cookie = c_name+ "=" +escape(value) + ((expiredays==null) ? "" : ";expires="+exdate.toGMTString())
+  }
+  function getCookie(c_name){
+    if (document.cookie.length>0){
+      c_start=document.cookie.indexOf(c_name + "=");
+      if (c_start!=-1){ 
+        c_start=c_start + c_name.length+1 ;
+        c_end=document.cookie.indexOf(";",c_start);
+        if (c_end==-1) c_end=document.cookie.length;
+          return unescape(document.cookie.substring(c_start,c_end));
+        } 
+      }
+    return "";
+  }
+  var androidUrl = '<{$setting.android_url}>';
+  var iosUrl     = '<{$setting.ios_url}>';
+  var weixinUrl = '<{url action=topwap_ctl_app@wxDownloadBoot}>'
+  var APPCommon = {
+    schema: 'bbc://',
+    iphoneDownUrl: iosUrl,
+    androidDownUrl: androidUrl,
+    openApp: function(){
+        var this_  =  this;
+        //微信
+        if(this_.isWeixin()){
+            location.href = weixinUrl;
+        }else{//非微信浏览器
+            if (navigator.userAgent.match(/(iPhone|iPod|iPad);?/i)) {
+                var loadDateTime = new Date();
+                window.setTimeout(function() {
+                    var timeOutDateTime = new Date();
+                    if (timeOutDateTime - loadDateTime < 5000) {
+                        window.location = this_.iphoneDownUrl;//ios下载地址
+                    } else {
+                        window.close();
+                    }
+                },25);
+                window.location = this.schema;
+            }else if (navigator.userAgent.match(/android/i)) {
+                try {
+                    window.location = this_.schema;
+                    setTimeout(function(){
+                        window.location=this_.androidDownUrl; //android下载地址
+
+                    },500);
+                } catch(e) {}
+            }
+        }
+    },
+    isWeixin: function(){ //判断是否是微信
+        var ua = navigator.userAgent.toLowerCase();
+        if (ua.match(/MicroMessenger/i) == "micromessenger") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+  };
+
+  var dom = '<div class="bg-orange app-download-tip"><div class="tip-img"><img src="<{$setting.logo|storager}>" alt=""></div><div class="box-item-flex1 font-white fontS"><{$setting.desc}></div><button class="shopex-btn shopex-btn-outlined bbc-btn-sm bbc-btn-white bbc-btn-white-outlined">立即下载</button></div></div>'
+  $(function(){
+    $('#shopex-bbc-app-download').on('tap',function(){
+      APPCommon.openApp();
+    })
+    $('body').on('tap','.app-download-tip',function(){
+      APPCommon.openApp();
+    })
+    if (navigator.userAgent.match(/android/i) && androidUrl){
+      if(getCookie('isfirst') == ""){
+        shopex('#app_download').popover('show');
+        setCookie('isfirst', '1', 1);
+      }
+    }
+    if (navigator.userAgent.match(/(iPhone|iPod|iPad);?/i) && iosUrl){
+      if(getCookie('isfirst') == ""){
+        shopex('#app_download').popover('show');
+        setCookie('isfirst', '1', 1);
+      }
+    }
+    shopex('body').on('hidden', '#app_download', function(e) {
+      $('.app-download-tip').show();
+      $('body').addClass('body-padded');
+      $('.index-header').before(dom);
+    });
+  })
+</script>
+<{/if}>

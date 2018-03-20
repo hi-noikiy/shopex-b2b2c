@@ -1,0 +1,25 @@
+<div class="tableform">
+  <div class="division">
+    <table width="100%" cellspacing="0" cellpadding="0">
+      <tr>
+        <th><label><{t}>店铺名称：<{/t}></label></th>
+        <td><{$shop.shop_name}></td>
+        <th><label>保证金额度：</label></th>
+        <td><{$guaranteeMoney.guarantee_money|default:0}></td>
+      </tr>
+      <tr>
+        <th><label><{t}>店铺类型：<{/t}></label></th>
+        <td><{$shop.shoptype}></td>
+        <th><label><{t}>保证金余额：<{/t}></label></th>
+        <td><{$guaranteeMoney.guarantee_money_balance|default:0}></td>
+      </tr>
+      <tr>
+        <th><label><{t}>保证金账户状态：<{/t}></label></th>
+        <td><{if $guaranteeMoney.account_status =='0'}>正常<{elseif $guaranteeMoney.account_status =='1'}>预警<{else}><span style="color: red">欠缴</span><{/if}></td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<script>
+</script>

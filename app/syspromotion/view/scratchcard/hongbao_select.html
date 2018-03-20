@@ -1,0 +1,53 @@
+<div id="hongbao_select" class="hongbao-select-box tableform">
+	<select id="hongbao_list">
+		<{foreach from=$hongbaoList item=item}>
+      	<option value="<{$item.hongbao_id}>"><{$item.name}></option>
+      	<{/foreach}>
+	</select>
+	<div id="hongbao_list_box" class="division">
+		<ul>
+		</ul>
+	</div>
+</div>
+<{area inject='.mainFoot'}>
+<div class="table-action">
+  <{button class='close-btn' label="完成"|t:'syscategory'}>
+</div>
+<{/area}>
+
+<script>
+  void function(){
+    $E('.close-btn', $('hongbao_select').getParent('.dialog-box')).addEvent('click',function(){
+      var dialog=this.getParent('.dialog');
+      if(!dialog) return;
+      var selectedHongbao = $('hongbao_select').getElements('input:checked');
+      if(selectedHongbao.length <= 0) {
+      	alert("请选择红包");
+      	return;
+      }
+
+      dialog.retrieve('callback',$empty)(selectedHongbao[0].getParent(), $('hongbao_list').getElement('option:selected').get('value'));
+      dialog.getElement('.btn-close').fireEvent('click');
+    });
+  }();
+
+  $("hongbao_list").addEvent('change', function(){
+  	var activity_name = $(this).getElement('option:selected').get('text');
+    getRedpacketList(this.value, activity_name);
+  }).fireEvent('change');
+
+  function getRedpacketList(hongbao_id, activity_name) {
+  	new Request({url:'?app=syspromotion&ctl=admin_scratchcard&act=getHongbao',method:'post',data:{hongbao_id: hongbao_id},onComplete:function(rs){
+     var hongbaoJSON = JSON.parse(rs);
+     if(!hongbaoJSON) return;
+     var hongbaoList = hongbaoJSON.hongbao_list;
+     var redpacketList = [];
+     var hongbaoTxt = "";
+     for(var key in hongbaoList) {
+        hongbaoTxt = hongbaoJSON.hongbao_type == "stochastic" ? "随机红包" : hongbaoJSON.hongbao_type == "fixed" ? "定额红包" : "";
+        redpacketList.push('<li><label><input type="hidden" name="hongbaotype" value="'+hongbaoJSON.hongbao_type+'"><input type="radio" name="money" value="' + hongbaoList[key].money + '" />&nbsp;' + hongbaoTxt + '-' + hongbaoList[key].money + '元－' + activity_name + '</label></li>');
+     }
+     $('hongbao_list_box').getElement('ul').set('html', redpacketList.join(''));
+   	}}).send();
+  }
+</script>

@@ -1,0 +1,41 @@
+<div id="applink_<{$domid}>" style="display:inline-block;vertical-align:top;">
+    <select class="x-select" id="<{$domid}>" name="<{$linktypename}>">
+        <option data-noobject=true value="">请选择页面</option>
+        <{foreach from=$linkmapapp key=key item=item}>
+        <option value="<{$key}>" <{if !$item.obj}>data-noobject=true<{/if}> <{if $linktypevalue==$key}> selected=true <{/if}> ><{$item.name}></option>
+        <{/foreach}>
+    </select>
+    <div id="applinkobj_<{$domid}>"></div>
+    <div id="applinkobjname_<{$domid}>" <{if $linktypevalue=='h5' || $linkmapapp[$linktypevalue].obj.object}>style="display:;" <{else}> style="display:none" <{/if}> >
+    ID:<input type="text" name=<{$name}> value="<{$value}>" placeholder="自定义h5页则填完整链接，其他都是ID">
+    </div>
+</div>
+<script>
+function _callback_applink_<{$domid}>(rs, el){
+    $('applink_<{$domid}>').getElement('input[type=text]').value=JSON.decode(rs).id;
+}
+
+$('<{$domid}>').addEvent('change',function(){
+    var noobject = this.options[this.selectedIndex].get('data-noobject');
+    var linkkey = this.value;
+    if( noobject && (linkkey!='h5'||!linkkey) ){ //独立页面不需要参数的
+        $('applinkobj_<{$domid}>').set('html','');
+        $('applinkobjname_<{$domid}>').hide();
+    }else{ //需要后台ojbect选择框来选择对应主键的
+        $('applinkobjname_<{$domid}>').show();
+        $('applinkobjname_<{$domid}>').getElement('input[type=text]').value=''; //将id值置空
+        console.log(linkkey);
+        if(linkkey=='h5'){
+            $('applinkobj_<{$domid}>').set('html','');
+            return;
+        }
+        new Request.HTML({
+            method:'get',
+            update:$('applinkobj_<{$domid}>'),
+            url:'?app=sysapp&ctl=admin_utils&act=ajax_get_object',
+            data:'callback=_callback_applink_<{$domid}>&linktype='+linkkey+'&name=<{$name}>&value=<{$value}>',
+        }).send();
+    }
+});
+
+</script>

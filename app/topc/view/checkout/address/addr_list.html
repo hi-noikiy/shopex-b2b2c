@@ -1,0 +1,23 @@
+
+  <{foreach from=$userAddrList item=addrList}>
+  <li class="form-row <{if $addrList.def_addr}>on<{/if}>">
+    <label>
+      <input type="radio" name="addr" value="<{$addrList.addr_id}>" data-validate="onerequired" <{if $addrList.def_addr}>checked<{/if}>>
+      <span class="addr-info" data-region-id="<{$addrList.region_id}>" data-addr-id="<{$addrList.addr_id}>" data-addr="<{$addrList.addr}>" data-name="<{$addrList.name}>" data-mobile="<{$addrList.mobile}>" data-zip="<{$addrList.zip}>" title="<{$addrList.area|region}>&nbsp;<{$addrList.addr}> （<{$addrList.name}> 收） <{$addrList.mobile}>">
+        <{$addrList.area|region}>&nbsp;<{$addrList.addr|cut:75}> （<{$addrList.name}> 收） <{$addrList.mobile}>
+      </span>
+      <a href="javascript:void(0);" class="action-edit-address btn_dialog">修改本地址</a>
+      <{if $addrList.def_addr}>
+      <span class="address-default">默认地址</span>
+      <{/if}>
+    </label>
+    <div class="checked-icon">
+      <i class="icon icon-checkmark"></i>
+    </div>
+  </li>
+  <{/foreach}>
+  <li class="form-row list-addr-more">
+    <input type="radio" name="addr" id="for_newaddr" class="action-edit-address" value="-1">
+    <label for="for_newaddr"><i class="icon icon-add"></i>使用新地址</label>
+  </li>
+

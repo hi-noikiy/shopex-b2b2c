@@ -1,0 +1,81 @@
+<div class="alert alert-error message in" role="alert" id="messagebox" style="display:none;"></div>
+<header class="main-header">
+  <a href="<{url action=topshop_ctl_index@index}>" class="logo">
+    <!-- mini logo for sidebar mini 50x50 pixels -->
+    <span class="logo-mini"><b><{$system_site_name|cut:4:''}></b></span>
+
+    <!-- logo for regular state and mobile devices -->
+    <span class="logo-lg"><{$system_site_name}></span>
+    <!-- <img src="<{$logo|storager}>" alt=""> -->
+  </a>
+  <nav class="navbar navbar-static-top">
+    <!-- Sidebar toggle button-->
+    <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+      <span class="sr-only"></span>
+    </a>
+
+    <div class="navbar-custom-menu">
+      <ul class="nav navbar-nav">
+        <li class="dropdown user user-menu">
+          <!--a href="<{url action=topc_ctl_default@index}>" class="dropdown-toggle" target="_blank">
+            <span><{t}>商城首页<{/t}></span>
+          </a-->
+          <a href="<{url subdomain=$shop.subdomain action=topc_ctl_shopcenter@index shop_id=$shopId}>" class="dropdown-toggle" target="_blank">
+            <span><{t}>浏览店铺<{/t}></span>
+          </a>
+        </li>
+        <{if $topshop.seller}>
+        <li class="dropdown user user-menu">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <i class="glyphicon glyphicon-user"></i>
+            <span><{$topshop.seller.login_account}>
+              <i class="caret"></i>
+            </span>
+          </a>
+
+          <ul class="dropdown-menu text-right" role="menu">
+             <!-- User image -->
+              <li class="user-header">
+                <img src="<{$topshop.seller.shop_logo}>" class="img-circle" alt="User Image">
+                <p>
+                  <{$topshop.seller.login_account}>
+                  <small><{$topshop.seller.role_name}></small>
+                </p>
+              </li>
+              <!-- Menu Body -->
+              <li class="user-body">
+                <div class="row">
+                  <div class="col-xs-12 text-left">
+                    <i class="fa fa-phone"></i> &nbsp;<{$topshop.seller.mobile}>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xs-12 text-left">
+                    <i class="fa fa-envelope"></i> &nbsp;<{$topshop.seller.email}>
+                  </div>
+                </div>
+                <!-- /.row -->
+              </li>
+              <!-- Menu Footer-->
+              <li class="user-footer">
+                <div class="pull-left">
+                  <a href="<{url action=topshop_ctl_passport@update}>" class="btn btn-default btn-flat" data-toggle="modal" data-target="#pwdupdateIndexDialog"><{t}>修改密码<{/t}></a>
+                </div>
+                <div class="pull-right">
+                  <a href="<{url action=topshop_ctl_passport@logout}>" class="btn btn-default btn-flat"><{t}>退出<{/t}></a>
+                </div>
+              </li>
+          </ul>
+        </li>
+        <{/if}>
+      </ul>
+    </div>
+  </nav>
+</header>
+<div class="modal fade" id="pwdupdateIndexDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    </div>
+  </div>
+</div>
+

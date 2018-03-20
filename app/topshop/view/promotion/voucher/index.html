@@ -1,0 +1,168 @@
+<div class="callout callout-info">
+  <h4>营销方式说明：</h4>
+
+  <p>平台级的促销方式，平台发起购物券活动。平台对购物券活动条件进行设置和补贴比例，比如可参与的店铺类型、补贴比例、时间等。 商家可在购物券列表，在报名时限内，报名参与，最终由平台予以审核。优惠：一次下单只能使用一张购物券，若其他促销条件（不含组合促销）满足且实际付款金额达到购物券门槛，可共用一张购物券【优惠券与购物券可同时满足，先计算单店优惠】</p>
+</div>
+<form action="" method="post" role="form">
+  <div class="nav-tabs-custom" id="tabs">
+    <ul class="nav nav-tabs" role="tablist">
+      <li role="presentation" <{if !$is_apply}>class="active"<{/if}>>
+        <a href="<{url action=topshop_ctl_promotion_voucher@index}>">购物券列表</a>
+      </li>
+      <li role="presentation" <{if $is_apply}>class="active"<{/if}> >
+        <a href="<{url action=topshop_ctl_promotion_voucher@index is_apply=1}>">已申请列表</a>
+      </li>
+    </ul>
+    <div class="tab-content no-padding">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>购物券名称</th>
+            <th>补贴比例</th>
+            <th>规则</th>
+            <th>报名时间</th>
+            <th>参与情况</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <{if $list}>
+        <tbody id="data_node">
+          <{foreach from=$list item=item}>
+          <tr>
+            <td> <{$item.voucher_name}> </td>
+            <td class="text-green"><{$item.subsidy_proportion}>%</td>
+            <td>
+              满<{$item.limit_money|cur}>减<{$item.deduct_money|cur}>
+            </td>
+            <td><{$item.apply_begin_time|cdate}> 至 <{$item.apply_end_time|cdate}></td>
+            <td>
+              <{if $item.register}>
+              <{if $item.valid_status && $canuse_end_time > time() }>
+                <span class="label bg-gray">已结束</span>
+                <{/if}>
+
+                <{if $item.register.verify_status == 'pending'}>
+                <{if !$item.valid_status}>
+                <span class="label bg-gray">已失效</span>
+                <{else}>
+                <span class="label bg-blue">等待审核</span>
+                <{/if}>
+                <{elseif $item.register.verify_status == 'refuse'}>
+                <span class="label label-danger">审核拒绝</span>
+                <{else}>
+                <{if !$item.register.valid_status}>
+                  <span class="label bg-gray">已失效</span>
+                <{else}>
+                  <span class="label label-success">审核通过</span>
+                <{/if}>
+                <{/if}>
+              <{else}>
+                <{if $item.isactivity}>
+                <{if $canuse_end_time > time() }>
+                <span class="label bg-gray">已结束</span>
+                <{else}>
+                <span class="label label-success">可参加</span>
+                <{/if}>
+                <{else}>
+                <span class="label bg-gray">不可参加</span>
+                <{/if}>
+              <{/if}>
+            </td>
+            <td>
+              <{if !$item.register && $item.isactivity && $canuse_end_time <= time()}>
+              <a href="<{url action=topshop_ctl_promotion_voucher@detail voucher_id=$item.voucher_id}>">报名</a>
+              <{else}>
+              <a href="<{url action=topshop_ctl_promotion_voucher@detail voucher_id=$item.voucher_id}>">查看详情</a>
+              <{/if}>
+            </td>
+          </tr>
+          <{/foreach}>
+        </tbody>
+        <{else}>
+        <tbody id="data_node">
+          <tr>
+            <td algin="center" colspan="11">
+              <p class="help-block text-center">暂无数据</p>
+            </td>
+          </tr>
+        </tbody>
+        <{/if}>
+      </table>
+
+      <{if $total > 0 }>
+      <div class="text-right">
+        <{pagers data=$pagers}>
+        <span class="page-number">共&nbsp;<em class="text-aqua"><{$total}></em>&nbsp;条记录</span>
+      </div>
+      <{/if}>
+    </div>
+  </div>
+</form>
+
+<script type="text/javascript">
+  $('#selectAll').change(function(){
+    $('#data_node input[type=checkbox]').prop('checked', this.checked);
+  });
+
+  $('#action-onsale').on('click',function(){
+    var itemIds = new Array();
+    $($("#data_node input[name='item_ids']:checked")).each(function(){
+      $.post('<{url action=topshop_ctl_item@setItemStatus}>', 'type=tosale&item_id='+$(this).val(), function(rs){
+        if(rs.error) {
+          $('#messagebox').message(rs.message);
+          return;
+        }
+        if(rs.success) {
+          $('#messagebox').message(rs.message, 'success');
+          setTimeout(function(){location.reload();}, 800);
+        }
+      });
+      // itemIds.push($(this).val());//向数组中添加商品id
+    });
+    // if(itemIds.length>0){
+    //     var itemIdsStr=itemIds.join(',');//将商品id数组元素连接起来以构建一个字符串
+    // }else{
+    //     return false;
+    // }
+  });
+  $('#action-instock').on('click',function(){
+    var itemIds = new Array();
+    $($("#data_node input[name='item_ids']:checked")).each(function(){
+      $.post('<{url action=topshop_ctl_item@setItemStatus}>', 'type=tostock&item_id='+$(this).val(), function(rs){
+        if(rs.error) {
+          $('#messagebox').message(rs.message);
+          return;
+        }
+        if(rs.success) {
+          $('#messagebox').message(rs.message, 'success');
+          setTimeout(function(){location.reload();}, 800);
+        }
+      });
+    });
+  });
+
+  $('#action-remove').on('click',function(){
+    var itemIds = new Array();
+    $($("#data_node input[name='item_ids']:checked")).each(function(){
+      $.post('<{url action=topshop_ctl_item@deleteItem}>', 'item_id='+$(this).val(), function(rs){
+        if(rs.error) {
+          $('#messagebox').message(rs.message);
+          return;
+        }
+        if(rs.success) {
+          $('#messagebox').message(rs.message, 'success');
+          setTimeout(function(){location.reload();}, 800);
+        }
+      });
+    });
+  });
+
+</script>
+
+<script>
+  $(document).ready(
+    function() {
+      $(".sidebar .sidebar-menu li a i.glyphicon").eq(1).removeClass("glyphicon-list-alt").addClass("glyphicon-edit");
+    }
+  );
+</script>

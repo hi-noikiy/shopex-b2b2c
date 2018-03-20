@@ -1,0 +1,180 @@
+<div class="modal-dialog" role="document" aria-hidden="true">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    		<h4 class="modal-title" id="gridSystemModalLabel">商品导入</h4>
+		</div>
+	    <form action="" method="post" enctype="multipart/form-data" role="form" id="import-form">
+			<div class="modal-body">
+	        	<div class="form-group file-upload-icon text-conter">
+	        		<input type="file" name="import_file" class="hidden file-input">
+	        		<i class="glyphicon glyphicon-open action-file-upload"></i>
+	        		<i class="glyphicon glyphicon-file"></i>
+	        	</div>
+	        	<p class="file-name text-center">未选择文件</p>
+	        	<div class="form-group text-center">
+	        		<button type="button" class="btn btn-primary btn-upload">导入商品</button>
+	        	</div>
+	        	<div class="form-group file-explain">
+	        	<span>说明：</span>
+				<p>1、请使用符合模板要求的文档，且只可上传同一类目的文档</p>
+				<p>2、单次最多上传30条商品（货品）</p>
+				<p>3、可在操作日志中查看导入导出记录</p>
+				<p>4、导入的详细规则请见<a href="http://club.ec-os.net/doc/b2b2c-manual_book/300.shopCenter/400.goods-manager.md#6" target="_blank" style="text-decoration: underline;">此处</a></p>
+	        	</div>
+			</div>
+			<div class="modal-footer text-center">
+				<div class="template-content">
+					<div class="template-show"><span>商品模版下载 <i class="icon-arrow-down"></i><i class="icon-arrow-up"></i></span></div>
+					<div class="form-group template-choose">
+		        		<select name="cat" id="cat" class="form-control">
+		        			<!-- <{foreach from=$lv3Cat item=cat}>
+		        			<optgroup label="<{$cat.cat_name}>">
+		        				<{foreach from=$cat.lv3 item=catLv3}>
+						     	<option value ="<{$catLv3.cat_id}>"><{$catLv3.cat_name}></option>
+						     	<{/foreach}>
+						    </optgroup>
+		        			<{/foreach}> -->
+		        		</select>
+		        		<select id="sub_cat" class="form-control"></select>
+		        		<button class="btn btn-primary" type="button" id="export-tmpl">下载</button>
+		        	</div>
+	        	</div>
+			</div>
+	    </form>
+		<!-- loading -->
+		<div class="wait-loading" style="display:none;">
+		  <div class="spinner">
+		    <div class="spinner-container container1">
+		      <div class="circle1"></div>
+		      <div class="circle2"></div>
+		      <div class="circle3"></div>
+		      <div class="circle4"></div>
+		    </div>
+		    <div class="spinner-container container2">
+		      <div class="circle1"></div>
+		      <div class="circle2"></div>
+		      <div class="circle3"></div>
+		      <div class="circle4"></div>
+		    </div>
+		    <div class="spinner-container container3">
+		      <div class="circle1"></div>
+		      <div class="circle2"></div>
+		      <div class="circle3"></div>
+		      <div class="circle4"></div>
+		    </div>
+		  </div>
+		</div>
+		<div class="loading-bg" style="display:none;"></div>
+	</div>
+</div>
+
+<script>
+catJSON = $.parseJSON('<{$lv3Cat|json_encode}>');
+var catOption = "";
+//商品模板目录加载
+for(var key in catJSON) {
+	if(catJSON[key].level == "2") {
+		catOption += '<option value="' + catJSON[key].cat_id + '">' + catJSON[key].cat_name + '</option>';
+	}
+}
+$('#cat').html(catOption);
+getSubCat(catJSON, $('#cat').val());
+$('#cat').on('change', function() {
+	getSubCat(catJSON, $(this).val());
+});
+function getSubCat(dataJson, catId) {
+	var subCat = "";
+	var subCatOption = "";
+	if(dataJson && catId != "") {
+		subCat = dataJson[catId].lv3;
+		for(var i = 0; i < subCat.length; i++) {
+			subCatOption += '<option value="' + subCat[i].cat_id + '">' + subCat[i].cat_name + '</option>';
+		}
+		$('#sub_cat').html(subCatOption);
+	}
+}
+
+$('.action-file-upload').on('click', function(){
+	var fileinput = $(this).parent().find('.file-input');
+	fileinput.click();
+});
+
+$('.file-input').on('change', function(){
+	var filename = $(this).val();
+	if(filename != "") {
+		$('.file-name').html(filename.substr(filename.lastIndexOf("\\")+1));
+		$('.file-upload-icon').addClass('choose-file-icon');
+	} else {
+		$('.file-upload-icon').removeClass('choose-file-icon');
+	}
+});
+
+$('.template-show').on('click', '>span', function() {
+	$(this).parents('.template-content').toggleClass('on');
+});
+
+$('.btn-upload').on('click', function(){
+	$('.wait-loading').show();
+	$('.loading-bg').show();
+	var formData = new FormData($('#import-form')[0]);
+	$.ajax({
+		url:'<{url action=topshop_ctl_item_importexport@import}>',
+		type:'POST',
+		data:formData,
+		async:true,
+		cache:false,
+		contentType:false,
+		processData:false,
+		//timeout:300000,
+		success:function(rs)
+		{
+			$(".wait-loading").hide();
+			$('.loading-bg').hide();
+			if(rs.error) {
+			    $('#messagebox').message(rs.message);
+			}
+			if(rs.success)
+			{
+				$('#messagebox').message(rs.message, 'success');
+				$('#import').modal('hide');
+			    if(rs.redirect) {
+			    	setTimeout(function(){
+			    		window.location.href = rs.redirect;
+			    	}, 2000);
+			    }
+			}
+			if(rs.error) {
+				$('#messagebox').message(rs.message, 'error');
+			}
+		},
+		error:function(rs)
+		{
+			$(".wait-loading").hide();
+			$('.loading-bg').hide();
+			$('#messagebox').message('unknown error');
+		}
+	})
+});
+
+$('#export-tmpl').on('click', function(){
+	var catId = $('#sub_cat option:selected').val();
+	var checkBrandUrl = '<{url action=topshop_ctl_item@ajaxGetBrand}>';
+	var params = 'cat_id='+catId;
+	$.post(
+		checkBrandUrl,
+		params,
+		function(rs){
+			if(rs && !$.isEmptyObject(rs)) {
+				if(rs.error) {
+				    $('#messagebox').message(rs.message);
+				    return;
+				}
+			}
+
+			// import
+			var downImportTmplUrl = '<{url action=topshop_ctl_item_importexport@downLoadImportTmpl}>'+'?';
+			window.location.href = downImportTmplUrl+params;
+		})
+});
+</script>

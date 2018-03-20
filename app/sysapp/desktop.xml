@@ -1,0 +1,22 @@
+<desktop>
+  <permissions>
+    <permission id="appmodule" display='true' parent='0' workground='site.wrokground.theme'>app模块配置</permission>
+    <permission id="app.push.logger" display='true' parent='0' workground='sysuser.wrokground.user'>推送消息日志列表</permission>
+    <permission id="app.push.client" display='true' parent='0' workground='sysuser.wrokground.user'>app消息推送</permission>
+  </permissions>
+
+  <workground name="站点" id="site.wrokground.theme" controller="admin_theme_manage" action="index"  order="1">
+    <menugroup name="App配置">
+      <menu app='sysapp' controller='admin_tmpl' action='index' permission='appmodule' display='true' order='10'>模块配置</menu>
+      <menu app='sysapp' controller='admin_download' action='index' permission='appmodule' display='true' order='11'>APP下载</menu>
+    </menugroup>
+  </workground>
+
+  <workground name="会员" id="sysuser.wrokground.user" controller="admin_user" action="index" order='30'>
+    <menugroup name="会员互动">
+      <menu app='sysapp' controller='admin_push_clients' action='index' permission='app.push.client' display='true' order='40'>app消息推送</menu>
+      <menu app='sysapp' controller='admin_push_logger' action='index' permission='app.push.logger' display='true' order='41'>推送消息日志列表</menu>
+    </menugroup>
+  </workground>
+
+</desktop>

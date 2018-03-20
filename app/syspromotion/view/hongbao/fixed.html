@@ -1,0 +1,41 @@
+<table border="0" cellspacing="0" cellpadding="0" class="gridlist hongbao_value_table <{$propInfo.show_type|default:'text'}>-prop-value-table">
+  <thead>
+    <tr>
+      <th>
+        <{t}>红包面额<{/t}>
+      </th>
+      <th>
+        <{t}>红包数量<{/t}>
+      </th>
+      <th>
+        <{t}>操作<{/t}>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <{if $hongbao_list}>
+    <{foreach from=$hongbao_list item=item key=key}>
+    <tr>
+      <td>
+        <{input type="text" name="money[$key]" value=$item.money size=10 vtype='required&&positive' }>
+      </td>
+      <td>
+        <{input type='text' name="num[$key]" value=$item.num size=10 vtype='required&&unsignedint' }>
+      </td>
+      <td>
+        <{img app=desktop src="bundle/delete.gif" class="delete" title="删除" style="cursor:pointer;" }>
+      </td>
+    </tr>
+    <{/foreach}>
+    <{/if}>
+  </tbody>
+</table>
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <th><{t}>红包总金额：<{/t}></th>
+    <td><h2><font color='red total-money' id="total_money"><{$total_money|cur}></font></h2></td>
+    <th><{t}>红包总数量：<{/t}></th>
+    <td><h2><font color='red total-num' id="total_num"><{$total_num|default:0}></font></h2></td>
+  </tr>
+</table>

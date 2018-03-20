@@ -1,0 +1,33 @@
+<div class="box box-primary clearfix">
+  <table class="table table-hovet">
+    <thead>
+      <tr>
+        <th>操作时间</th>
+        <th>用户名</th>
+        <th>操作内容</th>
+        <th>IP</th>
+      </tr>
+    </thead>
+    <{if $data}>
+    <tbody>
+      <{foreach from=$data item=item}>
+      <tr>
+        <td><{$item.created_time|cdate}></td>
+        <td><{$item.seller_username}></td>
+        <td><{$item.memo}></td>
+        <td><{$item.ip}></td>
+      </tr>
+      <{/foreach}>
+    </tbody>
+    <{else}>
+    <tbody id="none_cat">
+      <tr class="none-information">
+        <td colspan="6"><p class="help-block text-center">暂无数据</p></td>
+      </tr>
+    </tbody>
+    <{/if}>
+  </table>
+  <div class="pull-right">
+    <{pagers data=$pagers}>
+  </div>
+</div>

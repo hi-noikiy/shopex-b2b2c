@@ -1,0 +1,12 @@
+<div class="order-confirm-item-bd">
+  <div class="clearfix">
+    <div class="total-info">
+      <div class="row"><span class="col-lg-2">商品总件数：</span> <em class="col-lg-2 price shop-<{$shop_id}>-goods_count"><{$cartInfo.totalCart.number}></em></div>
+      <div class="row"><span class="col-lg-2">总重量：</span> <em class="col-lg-2 price shop-weight"><{$cartInfo.totalCart.totalWeight}>kg</em></div>
+      <div class="row"><span class="col-lg-2">商品总金额：</span> <em class="col-lg-2 price shop-total_fee"><{$cartInfo.totalCart.totalPrice|cur}></em></div>
+      <div class="row"><span class="col-lg-2">总运费：</span> <em class="col-lg-2 price price shop-post_fee"><{$cartInfo.totalCart|cur}></em></div>
+      <div class="row"><span class="col-lg-2">减免：</span> <em class="col-lg-2 price shop-reduction">-<{$cartInfo.totalCart.totalDiscount|cur}></em></div>
+      <div class="row"><span class="col-lg-2" style="line-height: 36px;">应付总额：</span> <em class="col-lg-2 price total-price" id="total_fee"><{$cartInfo.totalCart.totalAfterDiscount|cur}></em></div>
+    </div>
+  </div>
+</div>

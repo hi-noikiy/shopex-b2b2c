@@ -1,0 +1,30 @@
+<form action="<{url action=topshop_ctl_trade_cancel@ajaxSearch}>" method="post" role="form" data-validate-onsuccess="ajaxSuccess">
+  <div class="box-body">
+    <!-- Date range -->
+    <div class="form-group">
+      <label>申请时间：</label>
+
+      <div class="input-group">
+        <div class="input-group-addon">
+          <i class="fa fa-calendar"></i>
+        </div>
+        <input type="text" name="created_time" class="form-control pull-right reservation">
+      </div>
+      <!-- /.input group -->
+    </div>
+    <!-- /.form group -->
+
+    <!-- text input -->
+    <div class="form-group">
+      <label>订单号：</label>
+      <input type="text" name="tid" class="form-control" placeholder="请输入 ...">
+    </div>
+
+  </div>
+  <!-- /.box-body -->
+  <div class="box-footer">
+    <button type="button" class="btn btn-default" id="reset-form">重置</button>
+    <button type="submit" class="btn btn-info pull-right">搜索</button>
+  </div>
+  <!-- /.box-footer -->
+</form>

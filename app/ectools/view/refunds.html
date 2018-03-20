@@ -1,0 +1,82 @@
+<div class="tableform">
+  <div class="division">
+    <table width="100%">
+      <tr>
+        <th><{t}>退款类型：<{/t}></th>
+        <{if $refunds_type == '0' }>
+        <td>售后退款</td>
+        <th><{t}>售后单号：<{/t}></th>
+        <td><{$aftersales_bn}></td>
+        <{else}>
+        <td>取消订单退款</td>
+        <th><{t}>取消订单号：<{/t}></th>
+        <td><{$tid}></td>
+        <{/if}>
+      </tr>
+      <tr>
+        <th><{t}>退款方式：<{/t}></th>
+        <{if $rufund_type=='online'}>
+        <td>在线退款(原路返回)</td>
+        <{elseif $rufund_type=='offline'}>
+        <td>线下退款</td>
+        <{else}>
+        <td>无</td>
+        <{/if}>
+        <th><{t}>退款金额：<{/t}></th>
+        <td><em style="color: red"><{$cur_money|cur}></em></td>
+      </tr>
+      <tr>
+        <th><{t}>退款银行：<{/t}></th>
+        <td ><em class="red">*</em><{$refund_bank}></td>
+        <th><{t}>退款帐号：<{/t}></th>
+        <td><em class="red">*</em><{$refund_account}></td>
+      </tr>
+      <tr>
+        <th><{t}>收款银行：<{/t}></th>
+        <td><em class="red">*</em><{$receive_bank}></td>
+        <th><{t}>收款帐号：<{/t}></th>
+        <td><em class="red">*</em><{$receive_account}></td>
+      </tr>
+      <tr>
+        <th><{t}>退款人：<{/t}></th>
+        <td><em class="red">*</em><{$refund_people}></td>
+        <th><{t}>收款人：<{/t}></th>
+        <td><em class="red">*</em><{$beneficiary}></td>
+      </tr>
+      <tr>
+        <th><{t}>支付开始时间：<{/t}></th>
+        <td><{$created_time|cdate}></td>
+        <th><{t}>支付完成时间：<{/t}></th>
+        <td><{$finish_time|cdate}></td>
+      </tr>
+      <tr>
+        <th><{t}>交易主订单号：<{/t}></th>
+        <td><{$tid}></td>
+        <th><{t}>支付状态：<{/t}></th>
+        <{if $status =='succ'}>
+        <td>支付成功</td>
+        <{elseif $status =='failed'}>
+        <td>支付失败</td>
+        <{elseif $status =='cancel'}>
+        <td>未支付</td>
+        <{elseif $status =='error'}>
+        <td>处理异常</td>
+        <{elseif $status =='invalid'}>
+        <td>非法参数</td>
+        <{elseif $status =='progress'}>
+        <td>处理中</td>
+        <{elseif $status =='timeout'}>
+        <td>超时</td>
+        <{elseif $status =='ready'}>
+        <td>准备中</td>
+        <{/if}>
+      </tr>
+      <{if $oid}>
+      <tr>
+      <th><{t}>交易子订单号：<{/t}></th>
+      <td><{$oid}></td>
+      </tr>
+      <{/if}>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,77 @@
+<{if $gask}>
+<table class="table table-condensed">
+  <{foreach from=$gask item=item}>
+  <tbody>
+    <tr>
+      <th>
+        <a href="<{url action=topc_ctl_item@index item_id=$item.item_id}>"> <img width="36" height="36" src="<{$item.image_default_id|storager:t}>"> <{$item.item_title}></a>
+      </th>
+    </tr>
+    <tr>
+      <td>
+        <div class="box-body chat">
+          <div class="item">
+            <!-- <img src="<{$item.image_default_id|storager:t}>" alt="user image" class="online"> -->
+
+           <!--  <p class="">
+              <a href="#" class="name">
+                <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> <{$item.created_time|cdate}></small>
+                <{if $item.contack}> <{$item.contack}><{else}><{$item.author}> <{/if}>（<{if !$item.is_anonymity}>实名<{else}>匿名<{/if}>）
+              </a>
+              <{$item.content}>
+            </p> -->
+            <div class="attachment" style="margin-bottom: 20px;">
+              <h4>
+                <{if $item.contack}> <{$item.contack}><{else}><{$item.author}> <{/if}>（<{if !$item.is_anonymity}>实名<{else}>匿名<{/if}>:<small class="text-muted pull-right"><i class="fa fa-clock-o"></i> <{$item.created_time|cdate}></small>
+              </h4>
+              <p class="filename">
+                <{$item.content}>
+              </p>
+              <div class="pull-right">
+                <{if $item.is_display == "false"}>
+                <button type="button" class="btn btn-primary btn-xs gask_display" data-id="<{$item.consultation_id}>" data-status="<{$item.is_display}>">显示至商品详情页</button>
+                <{else}>
+                <button type="关闭显示" class="btn btn-primary btn-xs gask_display" data-id="<{$item.consultation_id}>" data-status="<{$item.is_display}>">关闭显示</button>
+                <{/if}>
+                <{if !$item.is_reply}>
+                <button type="button" class="btn btn-primary btn-xs" data-id="<{$item.consultation_id}>" data-toggle="modal"  data-target="#reply_modal">回复</button>
+                <{/if}>
+              </div>
+            </div>
+            <{if $item.reply}>
+            <div class="attachment bg-gray" style="color: #666;">
+              <h4><{$item.reply.author}>:<small class="text-muted pull-right"><i class="fa fa-clock-o"></i> <{$item.reply.created_time|cdate}></small></h4>
+
+              <p class="filename">
+                <{$item.reply.content}>
+              </p>
+
+              <div class="pull-right">
+                <{if $item.reply.is_display == "false"}>
+                <button type="button" class="btn btn-primary btn-xs gask_display" data-id="<{$item.reply.consultation_id}>" data-status="<{$item.reply.is_display}>">显示至商品详情页</button>
+                <{else}>
+                <button type="button" class="btn btn-primary btn-xs gask_display" data-id="<{$item.reply.consultation_id}>" data-status="<{$item.reply.is_display}>">关闭显示</button>
+                <{/if}>
+                <button type="button" class="btn btn-primary btn-xs gask_del" data-id="<{$item.reply.consultation_id}>">删除</button>
+              </div>
+            </div>
+            <!-- /.attachment -->
+            <{/if}>
+          </div>
+          
+        </div>
+      </td>
+    </tr>
+  </tbody>
+  <{/foreach}>
+</table>
+<{else}>
+<p class="help-block text-center">暂无数据</p>
+<{/if}>
+<div class="text-right">
+  <{pagers data=$pagers}>
+  <{if $total > 0 }>
+  <span class="page-number">共&nbsp;<em class="text-aqua"><{$total}></em>&nbsp;条记录</span>
+  <{/if}>
+</div>
+

@@ -1,0 +1,24 @@
+<div class="tableform">
+  <div class="division">
+    <table width="100%" border="0" cellpadding="0" cellspacing="0"  class="shop-setting">
+      <thead>
+        <tr>
+          <td>图片</td>
+          <td>规格</td>
+          <td>原价</td>
+          <td>活动价</td>
+        </tr>
+      </thead>
+      <tbody>
+        <{foreach from=$skuList item=skudata}>
+        <tr>
+          <td> <img src="<{$skudata.image_default_id|storager:t}>" width="50" higher="50"></td>
+          <td><{$skudata.spec_info}></td>
+          <td><{$skudata.price|cur}></td>
+          <td><{$skudata.activity_price|cur}></td>
+        </tr>
+        <{/foreach}>
+      </tbody>
+    </table>
+  </div>
+</div>

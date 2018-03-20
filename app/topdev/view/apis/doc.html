@@ -1,0 +1,133 @@
+<html>
+  <head>
+    <{include file="topdev/common/head.html"}>
+    <{css app="toputil" src="googlecode.css"}>
+    <{script app="toputil" src="highlight.pack.js"}>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </head>
+  <body>
+    <{foreach from=$topapisList item=group key=groupname}>
+      <div class="box box-solid">
+        <div class="box-body no-padding">
+          <ul class="nav nav-pills nav-stacked">
+            <li class="active">
+              <a href="#<{$group.name}>"> <h1><{$group.name}>相关API </h1></a>
+            </li>
+            <{foreach from=$group.list key=key1 item=item}>
+            <li>
+              <a href="#<{$key1}>"> <h2><{$key1}><span class="col-md-8 pull-right"><{$item.apidesc}></span></h2> </a>
+            </li>
+            <{/foreach}>
+          </ul>
+        </div>
+      </div>
+    <{/foreach}>
+
+    <{foreach from=$topapisList item=group key=groupname}>
+    <h1><a name="<{$group.name}>"> <{$group.name}>相关API</a></h1>
+    <{foreach from=$group.list key=key item=item}>
+    <div class="box box-primary">
+      <div class="box-header with-border">
+        <h2 class="box-title"><a name="<{$key}>"><{$item.apidesc}>（<{$key}>）</h2>
+      </div><!-- /.box-header -->
+      <div class="box-body">
+        <div class="panel panel-info">
+          <!-- Default panel contents -->
+          <div class="panel-heading">接口参数</div>
+          <div class="panel-body">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>字段</th>
+                  <th width="10%">数据类型</th>
+                  <th width="15%">验证条件</th>
+                  <th width="20%">示例值</th>
+                  <th width="40%">描述</th>
+                </tr>
+              </thead>
+              <tbody>
+                <{foreach from=$item.system_params item="column" key="columnName"}>
+                <tr>
+                  <td><{$column.field}></td>
+                  <td><{$column.type}></td>
+                  <td><{$column.validate}></td>
+                  <td style="word-break:break-all"><{$column.example}></td>
+                  <td><{$column.desc}></td>
+                </tr>
+                <{/foreach}>
+                <{foreach from=$item.params item="column" key="columnName"}>
+                <tr>
+                  <td> <{$column.field}> </td>
+                  <td><{$column.type}></td>
+                  <td><{$column.validate}></td>
+                  <td style="word-break:break-all"><{$column.example}></td>
+                  <td><{$column.desc}></td>
+                </tr>
+                <{if $column.type  == "jsonArray" || $column.type  == "jsonObject" }>
+                <tr>
+                  <td colspan="5">
+                    <div class="box collapsed-box box-solid">
+                      <div class="box-header with-border">
+                        <h5 class="box-title">查看结构详情</h5>
+                        <div class="box-tools pull-right">
+                          <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="box-body" style="display: none;">
+                        <table class="table table-bordered">
+                          <tbody>
+                            <{foreach from=$column.params item=item key=key}>
+                            <tr>
+                              <td><{$key}></td>
+                              <td><{$item.type}></td>
+                              <td><{$item.valid}></td>
+                              <td><{$item.desc}></td>
+                            </tr>
+                            <{/foreach}>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <{/if}>
+                <{/foreach}>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="panel panel-success">
+          <!-- Default panel contents -->
+          <div class="panel-heading">返回结果</div>
+          <div class="panel-body">
+            <div class="bs-example bs-example-tabs" data-example-id="togglable-tabs">
+              <div id="myTabContent" class="tab-content">
+                <{if $item.response}>
+                <table class="table table-striped" >
+                  <thead>
+                    <tr><th>返回字段</th><th>类型</th><th width="70%">说明</th></tr>
+                  </thead>
+                  <tbody>
+                    <{foreach from=$item.response item="rcolumn" key="rcolumnName"}>
+                    <tr>
+                      <td><{$rcolumn[1]}></td>
+                      <td><{$rcolumn[0]}></td>
+                      <td><{$rcolumn[2]}></td>
+                    </tr>
+                    <{/foreach}>
+                  </tbody>
+                </table>
+                <{else}>
+                  <{if $item.returnJson}><pre><code id="json-output"><{$item.returnJson}></code></pre><{/if}>
+                <{/if}>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!-- /.box-body -->
+    </div>
+    <{/foreach}>
+    <{/foreach}>
+  </body>
+</html>

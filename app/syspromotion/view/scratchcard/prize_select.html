@@ -1,0 +1,37 @@
+<div id="prize_select" class="prize-select-box tableform">
+	<div class="division">
+		<ul>
+			<li data-item="none">未中奖</li>
+			<li data-item="point">积分</li>
+			<li data-item="hongbao">红包</li>
+      <li data-item="voucher">购物券</li>
+
+      <!--
+      <li data-item="custom">自定义奖项</li>
+      -->
+		</ul>
+	</div>
+  <div class="notice">注：若会员不符合对应奖项的领取规则，即便抽中也不会获奖，系统会自动转变为【未中奖】。</div>
+</div>
+<{area inject='.mainFoot'}>
+<div class="table-action">
+  <{button class='close-btn' label="完成"|t:'syspromotion'}>
+</div>
+<{/area}>
+
+<script>
+  void function(){
+  	$('prize_select').getElements('li').addEvent('click', function(){
+  		$(this).toggleClass('selected');
+  	});
+    $E('.close-btn', $('prize_select').getParent('.dialog-box')).addEvent('click',function(){
+      var dialog=this.getParent('.dialog');
+      if(!dialog) return;
+      var selectedPrize = $('prize_select').getElements('li.selected');
+      if(selectedPrize.length > 0){
+        dialog.retrieve('callback',$empty)(selectedPrize);
+      }
+      dialog.getElement('.btn-close').fireEvent('click');
+    });
+  }();
+</script>

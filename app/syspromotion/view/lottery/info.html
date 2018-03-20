@@ -1,0 +1,139 @@
+<form id="lotteryForm" action="?app=syspromotion&ctl=admin_lottery&act=updateStatus"  method="POST" >
+  <input type="hidden" name="lottery_id"  value="<{$lottery_id}>">
+  <div class="tableform">
+    <div class="division">
+      <table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <th><{t}>活动名称：<{/t}></th>
+          <td><{$lottery_name}></td>
+        </tr>
+        <tr>
+          <th><{t}>规则描述：<{/t}></th>
+          <td><{$lottery_desc}></td>
+        </tr>
+        <tr>
+          <th><{t}>获取抽奖次数方式：<{/t}></th>
+          <td>
+              <input type="radio" name ="lottery_type" value='0' <{if $lottery_type==0}> checked<{/if}> disabled="disabled" >全部
+              <input type="radio" name ="lottery_type" value="1" <{if $lottery_type==1}> checked<{/if}> disabled="disabled">初始可抽奖
+              <input type="radio" name ="lottery_type" value="2" <{if $lottery_type==2}> checked<{/if}> disabled="disabled">积分兑换
+            </td>
+        </tr>
+        <tr>
+          <th><{t}>初始可抽奖次数：<{/t}></th>
+          <td><{$lottery_joint_limit}></td>
+        </tr>
+        <tr>
+          <th><{t}>积分兑换所需积分：<{/t}></th>
+          <td><{$lottery_point_num}></td>
+        </tr>
+        <tr>
+          <th><{t}>发布平台：<{/t}></th>
+          <td>
+            <select name="used_platform" disabled="disabled">
+              <option value="0" <{if $used_platform == '0'}>selected<{/if}>>全平台</option>
+              <option value="1" <{if $used_platform == '1'}>selected<{/if}>>电脑端</option>
+              <option value="2" <{if $used_platform == '2'}>selected<{/if}>>手机端</option>
+            </select>
+          </td>
+        </tr>
+        <!-- <tr>
+          <th><{t}>奖项设置：<{/t}></th>
+          <td>
+            添加奖项
+            <h10>至少添加X项，最多添加Y项，所以奖项概率之和需为100%</h10>
+          </td>
+        </tr> -->
+      </table>
+    </div>
+    <div class="division">
+      <div class="gridlist-action">
+        <input type='button' value='奖项设置' id="setPrize" disabled="disabled">
+        <!-- <{button app="desktop" label="奖项设置2"|t:'syscategory' id="addPrize" icon="btn_add.gif" }><span class="notice-inline"></span> -->
+      </div>
+
+      <table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <thead>
+          <tr>
+            <th style="width:40%;"></th>
+            <th style="width:25%;"></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <{foreach from=$lottery_rules item=item key=key}>
+          <{if $item.bonus_type=='hongbao'}>
+          <tr>
+            <td>
+              红&nbsp;&nbsp;&nbsp;包：<input type="text" name="rate" value="<{$item.hongbaomoney}>元-红包<{$item.hongbaoid}>" size=30 vtype='required' disabled="disabled">
+            </td>
+            <td>
+              中奖概率：<input type="text" name="rate" value="<{$item.rate}>" size=10 vtype='required' disabled="disabled"> &nbsp;&nbsp;%
+            </td>
+            <td><{input type="color" name="color" value=$item.color}></td>
+          </tr>
+          <{elseif $item.bonus_type=='point'}>
+          <tr>
+            <td>
+              积分：<input type="text" name="num" value="<{$item.num}>" size=10 vtype='required' disabled> &nbsp;&nbsp;点
+            </td>
+            <td>
+              中奖概率：<input type="text" name="rate" value="<{$item.rate}>" size=10 vtype='required' disabled="disabled"> &nbsp;&nbsp;%
+            </td>
+            <td><{input type="color" name="color" value=$item.color}></td>
+          </tr>
+          <{else}>
+          <tr>
+            <td>
+            <{if $item.bonus_type=='custom'}>自定义：<{elseif $item.bonus_type=='none'}>未中奖：<{/if}>
+              <input type="text" name="bonus_desc" value="<{$item.bonus_desc}>" size=30 vtype='required' disabled>
+            </td>
+            <td>
+              中奖概率：<input type="text" name="rate" value="<{$item.rate}>" size=10 vtype='required' disabled="disabled"> &nbsp;&nbsp;%
+            </td>
+            <td><{input type="color" name="color" value=$item.color}></td>
+            <{if $item.bonus_type=='custom'}>
+            <td>
+              <img src="<{$item.img|storager:'t'}>" width="45px" height="45px">
+            </td>
+            <{/if}>
+          </tr>
+          <{/if}>
+          <{/foreach}>
+        </tbody>
+      </table>
+    </div>
+    <input type="hidden" name="status" value="stop">
+    <div class="table-action">
+      <{button type="submit" id='brand-form-submit' label="暂停活动"|t:'syspromotion'}>
+    </div>
+  </div>
+</form>
+<script>
+  (function(){
+    var _form = $('lotteryForm');
+    var btn =$('brand-form-submit');
+    var finder = finderGroup['<{$env.get._finder.finder_id}>'];
+
+    _form.store('target',{
+      onSuccess:function(response){ var hash_res_obj = JSON.decode(response);
+
+        if (hash_res_obj.success != undefined && hash_res_obj.success != ""){
+          try{
+            var _dialogIns = btn.getParent('.dialog').retrieve('instance');
+          }catch(e){}
+
+          if(_dialogIns){
+            _dialogIns.close();
+            window.finderGroup['<{$env.get._finder.finder_id}>'].refresh();
+          }
+        }
+      }
+    });
+
+    btn.addEvent('click',function(){
+      _form.fireEvent('submit',{stop:$empty});
+    });
+
+  })();
+</script>

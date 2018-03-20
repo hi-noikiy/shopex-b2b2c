@@ -1,0 +1,220 @@
+<div class="notice clearfix tableform" id="browser_notice" style="display:none;">
+<div class="flt">
+<b class="f-14">	我们强烈建议您升级或更换到新型浏览器，提升后台操作体验（响应速度更快、视觉效果更佳）!</b>
+<p>被推荐的浏览器有：
+	Google <a href="http://www.google.com/chrome?hl=zh-cn" target="_blank"><b class="c-blue">Chrome</b></a>、
+	Apple  <a href="http://www.apple.com.cn/safari/download/" target="_blank"><b class="c-blue">Safari</b></a>、
+	Mozilla <a href="http://www.mozillaonline.com/" target="_blank"><b class="c-blue">Firefox</b></a>、
+	Microsoft <a href="http://www.microsoft.com/china/windows/internet-explorer/" target="_blank"><b class="c-blue">IE最新版</b></a>
+</p>
+</div>
+<div class="frt">
+	<span class="btn pointer close" onclick="$('browser_notice').dispose();">知道了</span>
+</div>
+</div>
+
+<script>
+void function(){
+	if(Browser.ie && Browser.version < 10){
+		if('know'==Cookie.read('browser-notice'))return;
+		$('browser_notice').show();
+		$$('#browser_notice .close').addEvent('click',function(){
+			Cookie.write('browser-notice','know',{duration:1});
+		});
+	}
+}();
+</script>
+<div class="widgets clearfix">
+	<div class="pop-data clearfix">
+		<ul>
+		<{foreach from=$stat item=html}>
+			<{$html}>
+		<{/foreach}>
+		</ul>
+	</div>
+	<div class="clearfix">
+    <div class="quick-entrance">
+      <ul class="clearfix">
+        <li class="loc-bg">
+          <a href="<{url route='shopadmin' app='syspromotion' ctl='admin_hongbao' act='index'}>">
+            <i class="fa fa-envelope-open"></i>
+            红包
+          </a>
+        </li>
+        <li class="loc-bg">
+          <a href="<{url route='shopadmin' app='syspromotion' ctl='admin_activity' act='index'}>">
+            <i class="fa fa-tags"></i>
+            活动管理
+          </a>
+        </li>
+        <li class="loc-bg">
+          <a href="<{url route='shopadmin' app='sysfinance' ctl='admin_guaranteeMoney' act='index'}>">
+            <i class="fa fa-money"></i>
+            保证金
+          </a>
+        </li>
+        <li class="loc-bg">
+          <a href="<{url route='shopadmin' app='sysclearing' ctl='admin_settlement' act='index'}>">
+            <i class="fa fa-calculator"></i>
+            结算
+          </a>
+        </li>
+        <li class="loc-bg">
+          <a href="<{url route='shopadmin' app='sysapp' ctl='admin_push_clients' act='index'}>">
+            <i class="fa fa-bell-o"></i>
+            APP推送
+          </a>
+        </li>
+        <li class="loc-bg">
+          <a href="<{url route='shopadmin' app='sysrate' ctl='appeal' act='index'}>">
+            <i class="fa fa-exchange"></i>
+            申诉
+          </a>
+        </li>
+        <li class="loc-bg">
+          <a href="<{url route='shopadmin' app='systrade' ctl='admin_complaints' act='index'}>">
+            <i class="fa fa-phone"></i>
+            订单投诉
+          </a>
+        </li>
+        <li class="loc-bg">
+          <a href="<{url route='shopadmin' app='syspromotion' ctl='admin_lottery' act='index'}>">
+            <i class="fa fa-gift"></i>
+            转盘抽奖
+          </a>
+        </li>
+        <li class="loc-bg">
+          <a href="<{url route='shopadmin' app='syspromotion' ctl='admin_scratchcard' act='index'}>">
+            <i class="fa fa-hand-pointer-o"></i>
+            刮刮卡
+          </a>
+        </li>
+        <!-- <li class="loc-bg">
+          <a href="#">
+            <i class="fa fa-building-o"></i>
+            商家入驻
+          </a>
+        </li> -->
+      </ul>
+    </div>
+    <div class="member-info">
+      <div class="member-info-header">
+        <div class="member-number"><{if $userdata.op_no}>编号：<{$userdata.op_no}><{/if}></div>
+        <div class="member-info-avatar"><i class="fa fa-user-secret"></i></div>
+      </div>
+      <div class="member-info-caption">
+        <ul>
+          <li><{$userdata.account.login_name}> &nbsp;<{if $userdata.super}><span class="tag tag-danger">超管</span><{/if}></li>
+          <li><{$userdata.name}></li>
+          <li><{$userdata.memo}></li>
+        </ul>
+      </div>
+      <div class="member-last-login-time">最后登录时间：<{$userdata.lastlogin|cdate:FDATE_FTIME}></div>
+    </div>
+		<!-- <div class="member-wealth">
+			<div class="member-wealth-title">正在使用</div>
+			<div class="member-wealth-body">
+				<ul>
+					<li>短信： 15120 <span class="text-gray">条</span> &nbsp;&nbsp; <button class="btn btn-sm btn-primary">购买</button></li>
+					<li>物流查询： <span class="text-gray">剩余</span> 290 <span class="text-gray">天<span>  &nbsp;&nbsp; <button class="btn btn-sm btn-primary">续费</button></li>
+					<li>电子发票： <span class="text-gray">未开通</span></li>
+					<li>银牌小跟班： <span class="text-success"><i class="fa fa-"></i>正常</span> &nbsp;&nbsp; <a href="#">查看</a></li>
+					<li>电子发票： <span class="text-gray">未开通</span></li>
+				</ul>
+			</div>
+		</div> -->
+	</div>
+	<div class="server-status clearfix">
+	<{$server}>
+	</div>
+</div>
+
+<{area inject=".mainFoot"}>
+<div class="note clearfix">
+	 <div class="span-auto">
+         <{t}> 当前版本：<{/t}><{$deploy.product_name}>  V<{$deploy.product_version}>(<{$deploy.business_version}>)
+		 <a target="command::{title:'<{t}>检查更新<{/t}>'}" class="lnk" style="color:#3367ac" href="?ctl=appmgr&act=fetchindex"><{t}>检查更新<{/t}></a>
+
+
+	  </div>
+	<div class="user-tip frt">
+		<span class="text-danger"><{t}>你知道么?<{/t}>&nbsp;&nbsp;&nbsp;&nbsp;</span><span id="dashboard-tip"><{$tip}></span>
+		 &nbsp;<span class="lnk" onclick="$('dashboard-tip').set('opacity',0);new Request.HTML({url:'?app=desktop&ctl=dashboard&act=fetch_tip',onComplete:function(){$('dashboard-tip').set('opacity',1);},update:'dashboard-tip',evalScripts:false}).get()"><{t}>再一条<{/t}></span>
+	</div>
+
+</div>
+<{/area}>
+
+<input type="hidden" id="dashboard-side-r-trigger"/>
+<script>
+
+
+
+
+   new Side_R('?app=desktop&ctl=dashboard&act=advertisement',{width:250,title:'<span class="font9px">advertisement</span>',trigger:$('dashboard-side-r-trigger'),
+		onShow:function(){this.container.setStyle('overflow-y','hidden');},
+        onHide:function(){this.container.setStyle('overflow-y','auto');}
+   });
+
+	$$('.head-nav .wg').removeClass('current');
+
+	(function(){
+		var syncMoveState = (function(){
+			$$('.widget .dashbd-head .move').hide().each(function(item){
+				var _widget = item.getParent('.widget');
+				var _p = _widget.getPrevious('.widget');
+				var _n = _widget.getNext('.widget');
+				if(item.hasClass('up')){
+					item.setOpacity(_p?1:.2).store('disabled',_p?0:1);
+				}else{
+					item.setOpacity(_n?1:.2).store('disabled',_n?0:1);
+				}
+			});
+
+			var leftItems = $$('#l-1 .widget').setStyle('height','');
+			var rightItems = $$('#l-2 .widget').setStyle('height','');
+
+			leftItems.each(function(item){
+				var r =rightItems.shift();
+				if(r){
+					new Equalizer($$(item,r)).equalize('height');
+				}
+			});
+
+			return arguments.callee;
+		})();
+
+		$$('.widget .dashbd-head .move').addEvent('click',function(){
+			if(!!this.retrieve('disabled'))return;
+			var _wcol = this.getParent('.wcol');
+			var _widget = this.getParent('.widget');
+			var _p = _widget.getPrevious('.widget');
+			var _n = _widget.getNext('.widget');
+			if(this.hasClass('up')){
+				_widget.injectBefore(_p);
+			}else{
+				_widget.injectAfter(_n);
+			}
+			new Request().get('<{url route="shopadmin" app="desktop" ctl="dashboard" act="dashboard_sort"}>&sort='+_wcol.get('layout')+':'+_wcol.getElements('.widget').get('id').join(','));
+			syncMoveState();
+		});
+
+		$$('.widget .dashbd-head').addEvents({
+			mouseenter:function(){
+				this.getElements('.move').show();
+			},mouseleave:function(){
+				this.getElements('.move').hide();
+			}
+		});
+
+
+
+	})();
+
+
+</script>
+<{if $codeExpireAlertFlag}>
+<script>
+  alert('<{t}>您的激活码即将到期，请重新申请商业授权！<{/t}>');
+</script>
+<{/if}>

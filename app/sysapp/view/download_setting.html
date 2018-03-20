@@ -1,0 +1,61 @@
+
+<div class="tableform tableform-tabs">
+  <div class="tabs-wrap">
+    <ul>
+      <li class="tab current"><span><{t}>APP下载引导页配置<{/t}></span></li>
+    </ul>
+  </div>
+  <form action="?app=sysapp&ctl=admin_download&act=save" method="post" enctype="multipart/form-data">
+    <div class="division">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <th><{t}>APP名称:<{/t}></th>
+          <td>
+            <input type='text' name="name" maxlength="20" value='<{$name}>'/>
+          </td>
+        </tr>
+        <tr>
+          <th><{t}>IOS APP下载地址:<{/t}></th>
+          <td>
+            <input type='text' name="ios_url" value='<{$ios_url}>'/>
+          </td>
+        </tr>
+        <tr>
+          <th><{t}>安卓APP下载地址:<{/t}></th>
+          <td>
+            <input type='text' name="android_url" value='<{$android_url}>'/>
+          </td>
+        </tr>
+        <tr>
+          <th><{t}>推广用APP logo:<{/t}></th>
+          <td>
+            <{input type="image" name="logo" value=$logo width=100 height=100 }>
+          </td>
+        </tr>
+        <tr>
+          <th><{t}>APP宣传推广用语:<{/t}></th>
+          <td>
+            <textarea name="desc" cols ="30" rows = "6"><{$desc}></textarea>
+          </td>
+        </tr>
+        <tr>
+          <th><{t}>广告图片:<{/t}></th>
+          <td>
+            <{input type="image" name="ad_url" value=$ad_url  width=200 height=100 }>
+          </td>
+        </tr>
+        <tr>
+          <th><{t}>是否开启APP推广:<{/t}></th>
+          <td class="cleartd">
+            <input type="radio" value="true"  name='open' <{if $open == 'true'}>checked="checked"<{/if}>  />
+            <label for="bool-t"><{t}>开启<{/t}></label>
+            <input  type="radio" value="false" name='open' <{if $open != 'true'}>checked="checked"<{/if}> />
+            <label for="bool-t"><{t}>关闭<{/t}></label>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="table-action"><{button type="submit" label="保存"|t:'syslogistics' }></div>
+  </form>
+</div>
+

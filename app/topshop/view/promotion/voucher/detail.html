@@ -1,0 +1,308 @@
+<{if $canuse_end_time < time() }>
+<div class="row">
+  <div class="col-lg-12">
+    <div class="callout callout-danger">
+      <span class="lead"><i class="fa fa-warning"></i>购物券已失效</span>
+      该购物券活动已结束
+    </div>
+  </div>
+</div>
+<{elseif $register && !$register.valid_status}>
+<!-- 平台审核通过，但是终止购物券活动 -->
+<div class="row">
+  <div class="col-lg-12">
+    <div class="callout callout-danger">
+      <span class="lead"><i class="fa fa-warning"></i>购物券已失效</span>
+      <{if !$valid_status}>平台终止购物券活动<{else}>当前店铺购物券活动被终止<{/if}>
+    </div>
+  </div>
+</div>
+<{elseif !$register && !$isactivity}>
+<div class="row">
+  <div class="col-lg-12">
+    <div class="callout callout-warning">
+      <span class="lead"><i class="fa fa-warning"></i>当前购物券不可参加</span>
+      <{$not_apply_reason}>
+    </div>
+  </div>
+</div>
+<{/if}>
+<div class="row">
+  <div class="col-lg-12">
+    <div class="box box-default">
+      <div class="box-header with-border">
+        <div class="user-block">
+          <h1 class="no-margin pull-left  help-block"><i class="fa fa-tags"></i></h1>
+          <span class="username"><{$voucher_name}></span>
+          <span class="description"><{$voucher_desc}></span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="box-body no-padding">
+            <ul class="nav nav-stacked">
+              <li>
+                <a href="#"><b>购物券金额</b>
+                  <div class="pull-right">
+                    <strong>满 </strong><span class="text-red"><{$limit_money|cur}></span>
+                    <strong>减</strong><span class="text-red"><{$deduct_money|cur}></span>
+                  </div>
+                </a>
+              </li>
+              <li>
+                <a href="#"><b>平台补贴百分比</b> <div class="pull-right text-green"><{$subsidy_proportion}>%</div></a>
+              </li>
+              <li>
+                <a href="#"><b>购物券总数量</b> <div class="pull-right"><{$max_gen_quantity}></div></a>
+              </li>
+              <li>
+                <a href="#"><b>用户领取限制数量</b> <div class="pull-right"><{$userlimit_quantity}></div></a>
+              </li>
+              <li>
+                <a href="#"><b>使用平台</b>
+                  <div class="pull-right">
+                    <{foreach from=$used_platform item=item}>
+                    <{if $item=='pc'}>电脑端 <{elseif $item=='wap'}> H5端 <{else}> APP端<{/if}>
+                    <{/foreach}>
+                  </div>
+                </a>
+              </li>
+              <li>
+                <a href="#"><b>报名时间</b> <div class="pull-right"><{$apply_begin_time|cdate}> 至 <{$apply_end_time|cdate}></div></a>
+              </li>
+              <li>
+                <a href="#"><b>领取时间</b> <div class="pull-right"><{$cansend_start_time|cdate}> 至 <{$cansend_end_time|cdate}></div></a>
+              </li>
+              <li>
+                <a href="#"><b>有效时间</b> <div class="pull-right"><{$canuse_start_time|cdate}> 至 <{$canuse_end_time|cdate}></div></a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <ul class="products-list product-list-in-box">
+            <li class="item">
+              <div class="product-title">可报名的店铺类型
+                <span class="product-description">
+                  <ul class="users-list clearfix">
+                    <{foreach from=$shoptype_list item=shopTypeName}>
+                    <li><{$shopTypeName}></li>
+                    <{/foreach}>
+                  </ul>
+                </span>
+              </div>
+            </li>
+            <li class="item">
+              <div class="product-title">可参加的类目
+                <span class="product-description">
+                  <ul class="users-list clearfix">
+                    <{foreach from=$cat_list item=catName}>
+                    <li><{$catName}></li>
+                    <{/foreach}>
+                  </ul>
+                </span>
+              </a>
+            </li>
+            <li class="item">
+              <div class="product-title">适用会员
+                <span class="product-description">
+                  <ul class="users-list clearfix">
+                    <{foreach from=$valid_grade_list item=item}>
+                    <li><{$item}></li>
+                    <{/foreach}>
+                  </ul>
+                </span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<{if $subsidyData.list }>
+<div class="box box-widget">
+  <div class="box-body with-border">
+    <div class="tab-content no-padding">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>账单补贴编号</th>
+            <th>订单数量</th>
+            <th>补贴金额</th>
+            <th>补贴状态</th>
+            <th>账单开始时间</th>
+            <th>账单结束时间</th>
+            <th>补贴发放时间</th>
+          </tr>
+        </thead>
+        <tbody id="data_node">
+          <{foreach from=$subsidyData.list item=subsidyItem}>
+          <tr>
+            <td><{$subsidyItem.subsidy_no}></td>
+            <td><{$subsidyItem.tradecount}></td>
+            <td><{$subsidyItem.subsidy_fee|cur}></td>
+            <td><{if $subsidyItem.status == 1}>未发放<{else}>已发放<{/if}></td>
+            <td><{$subsidyItem.account_start_time|cdate}></td>
+            <td><{$subsidyItem.account_end_time|cdate}></td>
+            <td><{if $subsidyItem.subsidy_time}><{$subsidyItem.subsidy_time|cdate}><{else}>还未发放，准备中<{/if}></td>
+          </tr>
+          <{/foreach}>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<{/if}>
+
+<{if !$register && $isactivity}>
+<form action="<{url action=topshop_ctl_promotion_voucher@apply}>" method="post" class="form-horizontal clearfix" data-validate-onsuccess="ajaxSubmit" role="form">
+  <input type="hidden" name="voucher_id" value="<{$voucher_id}>">
+  <ul class="timeline">
+    <!-- timeline time label -->
+    <li class="time-label">
+      <span class="bg-red">
+        报名截止：<{$apply_end_time|cdate}>
+      </span>
+    </li>
+    <!-- /.timeline-label -->
+
+    <!-- timeline item -->
+    <li>
+      <!-- timeline icon -->
+      <div class="timeline-item">
+
+        <h3 class="timeline-header"><a href="#">报名参加购物券</a></h3>
+
+        <div class="timeline-body">
+          <div class="box-header with-border">
+            <h3 class="box-title">选择参加类目</h3>
+          </div>
+          <div class="box-body no-padding">
+            <ul class="users-list clearfix">
+              <{foreach from=$shop_limit_cat item=row}>
+              <li  style="width:18%"><div class="users-list-name"><label style="cursor: pointer;"><input type=checkbox name="cat_id[]" value="<{$row.cat_id}>"><{$row.cat_name}></label></div></li>
+              <{/foreach}>
+            </ul>
+          </div>
+        </div>
+        <div class="timeline-footer text-center">
+          <button type="submit" class="btn bg-blue btn-flat margin">提交报名</button>
+        </div>
+      </div>
+    </li>
+    <li class="time-label">
+      <i class="fa fa-clock-o bg-gray"></i>
+    </li>
+  </ul> </form>
+<script>
+  function ajaxSubmit (e) {
+    var form = e.target;
+    e.preventDefault();
+    $.post(form.action, $(form).serialize(), function(rs) {
+      if(rs.error) {
+        $('#messagebox').message(rs.message); return;
+      }
+      if(rs.success) {
+        $('#messagebox').message(rs.message, 'success');
+      }
+      if(rs.redirect) {
+        location.href = rs.redirect;
+      }
+    });
+  }
+</script>
+<{/if}>
+<{if $register }>
+<ul class="timeline">
+  <{if $register.verify_status == 'pending'}>
+  <{if !$register.valid_status}>
+  <li>
+    <i class="fa fa-close bg-red"></i>
+  </li>
+  <li>
+    <div class="timeline-item">
+      <span class="time"><i class="fa fa-clock-o"></i> <{$register.modified_time|cdate}></span>
+      <h3 class="timeline-header">购物券已失效</h3>
+    </div>
+  </li>
+  <{/if}>
+  <!-- timeline time label -->
+  <li class="time-label">
+    <span class="bg-blue">
+      等待审核
+    </span>
+  </li>
+  <{elseif $register.verify_status == 'refuse'}>
+  <li>
+    <i class="fa fa-close bg-red"></i>
+  </li>
+  <li>
+    <div class="timeline-item">
+      <span class="time"><i class="fa fa-clock-o"></i> <{$register.modified_time|cdate}></span>
+      <h3 class="timeline-header">审核拒绝</h3>
+      <div class="timeline-body">
+        <{$register.refuse_reason}>
+      </div>
+    </div>
+  </li>
+  <{else}>
+  <{if $subsidyData.subsidyFeeTotal }>
+  <li>
+    <i class="fa fa-money bg-red"></i>
+  </li>
+  <li>
+    <div class="timeline-item">
+      <span class="time"><i class="fa fa-clock-o"></i> 当前时间 </span>
+      <h3 class="timeline-header">平台待补贴信息</h3>
+      <div class="timeline-body">
+        <ul class="nav nav-stacked">
+          <li><a href="#">补贴总额 <span class="pull-right badge bg-blue"><{$subsidyData.subsidyFeeTotal|cur}></span></a></li>
+          <li><a href="#">待发放补贴金额<span class="pull-right badge bg-aqua"><{$subsidyData.reserve_subsidyFeeTotal|cur}></span></a></li>
+          <li><a href="#">已发放补贴金额 <span class="pull-right badge bg-green"><{$subsidyData.has_issued_subsidyFeeTotal|cur}></span></a></li>
+          <li><a href="<{url action=topshop_ctl_clearing_vouchersubsidy@detail voucher_id=$voucher_id}>"><span class="text-aqua">查看使用该优惠券的订单</span></a></li>
+        </ul>
+      </div>
+    </div>
+  </li>
+  <{/if}>
+  <li>
+    <i class="fa fa-check bg-green"></i>
+  </li>
+  <li>
+    <!-- timeline icon -->
+    <div class="timeline-item">
+      <span class="time"><i class="fa fa-clock-o"></i> <{$register.modified_time|cdate}></span>
+      <h3 class="timeline-header">平台审核通过</h3>
+    </div>
+  </li>
+  <{/if}>
+  <!-- /.timeline-label -->
+
+  <li>
+    <i class="fa fa-pencil bg-blue"></i>
+  </li>
+  <!-- timeline item -->
+  <li>
+    <!-- timeline icon -->
+    <div class="timeline-item">
+      <span class="time"><i class="fa fa-clock-o"></i> <{$register.created_time|cdate}></span>
+      <h3 class="timeline-header">已申请参加类目</h3>
+      <div class="timeline-body">
+        <div class="box-body no-padding">
+          <ul class="users-list clearfix">
+            <{foreach from=$shop_limit_cat item=row}>
+            <{if in_array($row.cat_id,$register.cat_id)}>
+            <li style="width:18%"><div class="users-list-name"><{$row.cat_name}></div></li>
+            <{/if}>
+            <{/foreach}>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </li>
+  <li class="time-label">
+    <i class="fa fa-clock-o bg-gray"></i>
+  </li>
+</ul>
+<{/if}>

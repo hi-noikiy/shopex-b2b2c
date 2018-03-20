@@ -1,0 +1,20 @@
+<{if count($screen.cat) != 1 || $activeFilter.cat_id }>
+<div class="filter-attr goods-list-filter expand-panel">
+  <div class="filter-attr-title"><{t}>类目<{/t}>：</div>
+  <div class="filter-attr-list">
+    <{foreach from=$screen.cat item=cat_row name=name}>
+      <{if $cat_row.cat_id == $activeFilter.cat_id ||  in_array( $cat_row.cat_id,$activeFilter.cat_id)}>
+      <a href="<{url action=topc_ctl_list@index _params=$filter d_c=$cat_row.cat_id operationtype=remove}>" class="on" > <{$cat_row.cat_name}>  <i class="icon icon-close"></i></a>
+      <{else}>
+      <a href="<{url action=topc_ctl_list@index _params=$filter a_c=$cat_row.cat_id operationtype=add }>"> <{$cat_row.cat_name}>  <i class="icon icon-close"></i></a>
+      <{/if}>
+    <{/foreach}>
+  </div>
+  <{if count($screen.cat) > 18}>
+  <div class="more-btn">
+    <a href="javascript:void(0);" class="btn btn-link expand-btn">更多<i class="icon icon-arrow-down"></i></a>
+    <a href="javascript:void(0);" class="btn btn-link unexpand-btn">收起<i class="icon icon-arrow-up"></i></a>
+  </div>
+  <{/if}>
+</div>
+<{/if}>

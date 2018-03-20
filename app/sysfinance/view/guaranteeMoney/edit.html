@@ -1,0 +1,57 @@
+<div class="tableform">
+    <form action="<{$submit_url}>"  method="post" id="guananteeMoneyBalance_form">
+    <input type="hidden" name="shop_id" value="<{$shop_id}>">
+    <input type="hidden" name="op_type" value="<{$op_type}>">
+    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+      <tbody>
+        <tr>
+          <th><{t}>当前保证金余额:<{/t}></th>
+          <td>
+            <span class="price0"><{$guarantee_money_balance|default:0}></span>
+          </td>
+        </tr>
+        <tr>
+          <th><{t}><{if $op_type =='recharge'}>增加<{else}>扣减<{/if}>保证金金额:<{/t}></th>
+          <td><{input type="number" vtype="required&&unsigned" maxlength="10" name="money" style="float:left;" }>
+        </tr>
+        <{if $op_type =='recharge'}>
+        <tr>
+          <th><{t}>银行交易流水号：<{/t}></th>
+          <td><{input type="text" name="transaction_id" maxlength=50}></td>
+        </tr>
+        <{elseif $op_type=='expense'}>
+        <tr>
+          <th><{t}>关联订单编号<{/t}></th>
+          <td><{input type="text" name="rel_tid" maxlength=50}></td>
+        </tr>
+        <tr>
+          <th><{t}>处罚理由：<{/t}></th>
+          <td><{input type="text" name="penalty_reason" maxlength=30}></td>
+        </tr>
+        <tr>
+          <th><{t}>违规描述：<{/t}></th>
+          <td><textarea name="violation_desc" rows="5" cols="60" maxlength="200"></textarea></td>
+        </tr>
+        <{/if}>
+        <tr>
+          <th><{t}>备注:<{/t}></th>
+          <td><textarea name="memo" rows="5" cols="60" maxlength="200"></textarea></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="table-action">
+      <{button type="submit" label="保存"|t:'___sysfinance' }>
+      <a href="<{$url}>" target="_blank" ><{button type="button" label=$___sysfinance="查看明细"|t:'sysfinance' }></a>
+    </div>
+  </form>
+</div>
+
+<script>
+  $$('.table-action button').addEvent('click',function(e){
+    var dom = this.getParent('form');
+    $$(dom).addEvent('submit',function(e){
+      $$(dom)[0].reset();
+      // setTimeout(function(){document.querySelectorAll('.finder-packet .current a')[0].click();},0)
+    })
+  })
+</script>

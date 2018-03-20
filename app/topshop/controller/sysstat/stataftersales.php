@@ -1,0 +1,117 @@
+<?php
+/**
+ * ShopEx licence
+ *
+ * @copyright  Copyright (c) 2005-2010 ShopEx Technologies Inc. (http://www.shopex.cn)
+ * @license  http://ecos.shopex.cn/ ShopEx License
+ */
+
+class topshop_ctl_sysstat_stataftersales extends topshop_controller
+{
+	public function index()
+	{
+		$postSend = input::get();
+		$type     = $postSend['sendtype'];
+		$objFilter = kernel::single('sysstat_data_filter');
+		$params = $objFilter->filter($postSend);
+		if($postSend['compare'])
+		{
+			$pagedata['compare'] = $postSend['compare'];
+		}
+		if(!$postSend || !in_array($postSend['sendtype'],array('yesterday','beforday','week','month','selecttime','select')))
+		{
+			$type='yesterday';
+		}
+		$postSend['sendtype'] = $type;
+		//api参数
+		$all = $this->__getParams('all',$postSend,'trade');
+		$notAll = $this->__getParams('notall',$postSend,'trade',$params);
+		//获取数据
+		$data = app::get('topshop')->rpcCall('sysstat.data.get',$notAll,'seller');
+
+		if($type=='selecttime')
+		{
+			$pagedata['sysstat'] = $data['sysstat'];
+		}
+		else
+		{
+			$pagedata['sysstat'] = $data['sysstat']['commonday'];
+		}
+
+		//退货前十的商品
+		$refundParams = array('inforType'=>'item','timeType'=>$type,'starttime'=>$postSend['starttime'],'limit'=>10,'orderBy'=>'refundnum DESC');
+		$refundToptenItem = app::get('topshop')->rpcCall('sysstat.data.get',$refundParams,'seller');
+	
+		$pagedata['refundToptenItem'] = $refundToptenItem['sysTrade'];
+		//换货前十的商品
+		$changingParams = array('inforType'=>'item','timeType'=>$type,'starttime'=>$postSend['starttime'],'limit'=>10,'orderBy'=>'changingnum DESC');
+		$changingToptenItem = app::get('topshop')->rpcCall('sysstat.data.get',$changingParams,'seller');
+		$pagedata['changingToptenItem'] = $changingToptenItem['sysTrade'];
+
+		//获取页面显示的时间
+		$pagetime = app::get('topshop')->rpcCall('sysstat.datatime.get',$all,'seller');
+
+		$pagedata['sendtype'] = $type;
+		$pagedata['pagetime'] = $pagetime;
+		$pagedata['sysTradeData'] = $data['sysTradeData'];
+		$this->contentHeaderTitle = app::get('topshop')->_('运营报表-问题订单分析');
+
+		return $this->page('topshop/sysstat/stataftersales.html', $pagedata);
+	}
+
+	/**
+	 * 异步获取数据  图表用
+	 * @param null
+	 * @return array
+	 */
+
+	public function ajaxTrade()
+	{
+		$postData = input::get();
+		//api的参数
+		$all = $this->__getParams('graphall',$postData,'trade');
+		$datas =  app::get('topshop')->rpcCall('sysstat.data.get',$all,'seller');
+
+		return response::json($datas);
+
+	}
+	//api参数组织
+	private function __getParams($type,$postSend,$objType,$data=null)
+	{
+		if($type=='all')
+		{
+			$params = array(
+				'inforType'=>$objType,
+				'timeType'=>$postSend['sendtype'],
+				'starttime'=>$postSend['starttime'],
+				'endtime'=>$postSend['endtime'],
+				'dataType'=>$type
+			);
+		}
+		elseif($type=='notall')
+		{
+			$params = array(
+				'inforType'=>$objType,
+				'timeType'=>$postSend['sendtype'],
+				'starttime'=>$postSend['starttime'],
+				'endtime'=>$postSend['endtime'],
+				'dataType'=>$type,
+				'limit'=>intval($data['limit']),
+				'start'=>intval($data['start'])
+			);
+		}
+		elseif($type=='graphall')
+		{
+			$params = array(
+				'inforType'=>$objType,
+				'tradeType'=>$postSend['trade'],
+				'timeType'=>$postSend['sendtype'],
+				'starttime'=>$postSend['starttime'],
+				'endtime'=>$postSend['endtime'],
+				'dataType'=>$type
+			);
+		}
+		return $params;
+	}
+
+}

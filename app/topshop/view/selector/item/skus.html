@@ -1,0 +1,67 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+  <h4 class="modal-title" id="myModalLabel">编辑SKU</h4>
+</div>
+<div class="modal-body no-padding">
+  <div class="goods-list">
+    <div class="goods-sku-list">
+      <ul class="clearfix">
+      <{foreach from=$_input.skusList item=sku key=key}>
+      <li data-id="<{$sku.sku_id}>" data-src="<{$sku.image_default_id}>" data-specinfo="<{$sku.spec_info}>" >
+        <div class="thumb">
+          <div class="thumb-wrap">
+            <{if $sku.image_default_id}>
+            <img src="<{$sku.image_default_id|storager:'s'}>">
+            <{else}>
+            <img src="<{$image_default_id.S.default_image}>">
+            <{/if}>
+          </div>
+        </div>
+        <div class="sku-info">
+          <div class="title" title="<{$sku.title}>"><{$sku.title}></div>
+          <div class="sku-spec" title="<{$sku.spec_info}>"><{$sku.spec_info}></div>
+          <div class="price clearfix"><span class="text-orange fl"><{$sku.price|cur}></span><{if $sku.approve_status != 'onsale'}><span class="text-red fr">未上架</span><{/if}></div>
+        </div>
+      </li>
+      <{/foreach}>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+  <button type="button" class="btn btn-primary choose-sku">确定</button>
+</div>
+<script>
+  var _this;
+  var thisSku = $($('.goods-sku-list').parents('.modal')).data('skuids');
+  var thisitems = $('.goods-sku-list').find('li');
+  if(thisSku){
+    thisSku = thisSku.split(',');
+    for (var i = 0; i < thisSku.length; i++) {
+      for (var k = 0; k < thisitems.length; k++) {
+        if(thisSku[i]== $(thisitems[k]).data('id')){
+          $(thisitems[k]).addClass('checked');
+        }
+      };
+    };
+  }
+
+  $('.goods-sku-list li').click(function(event) {
+    $(this).toggleClass('checked');
+  });
+
+  $('.choose-sku').click(function(event) {
+    var itemsku;
+    var ids = [];
+    var infos = '';
+    var items = $('.goods-sku-list .checked');
+    for (var i = 0; i < items.length; i++) {
+      ids.push($(items[i]).data('id'));
+    };
+    itemsku = ids.join(',');
+    $($($(_this).parents('tr')).find('input[name="item_sku[]"]')).val(itemsku);
+    $('#show_sku_madal').modal('hide');
+  });
+
+</script>

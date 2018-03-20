@@ -1,0 +1,107 @@
+<header class="page-header">
+	<i class="header-left icon-func bbc-icon bbc-icon-back shopex-action-back"></i>
+	<div class="header-title">订单支付</div>
+</header>
+<{if $payment.status == "succ" || $payment.status == "progress"}>
+<section class="container">
+    <section class="section-white section-container pay-order-info pay-success" style="margin-bottom: 0;border-bottom: 0;padding-bottom: 0;">
+      <i class="bbc-icon bbc-icon-right bbc-icon-full-cricle"></i>
+      <div class="pay-order-info">
+        <div class="order-status">订单支付成功</div>
+        <p>等待商家发货</p>
+      </div>
+    </section>
+    <{if $marketingSetting.status && $marketingSetting.type =='scratchcard' && $marketingSetting.platform !='2' && $scratchcardInfo.status =='active'}>
+    <section class="section-white section-container" style="padding: 0.75rem 1.5rem;">
+      <div class="wraper">
+        <div class="box">
+          <div id="wipe" class="wipe"></div>
+          <div class="canvas-bg">
+                <button type="button" class="shopex-btn shopex-btn-warning bbc-btn-warning action-receive" data-scratchcard_id="<{$marketingSetting.scratchcard_id}>" style="margin-top:2rem;"><{$scratchcardInfo.scratchcard_btn_word}></button>
+            </div>
+          <div class="scratchcard-result"></div>
+        </div>
+      </div>
+    </section>
+    <{/if}>
+    <section class="pay-op-price">
+      <{if $payment.money > 0 }>
+      支付金额：<mark><{$payment.money|cur}></mark>
+      <{/if}>
+      <{if $hongbao_fee > 0 }>
+      红包支付：<mark><{$hongbao_fee|cur}></mark>
+      <{/if}>
+    </section>
+    <section class="shopex-content-padded">
+      <a href="<{url action=topwap_ctl_member_trade@tradeList}>" class="shopex-btn shopex-btn-block shopex-btn-warning bbc-btn-warning">查看我的订单</a>
+    </section>
+  </section>
+  <{else}>
+    <section class="container">
+    <section class="section-white section-container pay-order-info pay-failed">
+      <i class="bbc-icon bbc-icon-error bbc-icon-full-cricle"></i>
+      <div class="pay-order-info">
+        <div class="order-status">系统原因,订单支付失败</div>
+        <p>请到我的订单中，重新支付</p>
+      </div>
+    </section>
+    <section class="pay-op-time">
+      <p>创建时间: <span><{$payment.created_time|cdate}></span></p>
+    </section>
+    <section class="shopex-content-padded">
+      <a href="<{url action=topwap_ctl_paycenter@index payment_id=$payment.payment_id}>" class="shopex-btn shopex-btn-block shopex-btn-warning bbc-btn-warning">重新支付</a>
+    </section>
+  </section>
+  <{/if}>
+
+<script>
+  var flag = true;
+  var resultid = -1;
+  var paymentid = '<{$payment.payment_id}>';
+  var getprize = true;
+  var prizeresult;
+  var wipe = new Wipe({
+    el: '#wipe',
+    fg: "<{$env.app.topwap.res_url}>/images/cratchcart_bg.jpg",
+    txt: '<{$scratchcardInfo.scratchcard_word}>',
+    size: 40,
+    debug: true,
+    autoWipe: false,
+    data: null,
+    onswiping: function (percent) {
+      if(flag) {
+        if(resultid >0) {
+            $.post('<{url action=topwap_ctl_paycenter@issue}>', {'resultid': resultid}, function(rs){
+            if(rs.success && getprize) {
+              shopex.alert(prizeresult);
+            } else {
+              shopex.alert("奖品发放失败");
+            }
+          });
+        }
+        flag = false;
+      }
+      if (percent > 40) {
+        wipe.clear();
+      }
+    }
+  });
+  $('.action-receive').on('tap', function(){
+      $.post('<{url action=topwap_ctl_paycenter@getPrize}>', {'paymentid': paymentid, 'scratchcard_id': $(this).attr('data-scratchcard_id')}, function(rs){
+        if(rs.success) {
+          resultid = rs.prizeInfo.result_id ;
+          $('.canvas-bg').hide();
+          resultid = resultid != null || resultid != "" ? resultid : -1;
+          if(rs.prizeInfo.bonus_type !='none'){
+            prizeresult = '恭喜您，获得 ' + rs.prizeInfo.bonus_desc;
+          } else {
+            prizeresult = rs.prizeInfo.bonus_desc;
+          }
+          $('.scratchcard-result').html(prizeresult);
+          getprize = rs.prizeInfo.bonus_type == null || rs.prizeInfo.bonus_type == "" ? false : true;
+        } else {
+          shopex.alert(rs.msg);
+        }
+      });
+  });
+</script>

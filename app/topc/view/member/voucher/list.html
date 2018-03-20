@@ -1,0 +1,110 @@
+<div class="membercenter-box voucher-box">
+  <div class="membercenter-box-hd">
+    <div class="membercenter-box-left">我的购物券</div>
+  </div>
+  <div class="membercenter-box-bd">
+    <div class="coupon-toolbar">
+      <div class="c-sort">
+        <ul>
+          <li>
+            <div class="c-type">
+              <a href="<{url action=topc_ctl_member_voucher@index status=1}>" <{if $status==1}>class="curr"<{/if}>>未使用</a>
+            </div>
+          </li>
+          <li>
+            <a href="<{url action=topc_ctl_member_voucher@index status=0}>" <{if $status==0}>class="curr"<{/if}>>已使用</a>
+          </li>
+          <li>
+            <a href="<{url action=topc_ctl_member_voucher@index status=2}>" <{if $status==2}>class="curr"<{/if}>>已过期</a>
+          </li>
+        </ul>
+      </div>
+      <div class="extra-r">
+        <a href="#none" class="lump-icon curr" data-show-type="lump" title="块列"></a>
+        <a href="#none" class="list-icon" data-show-type="list" title="列表"></a>
+      </div>
+    </div>
+    <{if !$total }>
+    <div class="no-content">当前状态暂无购物券</div>
+    <{else}>
+    <div class="coupon-items voucher-items">
+    <{foreach from=$list item=item}>
+    <div class="coupon-item <{if $item.is_valid==1 && $item.end_time >= $now}>coupon-item-d<{else}>coupon-item-gray<{/if}>">
+        <div class="c-type <{if $item.is_valid==1 && $item.end_time >= $now}>voucher-red<{/if}> ">
+          <div class="c-price"><strong><{$item.deduct_money|cur}></strong></div>
+          <div class="c-limit">【<{$item.voucher_name}>】</div>
+          <div class="c-time font-white"><{$item.start_time|cdate:'FDATE'}>至<{$item.end_time|cdate:'FDATE'}></div>
+          <div class="c-type-left"></div>
+          <div class="c-type-right"></div>
+          <div class="c-type-bottom"></div>
+          <div class="c-type-bottom-circle"></div>
+          <{if $item.end_time-$now<3600*24 && $item.end_time>$now && $item.is_valid==1}>
+          <div class="c-type-remind-bg">
+          </div>
+          <div class="c-type-remind-txt">即将过期</div>
+          <{/if}>
+          <!-- <i class="icon icon-close"></i> -->
+        </div>
+        <div class="c-msg">
+          <div class="c-range">
+            <div class="range-item">
+              <span class="dt">使用条件：</span>
+              <span class="txt"><{$item.limit_money|cur}></span>
+            </div>
+            <div class="range-item">
+              <span class="dt">券编号：</span>
+              <span class="txt"><{$item.voucher_code}></span>
+            </div>
+            <div class="range-item">
+              <span class="dt">限制平台：</span>
+              <span class="txt">
+                <{foreach from=$item.used_platform item=platform}>
+                 &nbsp;<{$platform|json2value:'{"pc":"电脑端","wap":"触屏端","app":"APP端"}'}>
+                <{/foreach}>
+              </span>
+            </div>
+          </div>
+          <div class="op-btn">
+            <{if $status==1}>
+            <a href="<{url action=topc_ctl_list@index voucher_id=$item.voucher_id}>" class="btn">立即使用</a>
+            <{/if}>
+          </div>
+        </div>
+      </div>
+    <{/foreach}>
+    </div>
+    <{/if}>
+  </div>
+  <{pagers data=$pagers}>
+</div>
+<script>
+  if($.cookie('c_show_type')=='list'){
+    $('.coupon-items').addClass('coupon-items02');
+    $('.extra-r').find('.list-icon').addClass('curr');
+    $('.extra-r').find('.lump-icon').removeClass('curr');
+  }else{
+    $('.coupon-items').removeClass('coupon-items02');
+    $('.extra-r').find('.lump-icon').addClass('curr');
+    $('.extra-r').find('.list-icon').removeClass('curr');
+  }
+  $('.c-sort li>a').on('click', function() {
+    $('.c-sort li>a').removeClass('curr');
+    $(this).addClass('curr');
+  });
+  $('.c-type a').on('click', function() {
+    $('.c-type a').removeClass('curr');
+    $(this).addClass('curr');
+    if($(this).attr('data-location')) return;
+    $('.c-type .dt').find('span').html($(this).html());
+  });
+  $('.extra-r').on('click', 'a', function() {
+    $(this).addClass('curr').siblings('a').removeClass('curr');
+    if($(this).attr('data-show-type') == 'lump') {
+      $.cookie('c_show_type', 'lump');
+      $('.coupon-items').removeClass('coupon-items02');
+    } else {
+      $.cookie('c_show_type', 'list');
+      $('.coupon-items').addClass('coupon-items02');
+    }
+  });
+</script>

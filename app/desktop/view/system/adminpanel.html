@@ -1,0 +1,29 @@
+<div class="finder-title">
+    <h2 class="head-title span-auto"><{t}>控制面板<{/t}></span>
+    </h2>
+</div>
+<div class="admin-panel" id="adminpanel">
+<{foreach from=$groups name=groups item=group}>
+<{if $group.items}>
+     <div class="group flt <{if $env.foreach.groups.last}>last<{/if}>">
+	  <div class="group-body">
+        <div class="content-center">
+           <i class="<{$group.icon}>"></i>
+           <h4><{$group.title|t:'desktop'}></h4>
+        </div>
+        <div class="item">
+            <ul>
+            <{foreach from=$group.items item=item}>
+            <li class="span-auto"><a href="?<{$item.menu_path}>"><{$item.menu_title|t:'desktop'}></a></li>
+            <{/foreach}>
+            </ul>
+        </div>
+	   </div>
+     </div>
+<{/if}>
+<{/foreach}>
+</div>
+<script> 
+ new Equalizer($$('#adminpanel .item li a')).equalize('width');//等宽 
+ new Equalizer($$('#adminpanel .group','#adminpanel .group-body')).equalize('height');//等宽
+</script>

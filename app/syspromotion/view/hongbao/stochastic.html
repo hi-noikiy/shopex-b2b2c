@@ -1,0 +1,52 @@
+
+<table border="0" cellspacing="0" cellpadding="0" class="gridlist">
+  <thead>
+    <tr>
+      <th>
+        <{t}>红包总金额<{/t}>
+      </th>
+      <th>
+        <{t}>红包总数量<{/t}>
+      </th>
+      <th>
+        <{t}>最小红包面额<{/t}>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <{if $hongbao_list}>
+    <{foreach from=$hongbao_list item=item key=key}>
+    <tr>
+      <td>
+        <{input type="text" name="money" value=$item.money size=10 vtype='required&&positive' }>
+      </td>
+      <td>
+        <{input type='text' name="num" value=$item.num size=10 vtype='required&&unsignedint' }>
+      </td>
+      <td>
+        <{$min}>
+      </td>
+      </td>
+    </tr>
+    <{/foreach}>
+    <{else}>
+    <tr>
+      <td>
+        <{input type="text" name="money" size=10 vtype='required&&positive' }>
+      </td>
+      <td>
+        <{input type='text' name="num" size=10 vtype='required&&unsignedint' }>
+      <td>
+        <{$min}>
+      </td>
+    </tr>
+    <{/if}>
+  </tbody>
+</table>
+
+<br>
+<div class="notice">
+  <div>红包总数： 小于等于 红包总金额*100</div>
+  <div>最小红包：  会出现的最小金额为(<{$min}>)</div>
+  <div>最大红包： 会出现的最大金额为（人均金额*2） </div>
+</div>

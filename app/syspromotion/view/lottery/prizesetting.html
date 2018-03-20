@@ -1,0 +1,44 @@
+<{if $type=="hongbao"}>
+<td>
+	<{input type="hidden" name="lotteryrules[$maxkey][bonus_type]"  value="hongbao"}>
+	<{input type="hidden" name="lotteryrules[$maxkey][hongbaoid]" value=""}>
+	<{input type="hidden" name="lotteryrules[$maxkey][hongbaomoney]" value=""}>
+    <{input type="hidden" name="lotteryrules[$maxkey][hongbaotype]" value=""}>
+	<label>红  包:</label><{button label="选择关联红包"|t:"syscategory" class="chooseredpacket" onclick="choose_redpacket(this)" }><em><font color="red">*</font></em>&nbsp;&nbsp;<span class="redpacket-name"></span>
+</td>
+<{elseif $type=="point"}>
+<td>
+	<{input type="hidden" name="lotteryrules[$maxkey][bonus_type]"  value="point"}>
+	<label>积  分:</label><{input type="text" class="x-input" name="lotteryrules[$maxkey][num]" value="" size=30 vtype="required&&unsignedint"}>&nbsp;点<em><font color="red">*</font></em>
+</td>
+<{elseif $type=="none"}>
+<td>
+	<{input type="hidden" name="lotteryrules[$maxkey][bonus_type]"  value="none"}>
+	<label>未中奖:</label>
+	<{input type="text" name="lotteryrules[$maxkey][bonus_desc]" value="" size=30 vtype="required" value="感谢您的参与"}>
+	<em><font color="red">*</font></em>
+</td>
+<{elseif $type=="custom"}>
+<td>
+	<{input type="hidden" name="lotteryrules[$maxkey][bonus_type]"  value="custom"}>
+	<label>自定义:</label>
+	<{input type="text" class="x-input" name="lotteryrules[$maxkey][bonus_desc]" value="" size=30 vtype="required"}>
+	<em><font color="red">*</font></em><span class="suggest-size font-red">建议图片尺寸40px * 40px</span>
+	<{input type="image" name="lotteryrules[$maxkey][img]" width=45 height=45 value=""}>
+	<label>
+		<{input type="checkbox" name="lotteryrules[$maxkey][is_delivery]"}>是否需要配送
+		<em class="red">*</em>（开启后，会员可以填写收货信息，以便接收奖品）
+	</label>
+</td>
+<{/if}>
+<td><{t}>获奖概率：<{/t}>
+	<{input type="text" class="x-input" name="lotteryrules[$maxkey][rate]" value="" size=10 maxlength=5 vtype="required&&unsigned"}>%<em><font color="red">*</font></em>
+</td>
+<td>
+	<{input type="color" name="lotteryrules[$maxkey][color]" id="color_[$maxkey]" value=""}>
+</td>
+<td>
+	<{img style="cursor:pointer;" onclick="move_p(this,'up')" src="bundle/icon_asc.gif" alt="向上"|t:"syscategory" class="operater" app="desktop"}>&nbsp;&nbsp;&nbsp;&nbsp;
+	<{img style="cursor:pointer;" onclick="move_p(this,'down')" src="bundle/icon_desc.gif" alt="向下"|t:"syscategory" class="operater" app="desktop"}>&nbsp;&nbsp;&nbsp;&nbsp;
+	<{img app="desktop" src="bundle/delete.gif" class="delete"  title="删除" style="cursor:pointer;" onclick="delete_item(this)" }>
+</td>

@@ -1,0 +1,308 @@
+<div class="invoice no-touch">
+    <{if $trade.status == "WAIT_BUYER_PAY"}>
+    <{include file="topshop/trade/status/unpay.html"}>
+    <{elseif $trade.status == "WAIT_SELLER_SEND_GOODS"}>
+    <{include file="topshop/trade/status/undelivery.html"}>
+    <{elseif $trade.status == "WAIT_BUYER_CONFIRM_GOODS"}>
+    <{include file="topshop/trade/status/unreceived.html"}>
+    <{elseif $trade.status == "TRADE_FINISHED"}>
+    <{include file="topshop/trade/status/finish.html"}>
+    <{elseif $trade.status == "TRADE_CLOSED_BY_SYSTEM" || $trade.status == "TRADE_CLOSED"}>
+    <{include file="topshop/trade/status/cancel.html"}>
+    <{/if}>
+    <div class="row">
+      <div class="col-xs-12">
+        <h2 class="page-header">
+          <i class="fa fa-globe"></i> 订单信息
+          <small class="pull-right">下单时间: <{$trade.created_time|cdate}></small>
+        </h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-3">
+        <address>
+        订单号：<{$trade.tid}> <br>
+        订单状态：
+          <{if $trade.status == "WAIT_BUYER_PAY"}>等待买家付款
+          <{elseif $trade.status == "WAIT_SELLER_SEND_GOODS"}>
+            <{if $trade.pay_type == "offline"}>未付款(货到付款)，待发货
+              <{elseif $trade.pay_type == "online"}>买家已付款
+            <{/if}>
+          <{elseif $trade.status == "WAIT_BUYER_CONFIRM_GOODS"}>
+          <{if $trade.pay_type == "offline"}>已发货，待付款收货
+          <{elseif $trade.pay_type == "online"}>卖家已发货
+          <{/if}>
+          <{elseif $trade.status == "TRADE_FINISHED"}>订单已完成
+          <{elseif $trade.status == "TRADE_CLOSED_BY_SYSTEM" || $trade.status == "TRADE_CLOSED"}>订单已关闭
+          <{/if}> <br>
+        付款时间：<{if $trade.pay_time}><{$trade.pay_time|cdate}><{/if}>
+        </address>
+      </div>
+      <div class="col-sm-3">
+        <address>
+        商品总额：<{$trade.total_fee|cur}><br>
+        运费金额：<{$trade.post_fee|cur}><br>
+        应付金额：<{$trade.payment|cur}>
+       
+        </address>
+      </div>
+      <div class="col-sm-3">
+        <address>
+        是否需要发票：<{if !$trade.need_invoice }>否<{else}>是<{/if}> <br>
+        联系方式：<{$trade.receiver_mobile}><{if $trade.receiver_phone}>&nbsp;,&nbsp;<{$trade.receiver_phone}><{/if}><br>
+        </address>
+      </div>
+      <{if $trade.discount_fee>0 || $trade.points_fee>0}>
+      <div class="col-sm-3">
+        <address>
+          优惠信息：<br>
+          <{if $trade.discount_fee>0}>
+          促销优惠：-<{$trade.discount_fee|cur}> <br>
+          <{/if}>
+          <{if $trade.points_fee>0}>
+          积分抵扣：-<{$trade.points_fee|cur}> <br>
+          <{/if}>
+        </address>
+      </div>
+      <{/if}>
+    </div>
+    <{if $trade.status == "WAIT_SELLER_SEND_GOODS"}>
+      <div class="help-block text-center">
+        <a href="<{url action=topshop_ctl_trade_flow@goDelivery tid=$trade.tid}>" class="btn btn-success" ><i class="fa fa-truck"></i> 我要发货</a>
+      </div>
+    <{/if}>
+
+    <{include file="topshop/trade/detail_item.html"}>
+
+    <div class="row">
+      <div class="col-sm-6">
+        <{if $trade.trade_memo}>
+        <p class="lead">买家备注：</p>
+        <p class="text-muted well well-sm no-shadow" style="margin-top: 10px;">
+          <{$trade.trade_memo}>
+        </p>
+        <{/if}>
+        <p class="lead">备注信息：</p>
+        <form action="<{url action=topshop_ctl_trade_detail@setTradeMemo}>" method="post" id="trade_form" data-validate-onsuccess="ajaxSubmit">
+          <input type="hidden" name="tid" value="<{$trade.tid}>">
+          <div class="form-group">
+            <textarea name="shop_memo" class="form-control" rows="3"><{$trade.shop_memo}></textarea>
+          </div>
+          <div>
+            <button type="submit" class="btn btn-primary">保存</button>
+            <!--
+            <a href="#" class="pull-right">订单导出</a>
+            -->
+          </div>
+        </form>
+      </div>
+      <div class="col-sm-6">
+        <{include file="topshop/trade/trade_total_data.html"}>
+      </div>
+    </div>
+</div>
+<{if $logi.logi_no != '' || $ziti == "true" || $trade.need_invoice == true}>
+<div class="invoice">
+  <div class="row">
+    <{if $logi.logi_no != '' || $ziti == "true"}>
+    <div class="col-sm-6">
+      <p class="lead">配送信息：</p>
+      <div class="table-responsive">
+        <table class="table">
+          <tbody>
+            <{if $logi.logi_no != ''}>
+            <tr>
+              <th style="width:50%"><{t}>物流公司<{/t}>:</th>
+              <td><{$logi.logi_name}></td>
+            </tr>
+            <tr>
+              <th><{t}>配送单号<{/t}>:</th>
+              <td><{$logi.logi_no}></td>
+            </tr>
+              <{if $tracking && $tracking =='true' }>
+              <tr>
+                <th><{t}>物流跟踪<{/t}>:</th>
+                <td>
+                  <a href="#" id="click_get_track" class="sp-see">查看物流</a><br />
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2"><div id="logistics"></div></td>
+              </tr>
+              <{/if}>
+            <{/if}>
+            <{if $ziti == "true"}>
+              <{if $trade.ziti_memo}>
+              <tr>
+                <th><{t}>自提备注<{/t}>:</th>
+                <td><{$trade.ziti_memo}></td>
+              </tr>
+              <{/if}>
+            <{/if}>
+          </tbody>
+        </table>
+        <{if $trade.status == "WAIT_BUYER_CONFIRM_GOODS"}>
+        <div class="text-center">
+          <a href="javascript::;" data-toggle="modal" data-target="#editLogi" class="btn btn-primary">修改配送信息</a>
+        </div>
+        <{/if}>
+      </div>
+    </div>
+    <{/if}>
+    <{if $trade.need_invoice == true}>
+    <div class="col-sm-6">
+      <p class="lead">发票信息：</p>
+      <div class="table-responsive">
+        <table class="table">
+          <tbody>
+            <tr>
+              <th style="width:50%"><{t}>发票类型<{/t}>:</th>
+              <td><{if $trade.invoice_type=='normal'}><{t}>普通发票<{/t}><{elseif $trade.invoice_type=='vat'}><{t}>增值税发票<{/t}><{/if}></td>
+            </tr>
+            <{if $trade.invoice_type=='normal'}>
+            <tr>
+              <th><{t}>发票抬头<{/t}>:</th>
+              <td><{if $trade.invoice_name=='individual'}><{t}>个人<{/t}><{else}><{t}>单位<{/t}><{/if}>-<{$trade.invoice_main}></td>
+            </tr>
+            <tr>
+              <th><{t}>发票内容<{/t}>:</th>
+              <td><{t}>由商家直接开具<{/t}></td>
+            </tr>
+            <{/if}>
+            <{if $trade.invoice_type=='vat'}>
+            <tr>
+              <th><{t}>公司名<{/t}>:</th>
+              <td><{$trade.invoice_vat_main.company_name}></td>
+            </tr>
+            <tr>
+              <th><{t}>公司登记号<{/t}>:</th>
+              <td><{$trade.invoice_vat_main.registration_number}></td>
+            </tr>
+            <tr>
+              <th><{t}>公司地址<{/t}>:</th>
+              <td><{$trade.invoice_vat_main.company_address}></td>
+            </tr>
+            <tr>
+              <th><{t}>公司电话<{/t}>:</th>
+              <td><{$trade.invoice_vat_main.company_phone}></td>
+            </tr>
+            <tr>
+              <th><{t}>银行开户名<{/t}>:</th>
+              <td><{$trade.invoice_vat_main.bankname}></td>
+            </tr>
+            <tr>
+              <th><{t}>银行账号<{/t}>:</th>
+              <td><{$trade.invoice_vat_main.bankaccount}></td>
+            </tr>
+            <{/if}>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <{/if}>
+  </div>
+</div>
+<{/if}>
+<!-- modal -->
+<div class="modal fade" id="editLogi" tabindex="-1" role="dialog">
+  <div class="panel panel-default modal-dialog">
+    <div class="panel-heading clearfix">
+      修改配送信息
+      <div class="pull-right">
+        <!-- <button type="button" class="btn btn-primary action-save">保存</button> -->
+        <button type="button" class="btn btn-default action-cancel" data-dismiss="modal">取消</button>
+      </div>
+    </div>
+    <div class="panel-body text-center">
+      <input type='hidden' name='delivery_id' value='<{$logi.delivery_id}>' >
+      <{if $ziti == 'true'}>
+      <div class="form-group has-error">
+        配送方式：
+        <select name="dlytmpl_id" class="form-control inline" disabled style="width:175px;margin-left:-5px;">
+          <option value="<{$tradeInfo.dlytmpl_id}>">上门自提</option>
+        </select>
+      </div>
+      <{else}>
+      <div class="form-group has-error">
+        配送方式：
+        <select name="dlytmpl_id" class="form-control inline" disabled style="width:175px;margin-left:-5px;">
+          <option value="express">快递</option>
+        </select>
+      </div>
+      <{/if}>
+      <div class="form-group has-error">
+
+        物流公司：
+        <select name="corp_id" class="form-control inline" style="width:175px;margin-left:-5px;">
+          <{foreach from=$dlycorp key=key item=dlyList}>
+          <option value="<{$dlyList.corp_id}>" <{if $dlyList.corp_code == $logi.corp_code}>checked=checked<{/if}> ><{$dlyList.corp_name}></option>
+          <{/foreach}>
+        </select>
+      </div>
+      <div class="form-group has-error">
+        配送单号：<input type="text" name="logi_no" class="form-control inline" style='width:175px' maxlength="20" value='<{$logi.logi_no}>'>
+      </div>
+      <div class="modal-footer text-center">
+        <button type="button" class="btn btn-primary action-save" id="act-update-delivery">确认</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- modal -->
+
+
+
+<script>
+  function ajaxSubmit (e) {
+    var form = e.target;
+    e.preventDefault();
+    $.post(form.action, $(form).serialize(), function(rs) {
+      if(rs.error) {
+        $('#messagebox').message(rs.message);
+        return;
+      }
+      if(rs.success) {
+        $('#messagebox').message(rs.message, 'success');
+      }
+      if(rs.redirect) {
+        location.href = rs.redirect;
+      }
+    });
+  }
+  $('#click_get_track').click(function(e){
+    e.preventDefault()
+    $('#track-hidden').hide();
+      $('#logistics').html('加载中...');
+    $.post('<{url action=topshop_ctl_trade_detail@ajaxGetTrack}>',{'logi_no':'<{$logi.logi_no}>','corp_code':'<{$logi.corp_code}>'},function(rs){
+      if(rs.error){
+        return $('#messagebox').message(rs.message);
+      }
+      $('#logistics').html(rs);
+    });
+  });
+
+
+    $('#act-update-delivery').click(function(e){
+      var dlytmplId = $('select[name="dlytmpl_id"]').val();
+      var logi_no = $('input[name="logi_no"]').val();
+      var corp_id = $('select[name="corp_id"]').val();
+      var delivery_id = $('input[name="delivery_id"]').val();
+      var tid = $('input[name="tid"]').val();
+      var data = 'dlytmpl_id=' + dlytmplId + '&logi_no=' + logi_no + '&corp_id=' + corp_id + '&delivery_id=' + delivery_id + '&tid=' + tid;
+      $.post('<{url action=topshop_ctl_trade_flow@updateLogistic}>', data, function(rs){
+        // rs = JSON.parse(rs);
+        if(rs.error) {
+          $('#messagebox').message(rs.message);
+          return;
+        }
+        if(rs.success) {
+          $('#messagebox').message(rs.message, 'success');
+        }
+
+        if(rs.redirect) {
+          location.href = rs.redirect;
+        }
+      })
+    });
+
+</script>

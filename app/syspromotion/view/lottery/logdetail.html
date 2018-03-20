@@ -1,0 +1,64 @@
+
+<div class="tableform">
+<div class="division" style="position:static;">
+	<h3><{t}>转盘获奖明细<{/t}>
+	    <div class="fr" style="font-size: 12px;">
+        	<span class="num">共<em><{$count}></em>条记录</span>
+        </div>
+    </h3>
+	<div id="lottery_detail" class="tableform">
+	    <table width="100%" border="0" cellpadding="0" cellspacing="0" class="gridlist">
+	        <thead>
+	            <tr>
+	                <th style="width:150px;"><{t}>记录时间<{/t}></th>
+	                <th style="width:150px;"><{t}>会员名<{/t}></th>
+	                <th style="width:300px;"><{t}>活动名称<{/t}></th>
+	                <th style="width:300px;"><{t}>抽奖结果<{/t}></th>
+	                <th><{t}>联系方式<{/t}></th>
+	            </tr>
+	        </thead>
+	        <tbody>
+	        <{foreach from=$logInfo item=item}> 
+	        <tr>
+	            <td><{$item['created_time']|cdate:FDATE_FTIME}></td>
+	            <{if $item['loginName']}>
+	            <td><{$item['loginName']}></td>
+	            <{else}>
+	            <td><{$item['user_id']}></td>
+	            <{/if}>
+	            <td><{$item['prizeInfo']['lottery_name']}></td>
+	            <{if $item['prizeInfo']['bonus_type'] =='hongbao'}>
+	            <td><{$item['prizeInfo']['hongbaomoney']}>元-红包<{$item['prizeInfo']['hongbaoid']}></td>
+	            <{elseif $item['prizeInfo']['bonus_type'] =='point'}>
+	            <td><{$item['prizeInfo']['num']}>积分</td>
+	            <{elseif $item['prizeInfo']['bonus_type'] =='custom'}>
+	            <td><{$item['prizeInfo']['bonus_desc']}></td>
+	            <{else}>
+	            <td></td>
+	            <{/if}>
+	            <td><{$item.addrList.mobile}> &nbsp;&nbsp;<{$item.addrList.name}> &nbsp;&nbsp;<{$item.addrList.area}><{$item.addrList.addr}>&nbsp;&nbsp;<{$item.addrList.zip}></td>
+	        </tr>
+	        <{/foreach}>
+	        </tbody>
+	    </table>
+	    <{$pagers}>
+	</div>
+</div>
+</div>
+<script>
+	window.onload = function(){ 
+		$('lottery_detail').getElements('span').addEvent('click', function(){
+			var pages = $(this).get('onclick');
+			var url = window.location.href;
+			if(url.indexOf('pages') >0)
+			{
+				var reg = new RegExp("pages=(\\d+)");
+				window.location.href = url.replace(reg,pages);	
+			}
+			else
+			{
+				window.location.href = url+'&'+pages;
+			}
+		});
+	}
+</script>

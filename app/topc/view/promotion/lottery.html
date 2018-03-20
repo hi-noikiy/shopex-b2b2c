@@ -1,0 +1,130 @@
+<{if $lottery_rules}>
+	<{foreach from=$lottery_rules item=rules key=key}>
+	<{if $rules.bonus_type=="custom"}>
+	<img src="<{$rules.img|storager:'t'}>" id="<{$rules.bonus_type}>_<{$key}>" style="display:none;">
+	<{else}>
+	<img src="<{$env.app.topc.res_url}>/images/<{$rules.bonus_type}>.png" id="<{$rules.bonus_type}>_<{$key}>" style="display:none;">
+	<{/if}>
+	<{/foreach}>
+<{/if}>
+<input type="hidden" name="lotterid" value="<{$lottery_id}>">
+<input type="hidden" name="last_modified_time" value="<{$modified_time}>">
+<div class="bread-crumbs">
+	<div class="lotter-wrap">
+		<section class="title">
+			<h1><span class="title-before">幸运大转盘</span><span class="title-after">抽奖活动</span></h1>
+			<p class="dirscript"></p>
+			<!-- <div class="qrcode">
+				<img src="" alt="" width="100" height="100">
+				扫一扫
+			</div> -->
+		</section>
+		<section class="lotter-content clearfix">
+			<div class="prize-box">
+				 <!--转盘-->
+		        <div class="banner">
+		            <div class="turnplate">
+		                <canvas class="item" id="wheelcanvas" width="422px" height="422px">
+		                </canvas>
+		                <{img src="turnplate-pointer.png" class="pointer" app="topc"}>
+		            </div>
+		        </div>
+			</div>
+			<div class="prize-rule">
+				<div class="rule-content">
+					<div class="rule-name">
+						活动规则区域
+					</div>
+					<div class="rule-list">
+						<{$lottery_desc}>
+					</div>
+				</div>
+				<div class="prize-result">
+					<div class="chance">您还有<span class="lotter-limit"><{$lottery_joint_limit}></span>次抽奖机会</div>
+					<{if $lottery_type=='0' || $lottery_type=='2'}>
+					<button class="btn btn-major btn-lg action-exchange"><span><span>兑换抽奖机会</span></span></button>
+					<p>
+						<span class="pointer"><{$lottery_point_num}></span>积分兑换一次抽奖机会
+						<label data-region-id="<{$addrList.region_id}>" data-addr-id="<{$addrList.addr_id}>" data-addr="<{$addrList.addr}>" data-name="<{$addrList.name}>" data-mobile="<{$addrList.mobile}>" data-zip="<{$addrList.zip}>" title="<{$addrList.area|region}>" class="prize-info-data"></label>
+					</p>
+					<{/if}>
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
+<div id="confirm_dialog" class="confirm-dialog text-center" style="display: none;">
+	<p class="text-center">确定要用 <span class="font-red exchange-limit"></span> 积分兑换一次抽奖机会吗？</p>
+	<p class="text-center">
+	    <button type="button" class="btn btn-import action-sure"><span><span>确定</span></span></button>
+	    <button type="button" class="btn btn-simple dialog-btn-close"><span><span>取消</span></span></button>
+	 </p>
+</div>
+
+<script>
+$(document).ready(function(){
+	var lotteryType = $.parseJSON('<{$bonusInfo}>');
+	var lotterId = $('input[name="lotterid"]').val();
+	var last_modified_time = $('input[name="last_modified_time"]').val();
+	var lotterLimit = $.trim($('.lotter-limit').text());
+	var restaraunts = [];
+	var colors = [];
+	var desc = "";
+	for(var key in lotteryType) {
+		switch(lotteryType[key].bonus_type) {
+			case 'hongbao':
+				if(lotteryType[key].hongbaotype == "stochastic") {
+					restaraunts.push(lotteryType[key].id + "-" + lotteryType[key].bonus_type + "+随机红包");
+				} else if(lotteryType[key].hongbaotype == "fixed") {
+					restaraunts.push(lotteryType[key].id + "-" + lotteryType[key].bonus_type + "+红包" + lotteryType[key].hongbaomoney + "元");
+				}
+				break;
+			case 'point':
+				restaraunts.push(lotteryType[key].id + "-" + lotteryType[key].bonus_type + "+积分" + lotteryType[key].num + "点");
+				break;
+			case 'none':
+				restaraunts.push(lotteryType[key].id + "-" + lotteryType[key].bonus_type + "+" + lotteryType[key].bonus_desc);
+				desc = lotteryType[key].bonus_desc;
+				break;
+			case 'custom':
+				restaraunts.push(lotteryType[key].id + "-" + lotteryType[key].bonus_type + "+" + lotteryType[key].bonus_desc);
+				break;
+		}
+		colors.push(lotteryType[key].color);
+	}
+	
+	if(lotterLimit <= 0) flag = false;
+	var region = "<{$env.base_url}>/app/ectools/statics/scripts/region.json";
+	var nextpage = "<{url action=topc_ctl_lottery@lottery_info_dialog}>";
+	var saveUrl = '<{url action=topc_ctl_member_lottery@saveAddr}>';
+	readyTurnplate(restaraunts, colors, '<{url action=topc_ctl_lottery@getPrize}>', {"lottery_id": + lotterId , "lottery_joint_limit":  + lotterLimit , "last_modified_time": + last_modified_time }, $('.lotter-limit'), region, nextpage, saveUrl);
+});
+window.onload = function(){
+	drawRouletteWheel();
+
+	$('.action-exchange').on('click', function() {
+		var limit = $.trim($('.pointer').text());
+		$('#confirm_dialog').dialog({
+			title: "提示",
+			width: 300,
+			modal: true,
+			onShow: function(){
+				var that = this;
+				var lotterId = $('input[name="lotterid"]').val();
+				this.content.find('.exchange-limit').text(limit);
+				this.content.find('.action-sure').click(function(){
+					$.post('<{url action=topc_ctl_lottery@getExchangeNum}>', {'lottery_joint_limit': $.trim($('.lotter-limit').text()), 'pointNum': $.trim($('.pointer').text()), 'lotteryid':lotterId}, function(rs){
+						if(rs.error) {
+							Message.error(rs.message);
+							return;
+						}
+						$('.lotter-limit').text(rs);
+					});
+					that.hide();
+				});
+			}
+		});
+	});
+}
+</script>
+

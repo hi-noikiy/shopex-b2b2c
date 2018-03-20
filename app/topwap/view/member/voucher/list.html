@@ -1,0 +1,29 @@
+<{foreach from=$list item=item}>
+<li>
+  <{if $item.is_valid==1 && $item.end_time >= $now}>
+  <a class="shopex-linkto" href="<{url action=topwap_ctl_voucher@voucherList voucher_id=$item.voucher_id}>">
+  <div class="section-container coupon-item">
+  <{else}>
+  <div class="section-container coupon-item disabled">
+  <{/if}>
+  <div class="section-init">
+    <div class="box-display coupon-item-init">
+      <div class="box-item-flex1"><div class="coupon-item-denomination" data-denomination="voucher"><{$item.deduct_money|cur}></div><div class="font-gray-40" style="margin-top: 0.5rem;">满<{$item.limit_money|cur}>使用</div></div>
+      <div class="box-item-flex1">
+        <div class="coupon-item-rule">【<{$item.voucher_name}>】</div>
+        <div class="coupon-item-from">
+          <{foreach from=$item.used_platform item=platform}>
+           &nbsp;<{$platform|json2value:'{"pc":"电脑端","wap":"触屏端","app":"APP端"}'}>
+          <{/foreach}>
+        </div>
+      </div>
+    </div>
+    <div class="coupon-item-time-range"><{$item.start_time|cdate:'FDATE'}> - <{$item.end_time|cdate:'FDATE'}></div>
+  </div>
+    <i class="bbc-icon bbc-icon-forward"></i>
+  </div>
+  <{if $item.is_valid == 1}>
+  </a>
+  <{/if}>
+</li>
+<{/foreach}>

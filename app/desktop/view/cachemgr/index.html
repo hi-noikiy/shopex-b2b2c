@@ -1,0 +1,70 @@
+<div class="finder-title">
+  <h2 class="head-title span-auto">
+    <{t}>缓存管理<{/t}>
+  </h2>
+</div>
+<div class="box">
+  <div class="box-header with-border">
+    <h3 class="box-title"><{t}>缓存资源<{/t}></h3>
+  </div>
+  <div class="division">
+    <table class="table">
+      <thead>
+      <tr>
+        <th>资源名</th>
+        <th>支持缓存类型</th>
+        <th>配置</th>
+        <th>清除</th>
+      </tr>
+      </thead>
+
+      <{foreach from=$storeResources item=storeResource}>
+      <tr>
+        <td>
+          <{$storeResource.name}>
+        </td>
+        <td>
+          <{foreach from=$storeResource.supports item=support name=supports}><{$support.title}>(<{$support.name}>)<{if not $env.foreach.supports.last}><br/><{/if}><{/foreach}>
+        </td>
+        <td><{foreach from=$storeResource.config key=configKey item=configValue}><{$configKey}> : <{$configValue}><br><{/foreach}></td>
+        <td>
+          <{if $nullResource !== $storeResource.name}> 
+          <{capture name="href"}><{url route="shopadmin" app="desktop" ctl="cachemgr" act="clean" resource=$storeResource.name}><{/capture}>
+          <{button type="button" class="btn btn-sm btn-primary" href=$env.capture.href onclick="" label=$___desktop="清除"|t:'desktop'}>
+          <{/if}>
+        </td>
+      </tr>
+      <{/foreach}>
+    </table>    
+  </div>
+</div>
+<div class="box">
+  <div class="box-header with-border">
+    <h3 class="box-title"><{t}>缓存类型说明<{/t}></h3>
+  </div>
+  <div class="division">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>类型标识</th>
+          <th>标题</th>
+          <th>详细说明</th>
+        </tr>
+      </thead>
+
+      <{foreach from=$stores key=name item=store}>
+      <tr>
+        <td>
+          <{$name}>
+        </td>
+        <td>
+          <{$store.title}>
+        </td>
+        <td>
+          <{$store.memo}>
+        </td>
+      </tr>
+      <{/foreach}>
+    </table>    
+  </div>
+</div>

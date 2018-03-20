@@ -1,0 +1,101 @@
+<div class="row">
+  <div class="col-md-12">
+    <{if $openInfo.contact_type == null}>
+    <form  action="<{url action=topshop_ctl_open@applyForOpen}>" method="post" class="form-horizontal" data-validate-onsuccess="ajaxSubmit" id="form_delivery" role="form">
+      <div class="box-body">
+        <div class="col-md-10">
+          <div class="form-group">
+            <div class="input-group">
+              <div class="input-group-addon">
+                &nbsp;&nbsp;&nbsp;&nbsp;Key
+              </div>
+              <input type="text" class="form-control" name="key">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group">
+              <div class="input-group-addon">
+                Secret
+              </div>
+              <input type="text" class="form-control" name="secret">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="box-footer center">
+        <button type="submit" class="btn btn-primary"><{t}>申请绑定<{/t}></button>
+      </div>
+    </form>
+    <script>
+      function ajaxSubmit (e) {
+        var form = e.target;
+        e.preventDefault();
+        $.post(form.action, $(form).serialize(), function(rs) {
+          if(rs.error) {
+            $('#messagebox').message(rs.message);
+            return;
+          }
+          if(rs.success) {
+            $('#messagebox').message(rs.message, 'success');
+          }
+          if(rs.redirect) {
+            location.href = rs.redirect;
+          }
+        });
+      }
+    </script>
+    <{elseif $openInfo.contact_type == 'notallowopen'}>
+    <div class="alert alert-danger alert-dismissible">
+      <h4><i class="fa fa-warning"></i>平台拒绝</h4>
+      <p><{$openInfo.mark}></p>
+    </div>
+    <{elseif $openInfo.contact_type == 'applyforopen'}>
+    <div class="alert alert-info alert-dismissible">
+      <h4><i class="fa fa-spinner"></i>&nbsp;平台审核中，请稍后</h4>
+    </div>
+    <{else}>
+    <div class="box-body">
+      <form method="post" class="form-horizontal save-dev-conf-form" action="<{url action=topshop_ctl_open@setConf}>" role="form" >
+        <dl class="dl-horizontal merchant-info">
+          <dt>开发者Key：</dt>
+          <dd><{$openInfo.key}></dd>
+          <dt>开发者Secret：</dt>
+          <dd><span class='prism-secret' secret="<{$openInfo.secret}>">点击我显示密码</span></dd>
+          <dt>开发者模式：</dt>
+          <dd><input type='radio' name='developer' value='DEVELOP' <{if $shopConf.develop_mode=="DEVELOP"}>checked='checked'<{/if}> > 可以通过接口进行操作 </dd>
+          <dt>编辑模式：</dt>
+          <dd><input type='radio' name='developer' value='PRODUCT' <{if $shopConf.develop_mode !="DEVELOP"}>checked='checked'<{/if}> > 禁止通过接口进行操作 </dd>
+        </dl>
+        <div class="text-center">
+          <button type="button" class="btn btn-primary save-dev-conf">提交</button>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      $('.prism-secret').bind(
+        'click', function(e){
+          if(this.innerHTML == $(this).attr('secret')){
+            this.innerHTML = '点击我显示密码';
+          }else{
+            this.innerHTML = $(this).attr('secret');
+          }
+        });
+
+      $('.save-dev-conf').click(function(){
+        $.post(
+          '<{url action=topshop_ctl_open@setConf}>',
+          $('.save-dev-conf-form').serialize(),
+          function(rs){
+            if(rs.error) {
+              $('#messagebox').message(rs.message);
+            }
+            if(rs.success) {
+              $('#messagebox').message(rs.message, 'success');
+            }
+          });
+      });
+    </script>
+    <{/if}>
+  </div>
+</div>

@@ -1,0 +1,39 @@
+<form action="<{url action=topshop_ctl_auth_index@doCheckPassword}>" method="post" class="form-horizontal clearfix" data-validate-onsuccess="ajaxSubmit" role="form">
+  <input type="hidden" name="type" value="<{$type}>" />
+  <{if $ac == 'update'}><input type="hidden" name="ac" value="<{$ac}>" /><{/if}>
+  <div class="box box-default">
+    <div class="box-header with-border">
+      <h3 class="box-title">验证登录密码</h3>
+    </div>
+    <div class="box-body">
+      <div class="form-group has-feedback">
+        <label class="col-sm-2 control-label"><{t}>密码<{/t}>：</label>
+        <div class="col-sm-4">
+          <input type="password" name="login_password" id="password" value="" class="form-control" placeholder="请输入密码进行验证" required></div>
+      </div>
+    </div>
+    <div class="box-footer">
+      <button type="submit" class="btn btn-primary action-save">下一步</button>
+    </div>
+  </div>
+</form>
+<script>
+    $('#login-box').parent().css('height', 1);
+
+    function ajaxSubmit(e) {
+        var form = e.target;
+        e.preventDefault();
+        $.post(form.action, $(form).serialize(), function(rs) {
+            if(rs.error) {
+                $('#messagebox').message(rs.message);
+                return;
+            }
+            if(rs.success) {
+                $('#messagebox').message(rs.message, 'success');
+            }
+            if(rs.redirect) {
+                setTimeout(function(){location.href=rs.redirect;}, 1000);
+            }
+        });
+    }
+</script>

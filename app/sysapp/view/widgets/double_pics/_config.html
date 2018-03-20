@@ -1,0 +1,55 @@
+<div class="tabs-wrap">
+  <ul>
+    <li class="tab current"><span><{t}>双图挂件<{/t}></span></li>
+  </ul>
+</div>
+<div class="tableform notice">
+  <{t}>※ 图片地址必填，页面类型必填，页面类型如果有参数也要必填<{/t}>
+  <br />
+  <{t}>※ 如果靠前的项 填写信息少了或者未填，后面的位置数据会移动到前面的位置<{/t}>
+</div>
+<div id="picAddress" class="tableform">
+    <div class="piccontent">
+        <table  width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+                <th><{t app="sysapp"}>图片地址:<{/t}></th>
+                <td>
+                    <input name='pic[0][link]' class="imgsrc" id="pic[0][link]"  value="<{$setting.pic.0.link}>">
+                    <input type=button value=上传图片 class="uploadbtn"><span>（建议图片尺寸：px*px）</span>
+                </td>
+                <th><{t app="sysapp"}>页面类型:<{/t}></th>
+                <td>
+                    <{input type="applink" name="pic[0][linktarget]" value=$setting.pic.0.linktarget linktypename="pic[0][linktype]" linktypevalue=$setting.pic.0.linktype }>
+                </td>
+            </tr>
+            <tr>
+                <th><{t app="sysapp"}>图片地址:<{/t}></th>
+                <td>
+                    <input name='pic[1][link]' class="imgsrc" id="pic[1][link]"  value="<{$setting.pic.1.link}>">
+                    <input type=button value=上传图片 class="uploadbtn"><span>（建议图片尺寸：px*px）</span>
+                </td>
+                <th><{t app="sysapp"}>页面类型:<{/t}></th>
+                <td>
+                    <{input type="applink" name="pic[1][linktarget]" value=$setting.pic.1.linktarget linktypename="pic[1][linktype]" linktypevalue=$setting.pic.1.linktype }>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<script>
+  (function(){
+    var tag_type='tr';
+    $$(".piccontent .uploadbtn").addEvent('click',function(e){bindevent(this)});
+    function bindevent(el){
+      var target=$(el).getParent(tag_type).getElement('.imgsrc');
+      var goto_url=encodeURIComponent('<{url route="shopadmin" app="image" ctl="admin_manage" act="image_broswer" type="big"}>');
+      var url='<{url route="shopadmin" app="desktop" act="alertpages" goto=""}>'+goto_url;  
+      Ex_Loader('modedialog',function(){
+        return new imgDialog(url,{onCallback:function(image_id,image_src){
+          target.value=image_src;
+        }});
+      });
+    }
+  })();
+</script>

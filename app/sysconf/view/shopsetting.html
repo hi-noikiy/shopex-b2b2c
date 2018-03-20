@@ -1,0 +1,23 @@
+<div class="tableform tableform-tabs">
+  <div class="tabs-wrap">
+    <ul>
+      <li class="tab current"><span><{t}>商家登录背景图<{/t}></span></li>
+    </ul>
+  </div>
+    <form method="post" action="?app=sysconf&ctl=admin_setting&act=shopSaveSet" id="whitelist">
+      <div style="text-align:right;padding:3px 30px"></div>
+      <table class="tableform" style="width:99%;">
+      <tbody>
+        <tr>
+          <th><{t}>商家登录背景图<{/t}></th>
+          <td>
+            <{input type="image" name='shop_login_background' value=$shop_login_background width=800 height=500}>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="table-action">
+      <{button type="submit"  label=$___desktop="保存"|t:'site'}>
+    </div>
+  </form>
+</div>

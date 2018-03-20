@@ -1,0 +1,88 @@
+<div class="tableform tableform-tabs">
+    <div class="tabs-wrap">
+        <ul>
+            <li class="tab current"><span><{t}>尾随营销设置<{/t}></span></li>
+        </ul>
+    </div>
+    <form method="post" action="?app=syspromotion&ctl=admin_trailingmarketing&act=save">
+        <div class="clear division">
+            <table class="tableform" style="width: 99%">
+                <tbody>
+                    <tr>
+                        <th><{t}>开启尾随营销:<{/t}></th>
+                        <td>
+                            <{input type="bool" default=0 vtype="required" name="marketing[status]" value=$marketing.status class="open_trailingmarketing"}>
+                        </td>
+                    </tr>
+                    <tr class="prizesetting" <{if !$marketing.status}>style="display:none"<{/if}>>
+                        <th><{t}>选择平台：<{/t}></th>
+                        <td>
+                            <input type="radio" name="marketing[platform]" value="0" class="choosedplatform" <{if $marketing.platform!='1' && $marketing.platform!='2'}>checked<{/if}>>全部
+                            <input type="radio" name="marketing[platform]" value="1" class="choosedplatform" <{if $marketing.platform=='1'}>checked<{/if}>>H5端
+                            <input type="radio" name="marketing[platform]" value="2" class="choosedplatform" <{if $marketing.platform=='2'}>checked<{/if}>>APP端
+                        </td>
+                    </tr>
+                    <tr class="prizesetting" <{if !$marketing.status}>style="display:none"<{/if}>>
+                        <th><{t}>选择奖项:<{/t}></th>
+                        <td>
+                            <select class="marketing_type" name="marketing[type]" value="<{$marketing.type}>">
+                              <{foreach from=$marketing_type item=item key=key}>
+                                <option value="<{$key}>"><{$item}></option>
+                              <{/foreach}>
+                            </select>
+                            <span>
+                                <select class="scratchcard-option" name="marketing[scratchcard_id]">
+                                    <{foreach from=$scratchcardList item=item key=key}>
+                                    <option value="<{$item.scratchcard_id}>" <{if $marketing.scratchcard_id == $item.scratchcard_id}> selected='selected'<{/if}>><{$item.scratchcard_name}></option>
+                                    <{/foreach}>
+                                </select>
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="table-action">
+            <{button type="submit" label=$__desktop="保存"|t:'syspromotion'}>
+        </div>
+    </form>
+</div>
+
+<script>
+    $$(".open_trailingmarketing").addEvent("click",function(e){
+        if(this.value==0){
+            $$(".prizesetting").hide();
+        }
+        else{
+            $$(".prizesetting").show();
+        }
+    });
+    $$(".choosedplatform").addEvent("click",function(e){
+        var platform = $$('input[name="marketing[platform]"]:checked').get('value');
+        var url='?app=syspromotion&ctl=admin_trailingmarketing&act=ajaxGetscratchcardList';
+        var cratchcardStr = "";
+        cratchcardStr += '';
+        new Request({
+            url: url,
+            data:'platform='+ platform,
+            onSuccess:function(rs){
+                if(rs) {
+                    var rsJSON = JSON.decode(rs) ;
+                    var scratchcardList = rsJSON.scratchcardList;
+                    for( var i=0; i < scratchcardList.length; i++) {
+                      cratchcardStr += "<option value='"+ scratchcardList[i].scratchcard_id +"'>"+ scratchcardList[i].scratchcard_name +"</option>";
+                    }
+                }
+                $$('.scratchcard-option').set('html',cratchcardStr);
+            }
+        }).send();
+    });
+
+    $$('.markting_type').addEvent('change', function(e){
+        // $$('.scratchcard-option').hide();
+        // var type = $(this).get('value');
+        // if(type) {
+        //     $$('.scratchcard-option').show();
+        // }
+    }).fireEvent('change');
+</script>

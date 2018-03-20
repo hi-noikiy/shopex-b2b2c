@@ -1,0 +1,139 @@
+
+<div style="text-align:right;padding:3px 30px"></div>
+<div class="notice">
+  <{t}>
+  系统根据各个得分项每天自动更新一次分数，用于商品列表的排序，包括 综合、销量、新品等等
+  各大项总分1000分
+  分数有加有减
+  <{/t}>
+</div>
+
+<div>商品质量</div>
+<table class="tableform" style="width:99%;">
+  <tbody>
+    <tr>
+      <th><{t}>图片：<{/t}></th>
+      <td>
+        <span class="red"><{$goods_quality.every_pic}></span>
+        <span class="notice-inline">图片5张以内，每张X分，超过5张算5张</span>
+      </td>
+    </tr>
+    <tr>
+      <th><{t}>销量：<{/t}></th>
+      <td>
+        <span class="red"><{$goods_quality.every_sold}></span>
+        <span class="notice-inline">销量600以内，每个X分，超过600算600个销量</span>
+      </td>
+    </tr>
+    <tr>
+      <th><{t}>好评：<{/t}></th>
+      <td>
+        <span class="red"><{$goods_quality.every_rate_good}></span>
+        <span class="notice-inline">每个销量 X 分，好中差评加起来不超过200分</span>
+      </td>
+    </tr>
+    <tr>
+      <th><{t}>中评：<{/t}></th>
+      <td>
+        <span class="red"><{$goods_quality.every_rate_neutral}></span>
+        <span class="notice-inline">每个销量 X 分，好中差评加起来不超过200分</span>
+      </td>
+    </tr>
+    <tr>
+      <th><{t}>差评：<{/t}></th>
+      <td>
+        <span class="red"><{$goods_quality.every_rate_bad}></span>
+        <span class="notice-inline">每个销量 X 分，好中差评加起来不超过200分</span>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<div>店铺</div>
+<table class="tableform" style="width:99%;">
+  <tbody>
+    <tr>
+      <th><{t}>自营店：<{/t}></th>
+      <td>
+        <span class="red"><{$shop.shoptype_self}></span>
+        <span class="notice-inline">自营店 X 分</span>
+      </td>
+    </tr>
+    <tr>
+      <th><{t}>旗舰店：<{/t}></th>
+      <td>
+        <span class="red"><{$shop.shoptype_flag}></span>
+        <span class="notice-inline">旗舰店 X 分</span>
+      </td>
+    </tr>
+    <tr>
+      <th><{t}>品牌店：<{/t}></th>
+      <td>
+        <span class="red"><{$shop.shoptype_brand}></span>
+        <span class="notice-inline">品牌店 X 分</span>
+      </td>
+    </tr>
+    <tr>
+      <th><{t}>多品类店：<{/t}></th>
+      <td>
+        <span class="red"><{$shop.shoptype_store}></span>
+        <span class="notice-inline">多品类店 X 分</span>
+      </td>
+    </tr>
+    <tr>
+      <th><{t}>类目专营店：<{/t}></th>
+      <td>
+        <span class="red"><{$shop.shoptype_cat}></span>
+        <span class="notice-inline">单品类店 X 分</span>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<div>商品维护</div>
+<table class="tableform" style="width:99%;">
+  <tbody>
+    <tr>
+      <th><{t}>SKU缺货：<{/t}></th>
+      <td>
+        <span class="red"><{$goods_maintenance.every_nosku}></span>
+        <span class="notice-inline">每缺货一个SKU扣X分，扣到0为止</span>
+      </td>
+    </tr>
+    <tr>
+      <th><{t}>售后次数：<{/t}></th>
+      <td>
+        <span class="red"><{$goods_maintenance.every_artersales_num}></span>
+        <span class="notice-inline">超过5单后每单扣X分，扣到0为止</span>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<div>商品上下架</div>
+<table class="tableform" style="width:99%;">
+  <tbody>
+    <tr>
+      <th><{t}>新上架：<{/t}></th>
+      <td>
+        <span class="red"><{$goods_updown.new}></span>
+        <span class="notice-inline">30天内新建商品 X 分</span>
+      </td>
+    </tr>
+    <tr>
+      <th><{t}>重新发布：<{/t}></th>
+      <td>
+        <span class="red"><{$goods_updown.relist}></span>
+        <span class="notice-inline">30天前添加的商品重新发布，30天内再上架 X 分</span>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />

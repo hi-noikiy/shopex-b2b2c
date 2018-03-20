@@ -1,0 +1,16 @@
+a:7:{s:2:"id";i:1;s:7:"shop_id";i:3;s:11:"activity_id";i:2;s:13:"verify_status";s:5:"agree";s:12:"valid_status";i:1;s:13:"refuse_reason";s:0:"";s:13:"modified_time";i:1453802035;}
+a:7:{s:2:"id";i:2;s:7:"shop_id";i:3;s:11:"activity_id";i:3;s:13:"verify_status";s:5:"agree";s:12:"valid_status";i:1;s:13:"refuse_reason";s:0:"";s:13:"modified_time";i:1453802925;}
+a:7:{s:2:"id";i:3;s:7:"shop_id";i:1;s:11:"activity_id";i:1;s:13:"verify_status";s:5:"agree";s:12:"valid_status";i:1;s:13:"refuse_reason";s:0:"";s:13:"modified_time";i:1453878824;}
+a:7:{s:2:"id";i:4;s:7:"shop_id";i:3;s:11:"activity_id";i:5;s:13:"verify_status";s:5:"agree";s:12:"valid_status";i:1;s:13:"refuse_reason";s:0:"";s:13:"modified_time";i:1472471348;}
+a:7:{s:2:"id";i:5;s:7:"shop_id";i:3;s:11:"activity_id";i:6;s:13:"verify_status";s:5:"agree";s:12:"valid_status";i:1;s:13:"refuse_reason";s:0:"";s:13:"modified_time";i:1474954611;}
+a:7:{s:2:"id";i:6;s:7:"shop_id";i:2;s:11:"activity_id";i:6;s:13:"verify_status";s:5:"agree";s:12:"valid_status";i:1;s:13:"refuse_reason";s:0:"";s:13:"modified_time";i:1474954766;}
+a:7:{s:2:"id";i:7;s:7:"shop_id";i:3;s:11:"activity_id";i:7;s:13:"verify_status";s:5:"agree";s:12:"valid_status";i:1;s:13:"refuse_reason";s:0:"";s:13:"modified_time";i:1475134107;}
+a:7:{s:2:"id";i:8;s:7:"shop_id";i:1;s:11:"activity_id";i:7;s:13:"verify_status";s:5:"agree";s:12:"valid_status";i:1;s:13:"refuse_reason";s:0:"";s:13:"modified_time";i:1475134216;}
+a:7:{s:2:"id";i:9;s:7:"shop_id";i:3;s:11:"activity_id";i:8;s:13:"verify_status";s:5:"agree";s:12:"valid_status";i:1;s:13:"refuse_reason";s:0:"";s:13:"modified_time";i:1476085940;}
+a:7:{s:2:"id";i:10;s:7:"shop_id";i:3;s:11:"activity_id";i:9;s:13:"verify_status";s:7:"pending";s:12:"valid_status";i:1;s:13:"refuse_reason";s:0:"";s:13:"modified_time";i:1476241143;}
+a:7:{s:2:"id";i:11;s:7:"shop_id";i:3;s:11:"activity_id";i:10;s:13:"verify_status";s:7:"pending";s:12:"valid_status";i:1;s:13:"refuse_reason";s:0:"";s:13:"modified_time";i:1476244667;}
+a:7:{s:2:"id";i:12;s:7:"shop_id";i:3;s:11:"activity_id";i:11;s:13:"verify_status";s:5:"agree";s:12:"valid_status";i:1;s:13:"refuse_reason";s:0:"";s:13:"modified_time";i:1476251633;}
+a:7:{s:2:"id";i:13;s:7:"shop_id";i:2;s:11:"activity_id";i:12;s:13:"verify_status";s:5:"agree";s:12:"valid_status";i:1;s:13:"refuse_reason";s:0:"";s:13:"modified_time";i:1476261219;}
+a:7:{s:2:"id";i:14;s:7:"shop_id";i:2;s:11:"activity_id";i:13;s:13:"verify_status";s:5:"agree";s:12:"valid_status";i:1;s:13:"refuse_reason";s:0:"";s:13:"modified_time";i:1476264199;}
+a:7:{s:2:"id";i:15;s:7:"shop_id";i:2;s:11:"activity_id";i:14;s:13:"verify_status";s:5:"agree";s:12:"valid_status";i:1;s:13:"refuse_reason";s:0:"";s:13:"modified_time";i:1476264733;}
+a:7:{s:2:"id";i:16;s:7:"shop_id";i:3;s:11:"activity_id";i:15;s:13:"verify_status";s:5:"agree";s:12:"valid_status";i:1;s:13:"refuse_reason";s:0:"";s:13:"modified_time";i:1476274012;}

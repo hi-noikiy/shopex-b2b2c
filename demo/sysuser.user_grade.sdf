@@ -1,0 +1,5 @@
+a:6:{s:8:"grade_id";i:1;s:10:"grade_name";s:12:"普通会员";s:10:"grade_logo";s:61:"/images/9c/8e/47/fff315ccf96afcab5edbb89b1fc5b6c45a9e44f7.png";s:10:"experience";i:0;s:13:"default_grade";i:1;s:8:"validity";i:0;}
+a:6:{s:8:"grade_id";i:2;s:10:"grade_name";s:12:"初级会员";s:10:"grade_logo";s:65:"img0/images/c5/f4/ea/380844b0c90454a2c64ce1c385d99950783db26e.jpg";s:10:"experience";i:1000;s:13:"default_grade";i:0;s:8:"validity";i:0;}
+a:6:{s:8:"grade_id";i:3;s:10:"grade_name";s:12:"中级会员";s:10:"grade_logo";s:65:"img0/images/1b/c4/b4/0a1b7ba004f4e668a11602c466679132b999e2b2.jpg";s:10:"experience";i:3000;s:13:"default_grade";i:0;s:8:"validity";i:0;}
+a:6:{s:8:"grade_id";i:4;s:10:"grade_name";s:12:"高级会员";s:10:"grade_logo";s:65:"img0/images/cb/fd/e8/da9764ce004a7d50d9b6eaa804fd826c54b9f9ff.jpg";s:10:"experience";i:6000;s:13:"default_grade";i:0;s:8:"validity";i:0;}
+a:6:{s:8:"grade_id";i:5;s:10:"grade_name";s:12:"白金会员";s:10:"grade_logo";s:65:"img0/images/65/d4/ce/c77dd7dde59d52c00ccb9e2dff842c692fcd4a4b.png";s:10:"experience";i:10000;s:13:"default_grade";i:0;s:8:"validity";i:0;}

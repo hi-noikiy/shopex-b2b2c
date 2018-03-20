@@ -1,0 +1,73 @@
+<div class="box box-widget widget-user-2">
+  <!-- Add the bg color to the header using any of the bg-* classes -->
+  <div class="attachment-block clearfix">
+    <img class="attachment-img" src="<{$qrCodeData}>" alt="店铺二维码">
+    <div class="attachment-pushed">
+      <h4 class="attachment-heading"><a href="<{url subdomain=$shop.subdomain action=topc_ctl_shopcenter@index shop_id=$shop.shop_id}>" target="_blank"><{$shop.shop_name}></a></h4>
+      <div class="attachment-text"><{$shop.shop_descript}></div>
+    </div>
+  </div>
+  <{if $shop.shop_type != 'self'}>
+  <div class="box-body">
+    <div>
+      <div class="progress-group">
+        <span class="progress-text">实物与描述相符</span>
+        <span class="progress-number"><b><{$countDsr.tally_dsr.num|default:5}></b>/5</span>
+
+        <div class="progress sm">
+          <div class="progress-bar progress-bar-aqua" style="width: <{$countDsr.tally_dsr.percentage|default:'100%'}>"></div>
+        </div>
+      </div>
+      <!-- /.progress-group -->
+      <div class="progress-group">
+        <span class="progress-text">服务质量</span>
+        <span class="progress-number"><b><{$countDsr.attitude_dsr.num|default:5}></b>/5</span>
+
+        <div class="progress sm">
+          <div class="progress-bar progress-bar-red" style="width: <{$countDsr.attitude_dsr.percentage|default:'100%'}>"></div>
+        </div>
+      </div>
+      <!-- /.progress-group -->
+      <div class="progress-group">
+        <span class="progress-text">发货速度</span>
+        <span class="progress-number"><b><{$countDsr.delivery_speed_dsr.num|default:5}></b>/5</span>
+
+        <div class="progress sm">
+          <div class="progress-bar progress-bar-green" style="width: <{$countDsr.delivery_speed_dsr.percentage|default:'100%'}>"></div>
+        </div>
+      </div>
+      <!-- /.progress-group -->
+    </div>
+  </div>
+  <{/if}>
+  <div class="<{if $shop.shop_type != 'self'}>box-footer<{else}>box-body<{/if}>" <{if $shop.shop_type == 'self'}>style="min-height:426px; padding-top: 20px;"<{else}>style="min-height:256px; padding-top: 20px;"<{/if}>>
+    <p>
+      <strong>昨日店铺转化</strong>
+    </p>
+    <div class="shop-bar">
+      <div class="row">
+        <div class="col-sm-4 text-right">访问</div>
+        <div class="col-sm-5 row bar-one">
+          <div class="col-sm-9"></div>
+          <div class="col-sm-3"><{$uv|default:0}></div>
+        </div>
+        <span><{$uvTransRate}>%</span>
+      </div>
+      <div class="row">
+        <div class="col-sm-4 text-right">下单</div>
+        <div class="col-sm-5 row bar-two">
+          <div class="col-sm-6"></div>
+          <div class="col-sm-3"><{$countNewTrade}></div>
+        </div>
+        <span><{$avgPrice|cur}>/单</span>
+      </div>
+      <div class="row">
+        <div class="col-sm-4 text-right">销售额</div>
+        <div class="col-sm-5 row bar-three">
+          <div class="col-sm-3"></div>
+          <div class="col-sm-3"><{$countNewTradeFee|cur}></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,64 @@
+<div class=''>
+  <form id='platform_bind_node' name="platform_bind_node" action='?app=sysopen&ctl=admin_platformmatrix&act=dobind' method='post'>
+
+    <table>
+      <tr>
+        <th>
+          <label> 平台节点编号: </label>
+        </th>
+        <td>
+          <{$node_id}>
+        </td>
+      </tr>
+      <tr>
+        <th>
+          <label> 店铺名称: </label>
+        </th>
+        <td>
+          <input type='text' name='node_title' id='node_title_input' >
+        </td>
+      </tr>
+      <tr>
+        <th>
+          <label> 对方节点号: </label>
+        </th>
+        <td>
+          <input type='number' name='to_node_id' id='to_node_id_input'>
+        </td>
+      </tr>
+      <tr>
+        <th>
+          <label> 对方节点类型: </label>
+        </th>
+        <td>
+          <input type='text'  value='ecos.taocrm' disabled>
+          <input type='hidden' name='node_type' id='node_type_input' value='ecos.taocrm'>
+        </td>
+      </tr>
+      <tr>
+        <td colspan='2'>
+          <div class="table-action">
+            <{button id='submit_bind' type="submit"  label="提交申请" onclick="submitForm(event)"}>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </form>
+</div>
+<script>
+var submitForm = function (event){
+  var _form=$('platform_bind_node');
+  var target={
+    onComplete:function(rs){
+      if(rs&&!!JSON.decode(rs).success){
+        window.finderGroup['<{$env.get.finder_id}>'].refresh();
+        _form.getParent('.dialog').retrieve('instance').close();
+      }
+    }};
+    _form.store('target',target);
+    if(confirm('确定申请?')) {
+      _form.fireEvent('submit',new Event(event));
+    }
+  };
+
+</script>

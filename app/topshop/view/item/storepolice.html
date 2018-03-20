@@ -1,0 +1,42 @@
+<form  action="<{url action=topshop_ctl_item@saveStorePolice}>" method="post" class="form-horizontal" data-validate-onsuccess="ajaxSubmit" role="form">
+  <div class="box box-default">
+    <div class="box-body">
+      <{if $storePolice.police_id}><input type="hidden" name="police_id" value="<{$storePolice.police_id}>"><{/if}>
+      <div class="form-group">
+        <label class="col-md-2 control-label"><{t}>报警库存<{/t}>：</label>
+        <div class="col-md-4">
+          <input type="number" required min="1" name="storepolice" class="form-control" value="<{$storePolice.policevalue}>" >
+        </div>
+      </div>
+    </div>
+    <div class="box-footer">
+      <button type="submit" class="btn btn-primary">保存</button>
+    </div>
+  </div>
+</form>
+
+<script>
+  function ajaxSubmit (e) {
+    var form = e.target;
+    e.preventDefault();
+    $.post(form.action, $(form).serialize(), function(rs) {
+      if(rs.error) {
+        $('#messagebox').message(rs.message);
+        return;
+      }
+      if(rs.success) {
+        $('#messagebox').message(rs.message, 'success');
+      }
+      if(rs.redirect) {
+        setTimeout(function(){location.href=rs.redirect;}, 800);
+      }
+    });
+  }
+</script>
+<script>
+  $(document).ready(
+    function() {
+      $(".sidebar .sidebar-menu li a i.glyphicon").eq(1).removeClass("glyphicon-list-alt").addClass("glyphicon-cog");
+    }
+  );
+</script>

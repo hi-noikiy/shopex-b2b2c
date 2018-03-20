@@ -1,0 +1,108 @@
+<div class="row">
+  <div class="col-md-12">
+    <a href="<{url action=topshop_ctl_shop_dlytmpl@editView}>" class="btn btn-primary btn-sm margin-bottom act-dlytmpl">
+      <i class="fa fa-plus-square-o"></i> &nbsp;
+      <{t}>新增运费模板<{/t}>
+    </a>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12 col-sm-12 col-md-12">
+    <div class="nav-tabs-custom" id="tabs">
+      <ul class="nav nav-tabs">
+        <li class="active"><a href="#tab_0" data-toggle="tab">卖家承担运费</a></li>
+        <li><a href="#tab_1" data-toggle="tab">按重量运费模板</a></li>
+        <li><a href="#tab_2" data-toggle="tab">按件数运费模板</a></li>
+        <li><a href="#tab_3" data-toggle="tab">按金额运费模板</a></li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane active" id="tab_0">
+          <{if $data}>
+            <{foreach from=$data item=item}>
+              <{if $item.is_free}>
+                <{assign var="dlytmpl_type" value='0'}>
+                <{include file="topshop/shop/dlytmpl/is_free.html"}>
+                <{break}>
+              <{/if}>
+            <{/foreach}>
+          <{/if}>
+
+          <{if $dlytmpl_type != '0' }>
+          <div class="help-block text-center"><{t}>暂无数据<{/t}></div>
+          <{/if}>
+        </div>
+
+        <div class="tab-pane" id="tab_1">
+          <{if $data}>
+            <{foreach from=$data item=item}>
+              <{if !$item.is_free && $item.valuation == '1'}>
+                <{assign var="dlytmpl_type" value=1}>
+                <{include file="topshop/shop/dlytmpl/weight.html"}>
+                <{break}>
+              <{/if}>
+            <{/foreach}>
+          <{/if}>
+
+          <{if $dlytmpl_type != '1' }>
+          <div class="help-block text-center"><{t}>暂无数据<{/t}></div>
+          <{/if}>
+        </div>
+
+        <div class="tab-pane" id="tab_2">
+          <{if $data}>
+            <{foreach from=$data item=item}>
+              <{if !$item.is_free && $item.valuation == '2'}>
+                <{assign var="dlytmpl_type" value=2}>
+                <{include file="topshop/shop/dlytmpl/piece.html"}>
+                <{break}>
+              <{/if}>
+            <{/foreach}>
+          <{/if}>
+
+          <{if $dlytmpl_type != '2' }>
+          <div class="help-block text-center"><{t}>暂无数据<{/t}></div>
+          <{/if}>
+        </div>
+
+        <div class="tab-pane" id="tab_3">
+          <{if $data}>
+            <{foreach from=$data item=item}>
+              <{if !$item.is_free && $item.valuation == '3'}>
+                <{assign var="dlytmpl_type" value=3}>
+                <{include file="topshop/shop/dlytmpl/money.html"}>
+                <{break}>
+              <{/if}>
+            <{/foreach}>
+          <{/if}>
+
+          <{if $dlytmpl_type != '3' }>
+          <div class="help-block text-center"><{t}>暂无数据<{/t}></div>
+          <{/if}>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+
+$('.dlytmpl-delete').on('click',function(){
+    var url = "<{url action=topshop_ctl_shop_dlytmpl@remove}>";
+    var el = $(this),templateId=$(this).attr("data-templateId");
+    Modal.confirm({msg: '确定删除此条运费模板吗？'}).on(function(e) {
+      if(e==true) {
+        if(templateId) {
+          $.post(url,'template_id='+templateId,function(rs){
+            if(rs.success){
+              $('tr[data-templateId="' + templateId + '"]').remove();
+              $('#messagebox').message("删除成功", 'success');
+            }
+            if(rs.error){
+              $('#messagebox').message(rs.message, 'error');
+            }
+          });
+        }
+      }
+    });
+});
+
+</script>

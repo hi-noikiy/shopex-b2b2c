@@ -1,0 +1,22 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+  <h4 class="modal-title" id="myModalLabel">查看SKU</h4>
+</div>
+<div class="modal-body">
+  <div class="row">
+  <ul class="clearfix">
+    <{foreach from=$_input.skusList item=sku key=key}>
+    <{if in_array($sku.sku_id,$_input.sku_ids)}>
+    <li class="col-xs-3">
+        <{if $sku.image_default_id}>
+        <img src="<{$sku.image_default_id|storager:'s'}>" width="60" height="60" align="left" style="margin-right: 5px">
+        <{else}>
+        <img src="<{$image_default_id.S.default_image}>" width="60" height="60" align="left" style="margin-right: 5px">
+        <{/if}>
+        <{$sku.spec_info}>
+    </li>
+    <{/if}>
+    <{/foreach}>
+  </ul>
+  </div>
+</div>

@@ -1,0 +1,705 @@
+<div class="decorate">
+  <div class="decorate-widgets">
+    <ul class="decorate-widgets-list">
+      <li class="decorate-widgets-items" data-widget-name="title"><i class="fa fa-text-width"><br>标题</i></li>
+      <li class="decorate-widgets-items" data-widget-name="goods"><i class="fa fa-th-large"><br>商品</i></li>
+      <li class="decorate-widgets-items" data-widget-name="nav"><i class="fa fa-bars"><br>文本导航</i></li>
+      <li class="decorate-widgets-items" data-widget-name="imgad"><i class="fa fa-picture-o"><br>单图广告</i></li>
+      <li class="decorate-widgets-items" data-widget-name="slider"><i class="fa fa-picture-o"><br>轮播图</i></li>
+      <li class="decorate-widgets-items" data-widget-name="imgnav"><i class="fa fa-picture-o"><br>图片导航</i></li>
+      <li class="decorate-widgets-items" data-widget-name="search"><i class="fa fa-search"><br>商品搜索</i></li>
+      <li class="decorate-widgets-items" data-widget-name="showcase"><i class="fa fa-columns"><br>橱窗</i></li>
+      <li class="decorate-widgets-items" data-widget-name="cutline"><i class="fa fa-ellipsis-h"><br>分隔线</i></li>
+      <li class="decorate-widgets-items" data-widget-name="cutgap"><i class="fa fa-arrows-v"><br>分割空间</i></li>
+      <li class="decorate-widgets-items" data-widget-name="storeinfo"><i class="fa fa-home"><br>店铺信息</i></li>
+      <li class="decorate-widgets-items" data-widget-name="announcement"><i class="fa fa-bullhorn"><br>店内公告</i></li>
+      <li class="decorate-widgets-items" data-widget-name="coupon"><i class="fa fa-ticket"><br>优惠券</i></li>
+      <li class="decorate-widgets-items" data-widget-name="activity"><i class="fa fa-gift"><br>营销活动</i></li>
+      <li class="decorate-widgets-items" data-widget-name="goodsgroup"><i class="fa fa-th-list"><br>商品分组</i></li>
+    </ul>
+  </div>
+  <div class="decorate-control">
+    <div class="dd" id="decorate_control">
+      <ol class="dd-list">
+        <!-- 控制层 -->
+      </ol>
+    </div>
+  </div>
+  <div class="decorate-layout">
+    <div class="shop-sign">
+      <div class="shop-sign-cover"></div>
+      <div class="shop-sign-img">
+        <img src="../images/widgets_slider_04.jpg">
+      </div>
+      <div class="shop-sign-info">
+        <div class="shop-logo"><img src="../images/shop_logo.gif" alt=""></div>
+        <div class="shop-name">ONLY官方旗舰店 <i class="fa fa-angle-right"></i></div>
+        <button class="shopex-btn shop-favorite-btn"><i class="fa fa-star-o"></i> 收藏</button>
+      </div>
+    </div>
+    <!-- 展示层 -->
+  </div>
+  <div class="decorate-form">
+    <!-- 编辑层 -->
+  </div>
+</div>
+</div>
+
+<!-- title -->
+<script type="text/html" id="title">
+  <div class="decorate-layout-items" id="<%= widget_id %>" data-widgets="title">
+    <h2><%= title %></h2>
+  </div>
+</script>
+<script type="text/html" id="title_form">
+  <form role="form">
+    <div class="box-body">
+      <div class="form-group">
+        <label for="exampleInputEmail1">Email address</label>
+        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">Password</label>
+        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+      </div>
+      <div class="form-group">
+        <label for="exampleInputFile">File input</label>
+        <input type="file" id="exampleInputFile">
+        <p class="help-block">Example block-level help text here.</p>
+      </div>
+      <div class="checkbox">
+        <label>
+          <div class="icheckbox_minimal" aria-checked="false" aria-disabled="false" style="position: relative;">
+            <input type="checkbox" style="position: absolute; opacity: 0;">
+            <ins class="iCheck-helper"></ins>
+          </div> Check me out
+        </label>
+      </div>
+    </div>
+    <div class="box-footer">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+  </form>
+</script>
+
+<!-- goods -->
+<script type="text/html" id="goods">
+  <div class="decorate-layout-items" id="<%= widget_id %>" data-widgets="goods">
+    <div class="widgets-goods-like">
+      <div class="section-title">
+        <div class="title-txt"><%= title %></div>
+      </div>
+      <ul class="pro-list-grid">
+        <% if(list.length > 0){ %>
+        <% for(var i=0; i<list.length; i++){ %>
+        <li>
+          <div class="thumbnail">
+            <div class="thumb-img">
+              <a href="#"><img src="<%= list[i].img_url %>" alt=""></a>
+            </div>
+            <div class="caption">
+              <h1 class="goods-title"><span class="tag"><%= list[i].goods_tag %></span><%= list[i].goods_title %></h1>
+              <div class="price">
+                <div class="amount CNY"><%= list[i].price %></div>
+                <div class="purchased">已有<%= list[i].sold_num %>人购买</div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <% } %>
+        <% } %>
+      </ul>
+    </div>
+  </div>
+</script>
+<script type="text/html" id="goods_form">
+  <form role="form">
+    <div class="box-body">
+      <div class="form-group">
+        <label for="exampleInputEmail1">展示标题：</label>
+        <input type="text" class="form-control" id="exampleInputEmail1" placeholder="商品展示区域标题">
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">展示商品排序方式</label>
+        <select class="form-control">
+          <option>上架时间</option>
+          <option>价格</option>
+          <option>销量</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <p class="help-block">已选择商品</p>
+        <div id="selected_goods">
+
+        </div>
+      </div>
+      <div class="form-group">
+        <button class="btn btn-primary form-control">选择商品</button>
+      </div>
+    </div>
+  </form>
+</script>
+
+<!-- nav -->
+<script type="text/html" id="nav">
+  <div class="decorate-layout-items" id="<%= widget_id %>" data-widgets="nav">
+    <div class="shop-nav">
+      <% if(list){ %>
+      <% for(var i=0; i<list.length; i++){ %>
+      <div class="shop-nav-item"><a href="<%= list[i].link %>"><%= list[i].name %></a></div>
+      <% } %>
+      <% } %>
+    </div>
+  </div>
+</script>
+<script type="text/html" id="nav_form">
+  <form role="form">
+    <div class="box-body">
+      <div class="form-group">
+        <label for="exampleInputEmail1">Email address</label>
+        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">Password</label>
+        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+      </div>
+      <div class="form-group">
+        <label for="exampleInputFile">File input</label>
+        <input type="file" id="exampleInputFile">
+        <p class="help-block">Example block-level help text here.</p>
+      </div>
+      <div class="checkbox">
+        <label>
+          <div class="icheckbox_minimal" aria-checked="false" aria-disabled="false" style="position: relative;">
+            <input type="checkbox" style="position: absolute; opacity: 0;">
+            <ins class="iCheck-helper"></ins>
+          </div> Check me out
+        </label>
+      </div>
+    </div>
+    <!-- /.box-body -->
+    <div class="box-footer">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+  </form>
+</script>
+
+<!-- slider -->
+<script type="text/html" id="slider">
+  <div class="decorate-layout-items" id="<%= widget_id %>" data-widgets="slider">
+    <div id="slider" class="shopex-slider">
+      <div class="shopex-slider-group shopex-slider-loop">
+        <% if(list){ %>
+        <!-- 额外增加的一个节点(循环轮播：第一个节点是最后一张轮播) -->
+        <div class="shopex-slider-item shopex-slider-item-duplicate">
+          <a href="#">
+            <img src="<%= list[i].img_url %>">
+          </a>
+        </div>
+        <% for(var i=0; i<list.length; i++){ %>
+        <div class="shopex-slider-item">
+          <a href="#">
+            <img src="<%= list[i].img_url %>">
+          </a>
+        </div>
+        <% } %>
+        <!-- 额外增加的一个节点(循环轮播：最后一个节点是第一张轮播) -->
+        <div class="shopex-slider-item shopex-slider-item-duplicate">
+          <a href="#">
+            <img src="../images/widgets_slider_01.jpg">
+          </a>
+        </div>
+        <% } %>
+      </div>
+      <div class="shopex-slider-indicator">
+        <% for(var i=0; i<list.length; i++){ %>
+        <div class="shopex-indicator"></div>
+        <% } %>
+      </div>
+    </div>
+    <div class="shop-nav">
+      <% if(list){ %>
+      <% for(var i=0; i<list.length; i++){ %>
+      <div class="shop-nav-item"><a href="<%= list[i].link %>"><%= list[i].name %></a></div>
+      <% } %>
+      <% } %>
+    </div>
+  </div>
+</script>
+<script type="text/html" id="slider_form">
+  <form role="form">
+    <div class="box-body">
+      <div class="form-group">
+        <label for="exampleInputEmail1">Email address</label>
+        <input type="file" id="exampleInputEmail1">
+      </div>
+    </div>
+  </form>
+</script>
+
+<!-- imgnav -->
+<script type="text/html" id="imgnav">
+  <div class="decorate-layout-items" id="<%= widget_id %>" data-widgets="imgnav">
+    <ul>
+      <li>1231313</li>
+    </ul>
+  </div>
+</script>
+<script type="text/html" id="imgnav_form">
+  <form role="form">
+    <div class="box-body">
+      <div class="form-group">
+        <label for="exampleInputEmail1">Email address</label>
+        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">Password</label>
+        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+      </div>
+      <div class="form-group">
+        <label for="exampleInputFile">File input</label>
+        <input type="file" id="exampleInputFile">
+        <p class="help-block">Example block-level help text here.</p>
+      </div>
+      <div class="checkbox">
+        <label>
+          <div class="icheckbox_minimal" aria-checked="false" aria-disabled="false" style="position: relative;">
+            <input type="checkbox" style="position: absolute; opacity: 0;">
+            <ins class="iCheck-helper"></ins>
+          </div> Check me out
+        </label>
+      </div>
+    </div>
+    <!-- /.box-body -->
+    <div class="box-footer">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+  </form>
+</script>
+
+
+<!-- imgad -->
+<script type="text/html" id="imgad">
+  <div class="decorate-layout-items" id="<%= widget_id %>" data-widgets="imgad">
+    <% if(img_url){ %>
+      <div><img src="<%= img_url %>"></div>
+    <% }else{ %>
+      <div class="img-block"><img src="http://placehold.it/320x80"></div>
+    <% } %>
+  </div>
+</script>
+<script type="text/html" id="imgad_form">
+  <form role="form">
+    <div class="box-body">
+      <div class="form-group">
+        <label for="exampleInputEmail1">上传图片</label>
+        <input type="file" id="exampleInputEmail1">
+        <p class="help-block">请保证上传图片在3MB以内！</p>
+      </div>
+    </div>
+    <!-- /.box-body -->
+    <div class="box-footer">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+  </form>
+</script>
+
+<!-- search -->
+<script type="text/html" id="search">
+  <div class="decorate-layout-items" id="<%= widget_id %>" data-widgets="search">
+    <ul>
+      <li>1231313</li>
+    </ul>
+  </div>
+</script>
+<script type="text/html" id="search_form">
+  <form role="form">
+    <div class="box-body">
+      <div class="form-group">
+        <label for="exampleInputEmail1">Email address</label>
+        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">Password</label>
+        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+      </div>
+      <div class="form-group">
+        <label for="exampleInputFile">File input</label>
+        <input type="file" id="exampleInputFile">
+        <p class="help-block">Example block-level help text here.</p>
+      </div>
+      <div class="checkbox">
+        <label>
+          <div class="icheckbox_minimal" aria-checked="false" aria-disabled="false" style="position: relative;">
+            <input type="checkbox" style="position: absolute; opacity: 0;">
+            <ins class="iCheck-helper"></ins>
+          </div> Check me out
+        </label>
+      </div>
+    </div>
+    <!-- /.box-body -->
+    <div class="box-footer">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+  </form>
+</script>
+
+<!-- search -->
+<script type="text/html" id="search">
+  <div class="decorate-layout-items" id="<%= widget_id %>" data-widgets="search">
+    <ul>
+      <li>1231313</li>
+    </ul>
+  </div>
+</script>
+<script type="text/html" id="search_form">
+  <form role="form">
+    <div class="box-body">
+      <div class="form-group">
+        <label for="exampleInputEmail1">Email address</label>
+        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">Password</label>
+        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+      </div>
+      <div class="form-group">
+        <label for="exampleInputFile">File input</label>
+        <input type="file" id="exampleInputFile">
+        <p class="help-block">Example block-level help text here.</p>
+      </div>
+      <div class="checkbox">
+        <label>
+          <div class="icheckbox_minimal" aria-checked="false" aria-disabled="false" style="position: relative;">
+            <input type="checkbox" style="position: absolute; opacity: 0;">
+            <ins class="iCheck-helper"></ins>
+          </div> Check me out
+        </label>
+      </div>
+    </div>
+    <!-- /.box-body -->
+    <div class="box-footer">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+  </form>
+</script>
+
+<!-- showcase -->
+<script type="text/html" id="showcase">
+  <div class="decorate-layout-items" id="<%= widget_id %>" data-widgets="showcase">
+    <ul>
+      <li>1231313</li>
+    </ul>
+  </div>
+</script>
+<script type="text/html" id="showcase_form">
+  <form role="form">
+    <div class="box-body">
+      <div class="form-group">
+        <label for="exampleInputEmail1">Email address</label>
+        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">Password</label>
+        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+      </div>
+      <div class="form-group">
+        <label for="exampleInputFile">File input</label>
+        <input type="file" id="exampleInputFile">
+        <p class="help-block">Example block-level help text here.</p>
+      </div>
+      <div class="checkbox">
+        <label>
+          <div class="icheckbox_minimal" aria-checked="false" aria-disabled="false" style="position: relative;">
+            <input type="checkbox" style="position: absolute; opacity: 0;">
+            <ins class="iCheck-helper"></ins>
+          </div> Check me out
+        </label>
+      </div>
+    </div>
+    <!-- /.box-body -->
+    <div class="box-footer">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+  </form>
+</script>
+
+<!-- cutline -->
+<script type="text/html" id="cutline">
+  <div class="decorate-layout-items" id="<%= widget_id %>" data-widgets="cutline">
+    <ul>
+      <li>1231313</li>
+    </ul>
+  </div>
+</script>
+<script type="text/html" id="cutline_form">
+  <form role="form">
+    <div class="box-body">
+      <div class="form-group">
+        <label for="exampleInputEmail1">Email address</label>
+        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">Password</label>
+        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+      </div>
+      <div class="form-group">
+        <label for="exampleInputFile">File input</label>
+        <input type="file" id="exampleInputFile">
+        <p class="help-block">Example block-level help text here.</p>
+      </div>
+      <div class="checkbox">
+        <label>
+          <div class="icheckbox_minimal" aria-checked="false" aria-disabled="false" style="position: relative;">
+            <input type="checkbox" style="position: absolute; opacity: 0;">
+            <ins class="iCheck-helper"></ins>
+          </div> Check me out
+        </label>
+      </div>
+    </div>
+    <!-- /.box-body -->
+    <div class="box-footer">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+  </form>
+</script>
+
+<!-- cutgap -->
+<script type="text/html" id="cutgap">
+  <div class="decorate-layout-items" id="<%= widget_id %>" data-widgets="cutgap">
+    <ul>
+      <li>1231313</li>
+    </ul>
+  </div>
+</script>
+<script type="text/html" id="cutgap_form">
+  <form role="form">
+    <div class="box-body">
+      <div class="form-group">
+        <label for="exampleInputEmail1">Email address</label>
+        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">Password</label>
+        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+      </div>
+      <div class="form-group">
+        <label for="exampleInputFile">File input</label>
+        <input type="file" id="exampleInputFile">
+        <p class="help-block">Example block-level help text here.</p>
+      </div>
+      <div class="checkbox">
+        <label>
+          <div class="icheckbox_minimal" aria-checked="false" aria-disabled="false" style="position: relative;">
+            <input type="checkbox" style="position: absolute; opacity: 0;">
+            <ins class="iCheck-helper"></ins>
+          </div> Check me out
+        </label>
+      </div>
+    </div>
+    <!-- /.box-body -->
+    <div class="box-footer">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+  </form>
+</script>
+
+<!-- storeinfo -->
+<script type="text/html" id="storeinfo">
+  <div class="decorate-layout-items" id="<%= widget_id %>" data-widgets="storeinfo">
+    <ul>
+      <li>1231313</li>
+    </ul>
+  </div>
+</script>
+<script type="text/html" id="storeinfo_form">
+  <form role="form">
+    <div class="box-body">
+      <div class="form-group">
+        <label for="exampleInputEmail1">Email address</label>
+        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">Password</label>
+        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+      </div>
+      <div class="form-group">
+        <label for="exampleInputFile">File input</label>
+        <input type="file" id="exampleInputFile">
+        <p class="help-block">Example block-level help text here.</p>
+      </div>
+      <div class="checkbox">
+        <label>
+          <div class="icheckbox_minimal" aria-checked="false" aria-disabled="false" style="position: relative;">
+            <input type="checkbox" style="position: absolute; opacity: 0;">
+            <ins class="iCheck-helper"></ins>
+          </div> Check me out
+        </label>
+      </div>
+    </div>
+    <!-- /.box-body -->
+    <div class="box-footer">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+  </form>
+</script>
+
+<!-- announcement -->
+<script type="text/html" id="announcement">
+  <div class="decorate-layout-items" id="<%= widget_id %>" data-widgets="announcement">
+    <ul>
+      <li>1231313</li>
+    </ul>
+  </div>
+</script>
+<script type="text/html" id="announcement_form">
+  <form role="form">
+    <div class="box-body">
+      <div class="form-group">
+        <label for="exampleInputEmail1">Email address</label>
+        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">Password</label>
+        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+      </div>
+      <div class="form-group">
+        <label for="exampleInputFile">File input</label>
+        <input type="file" id="exampleInputFile">
+        <p class="help-block">Example block-level help text here.</p>
+      </div>
+      <div class="checkbox">
+        <label>
+          <div class="icheckbox_minimal" aria-checked="false" aria-disabled="false" style="position: relative;">
+            <input type="checkbox" style="position: absolute; opacity: 0;">
+            <ins class="iCheck-helper"></ins>
+          </div> Check me out
+        </label>
+      </div>
+    </div>
+    <!-- /.box-body -->
+    <div class="box-footer">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+  </form>
+</script>
+
+<!-- coupon -->
+<script type="text/html" id="coupon">
+  <div class="decorate-layout-items" id="<%= widget_id %>" data-widgets="coupon">
+    <ul>
+      <li>1231313</li>
+    </ul>
+  </div>
+</script>
+<script type="text/html" id="coupon_form">
+  <form role="form">
+    <div class="box-body">
+      <div class="form-group">
+        <label for="exampleInputEmail1">Email address</label>
+        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">Password</label>
+        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+      </div>
+      <div class="form-group">
+        <label for="exampleInputFile">File input</label>
+        <input type="file" id="exampleInputFile">
+        <p class="help-block">Example block-level help text here.</p>
+      </div>
+      <div class="checkbox">
+        <label>
+          <div class="icheckbox_minimal" aria-checked="false" aria-disabled="false" style="position: relative;">
+            <input type="checkbox" style="position: absolute; opacity: 0;">
+            <ins class="iCheck-helper"></ins>
+          </div> Check me out
+        </label>
+      </div>
+    </div>
+    <!-- /.box-body -->
+    <div class="box-footer">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+  </form>
+</script>
+
+<!-- activity -->
+<script type="text/html" id="activity">
+  <div class="decorate-layout-items" id="<%= widget_id %>" data-widgets="activity">
+    <ul>
+      <li>1231313</li>
+    </ul>
+  </div>
+</script>
+<script type="text/html" id="activity_form">
+  <form role="form">
+    <div class="box-body">
+      <div class="form-group">
+        <label for="exampleInputEmail1">Email address</label>
+        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">Password</label>
+        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+      </div>
+      <div class="form-group">
+        <label for="exampleInputFile">File input</label>
+        <input type="file" id="exampleInputFile">
+        <p class="help-block">Example block-level help text here.</p>
+      </div>
+      <div class="checkbox">
+        <label>
+          <div class="icheckbox_minimal" aria-checked="false" aria-disabled="false" style="position: relative;">
+            <input type="checkbox" style="position: absolute; opacity: 0;">
+            <ins class="iCheck-helper"></ins>
+          </div> Check me out
+        </label>
+      </div>
+    </div>
+    <!-- /.box-body -->
+    <div class="box-footer">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+  </form>
+</script>
+
+<!-- goodsgroup -->
+<script type="text/html" id="goodsgroup">
+  <div class="decorate-layout-items" id="<%= widget_id %>" data-widgets="goodsgroup">
+    <ul>
+      <li>1231313</li>
+    </ul>
+  </div>
+</script>
+<script type="text/html" id="goodsgroup_form">
+  <form role="form">
+    <div class="box-body">
+      <div class="form-group">
+        <label for="exampleInputEmail1">Email address</label>
+        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">Password</label>
+        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+      </div>
+      <div class="form-group">
+        <label for="exampleInputFile">File input</label>
+        <input type="file" id="exampleInputFile">
+        <p class="help-block">Example block-level help text here.</p>
+      </div>
+      <div class="checkbox">
+        <label>
+          <div class="icheckbox_minimal" aria-checked="false" aria-disabled="false" style="position: relative;">
+            <input type="checkbox" style="position: absolute; opacity: 0;">
+            <ins class="iCheck-helper"></ins>
+          </div> Check me out
+        </label>
+      </div>
+    </div>
+    <!-- /.box-body -->
+    <div class="box-footer">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+  </form>
+</script>

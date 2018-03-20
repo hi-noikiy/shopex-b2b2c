@@ -1,0 +1,150 @@
+  <div class="report">
+    <div class="box box-primary">
+      <div class="box-body">
+        <div class="report-filter bg-info">
+          <div class="pull-left">
+           <span class="report-filter-1">
+              <a href="<{url action=topshop_ctl_sysstat_systraffic@index sendtype='yesterday'}>" <{if $sendtype=='yesterday'|| $sendtype==''}>class="active"<{/if}> >昨日</a>
+              <a href="<{url action=topshop_ctl_sysstat_systraffic@index sendtype='beforday'}>" <{if $sendtype=='beforday'}>class="active"<{/if}>>前日</a>
+              <a href="<{url action=topshop_ctl_sysstat_systraffic@index sendtype='week'}>" <{if $sendtype=='week'}>class="active"<{/if}>>最近7天</a>
+              <a href="<{url action=topshop_ctl_sysstat_systraffic@index sendtype='month'}>" <{if $sendtype=='month'}>class="active"<{/if}>>最近30天</a>
+           </span>
+          </div>
+        </div>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div class="demo-container">
+              <div id="placeholder" class="demo-placeholder" style="width:100%;height:300px"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="box box-primary">
+      <div class="box-body">
+        <div class="report-title">流量数据(昨日)</div>
+        <table class="table table-primary table-bordered text-center">
+          <thead>
+            <tr>
+              <td>排行</td>
+              <td>页面地址</td>
+              <td>PV</td>
+              <td>UV</td>
+            </tr>
+          </thead>
+          <tbody>
+           <{if $trafficData}>
+           <{foreach from=$trafficData item=item key=id}>
+           <tr>
+             <td>
+               <{($pages-1)*$limits+$id+1}>
+             </td>
+             <td class="text-left" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+               <{if $item.use_platform=='pc'}>
+                <{if $item.page=='item'}>
+                <a href="<{url action=topc_ctl_item@index item_id=$item.page_rel_id}>" target="_blank">
+                  <{url action=topc_ctl_item@index item_id=$item.page_rel_id}>
+                </a>
+                <{elseif $item.page=='shop'}>
+                <a href="<{url action=topc_ctl_shopcenter@index shop_id=$item.page_rel_id}>" target="_blank">
+                  <{url action=topc_ctl_shopcenter@index shop_id=$item.page_rel_id}>
+                 </a>
+                <{elseif $item.page=='shop_cat'}>
+                <a href="<{url action=topc_ctl_shopcenter@search shop_id=$shop_id shop_cat_id=$item.page_rel_id}>" target="_blank">
+                  <{url action=topc_ctl_shopcenter@search shop_id=$shop_id shop_cat_id=$item.page_rel_id}>
+                </a>
+                <{/if}>
+               <{elseif $item.use_platform=='wap'}>
+               <{if $item.page=='item'}>
+                <a href="<{url action=topwap_ctl_item_detail@index item_id=$item.page_rel_id}>" target="_blank">
+                  <{url action=topwap_ctl_item_detail@index item_id=$item.page_rel_id}>
+                </a>
+                <{elseif $item.page=='shop'}>
+                <a href="<{url action=topwap_ctl_shop@index shop_id=$item.page_rel_id}>" target="_blank">
+                  <{url action=topwap_ctl_shop@index shop_id=$item.page_rel_id}>
+                 </a>
+                <{/if}>
+               <{/if}>
+             </td>
+             <td><{$item.pv}></td>
+             <td><{$item.uv}></td>
+           </tr>
+            <{/foreach}>
+            
+            <{else}>
+             <tr>
+              <td algin='center' colspan='4'>
+                <p class="text-muted well no-shadow text-center">暂无数据</p>
+              </td>
+             </tr>
+            <{/if}>
+          </tbody>
+        </table>
+        <div class="page-bar bg-gray">
+         <{pagers data=$pagers}>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script type="text/javascript">
+$('.reservation').daterangepicker({
+  format: 'YYYY/MM/DD',
+  opens: 'right'
+});
+
+$('.report input[type=radio]:checked').trigger('change');
+
+function sysstatment(rs)
+{
+    var options = {
+      series: {
+        lines: { show: true },
+        points: { show: true },
+        shadowSize:0
+      },
+      clickable: true,
+      hoverable: true,
+      xaxis:{
+        //tickSize:1,
+        minTickSize: [1, 'day'],
+        mode: 'time',
+        timeformat: "%Y/%m/%d"
+      }
+
+    };
+    console.log(rs);
+    $.plot("#placeholder", rs, options);
+}
+businessTrade();
+function businessTrade()
+{
+  var sendtype = "<{$sendtype}>";
+  var compare = $('input[name="compare"]:checked').val();
+  var start=$("#starttime").val();
+
+  var url = "<{url action=topshop_ctl_sysstat_systraffic@ajaxTrade}>";
+  if ($("#checkbox").is(":checked")){
+          var start=$("#starttime").val();
+          var end=$("#endtime").val();
+          if(!end)
+          {
+            return false;
+          }
+          var sendtype='selecttime';
+      }
+
+  var datainfo = "sendtype="+sendtype+"&starttime="+start;
+  $.ajax({
+    type:'POST',
+    url:url,
+    data:datainfo,
+    success:function(rs){
+      sysstatment(rs);
+    }
+  });
+
+}
+</script>
+

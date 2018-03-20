@@ -1,0 +1,75 @@
+<div class="box box-info">
+  <div class="invoice no-margin">
+    <div class="row">
+      <div class="col-md-4">
+        <p class="lead">交易</p>
+        <div class="table-responsive">
+          <table class="table">
+            <tbody>
+              <tr>
+                <th style="width:50%">未付款订单:</th>
+                <td><a href="<{url action=topshop_ctl_trade_list@index}>?status=1"><{$countUnTradeFee}></a></td>
+              </tr>
+              <tr>
+                <th>待发货订单:</th>
+                <td><a href="<{url action=topshop_ctl_trade_list@index}>?status=2"><{$countReadysSend}></a></td>
+              </tr>
+              <tr>
+                <th>待收货订单:</th>
+                <td><a href="<{url action=topshop_ctl_trade_list@index}>?status=3"><{$countReadyRec}></a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <p class="lead">售后</p>
+        <div class="table-responsive">
+          <table class="table">
+            <tbody>
+              <tr>
+                <th style="width:50%">待处理退货:</th>
+                <td><{$countRefund|default:0}></td>
+              </tr>
+              <tr>
+                <th style="width:50%">待处理换货:</th>
+                <td><{$countChanging|default:0}></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <p class="lead">商品</p>
+        <div class="table-responsive">
+          <table class="table">
+            <tbody>
+              <tr>
+                <th style="width:50%">未上架商品:</th>
+                <td><a href="<{url action=topshop_ctl_item@itemList status=instock}>"><{$countShopInstockItem}></a></td>
+              </tr>
+              <tr>
+                <th style="width:50%">库存预警:</th>
+                <td><a href="<{url action=topshop_ctl_item@itemList status=oversku}>"><{$storepolice}></a></td>
+              </tr>
+              <{if $isGoodsExamine}>
+              <tr>
+                <th style="width:50%">审核失败:</th>
+                <td><a href="<{url action=topshop_ctl_item@itemList status=refuse}>"><{$countShopRefuseItem}></a></td>
+              </tr>
+              <{/if}>
+              <tr>
+                <th style="width:50%">商品咨询:</th>
+                <td><a href="<{url action=topshop_ctl_consultation@index}>?type=item"><{$countGaskItem}></a></td>
+              </tr>
+              <tr>
+                <th style="width:50%">商品评价:</th>
+                <td><a href="<{url action=topshop_ctl_rate@index}>"><{$countRate}></a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

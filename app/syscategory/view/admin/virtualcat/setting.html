@@ -1,0 +1,56 @@
+<div class="tableform tableform-tabs">
+<div class="tabs-wrap">
+    <ul>
+        <li class="tab current"><span><{t}>移动端虚拟分类设置<{/t}></span></li>
+    </ul>
+</div>
+<form method="post" action="?app=syscategory&ctl=admin_virtualcatSetting&act=saveSetting" id="whitelist">
+    <div style="text-align: right;padding: 3px 30px"></div>
+    <table class="tableform" style="width: 99%">
+        <tbody>
+            <tr>
+                <th><{t}>开启H5端虚拟分类:<{/t}></th> 
+                <td>
+                    <input type="radio"  name="wapenable" value="true" <{if $wapenable =='true'}> checked="checked" <{/if}> />
+                    <label for="bool-t"><{t}>开启<{/t}></label>
+                    <input type="radio"  name="wapenable" value="false" <{if $wapenable !='true'}> checked="checked" <{/if}> />
+                    <label for="bool-t"><{t}>关闭<{/t}></label>
+                    <span class="notice-inline"><{t}>开启后，H5端类目列表页显示虚拟分类列表<{/t}></span>
+                </td>
+            </tr>
+            <tr>
+                <th><{t}>开启APP端虚拟分类:<{/t}></th> 
+                <td>
+                    <input type="radio"  name="appenable" value="true" <{if $appenable =='true'}> checked="checked" <{/if}> />
+                    <label for="bool-t"><{t}>开启<{/t}></label>
+                    <input type="radio"  name="appenable" value="false" <{if $appenable !='true'}> checked="checked" <{/if}> />
+                    <label for="bool-t"><{t}>关闭<{/t}></label>
+                    <span class="notice-inline"><{t}>开启后，H5端类目列表页显示虚拟分类列表<{/t}></span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="table-action">
+        <{button type="submit" label=$__desktop="保存"|t:'syscategory'}>
+    </div>
+    <form method="post" action="?app=syscategory&ctl=admin_virtualcatSetting&act=saveSetting" id="whitelist">
+        <div style="text-align: right;padding: 3px 30px"></div>
+        <table class="tableform" style="width: 99%">
+            <tbody>
+                <tr>
+                    <th><{t}>开启H5端虚拟分类:<{/t}></th> 
+                    <td>
+                        <input type="radio"  name="wapenable" value="true" <{if $wapenable =='true'}> checked="checked" <{/if}> />
+                        <label for="bool-t"><{t}>开启<{/t}></label>
+                        <input type="radio"  name="wapenable" value="false" <{if $wapenable !='true'}> checked="checked" <{/if}> />
+                        <label for="bool-t"><{t}>关闭<{/t}></label>
+                        <span class="notice-inline"><{t}>开启后，H5端类目列表页显示虚拟分类列表<{/t}></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="table-action">
+            <{button type="submit" label=$__desktop="保存"|t:'syscategory'}>
+        </div>
+    </form>
+</div>

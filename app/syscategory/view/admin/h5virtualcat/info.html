@@ -1,0 +1,246 @@
+<form method="post" action="?app=syscategory&ctl=admin_h5virtualcat&act=save" id='add-category-form'>
+<div class="tableform">
+    <div class="division">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <th><{t}>虚拟分类名称：<{/t}>
+            <{if $virtual_cat_id }><input type="hidden" value="<{$virtual_cat_id}>" name="virtual_cat_id" /></th><{/if}>
+          <td><input type="text" value="<{$virtual_cat_name|escape:'html'}>" name="virtual_cat_name" vtype='required' class='x-input'/>
+          </td>
+        </tr>
+        <tr>
+          <th><{t}>上级虚拟分类：<{/t}></th>
+          <td><{input noselect=true type="select" name="virtual_parent_id" style="font-size:12px;" vtype='required' value=$virtual_parent_id rows=$catList valueColumn="virtual_cat_id" labelColumn="virtual_cat_name"}>
+        </td>
+        </tr>
+<!-- 
+    
+        <{if $level==1}>
+        <tr>
+          <th><{t}>类目logo：<{/t}></th>
+          <td>
+            <{input type="image" name='virtual_cat_logo' value=$virtual_cat_logo width=30 height=30}>
+            <span class="notice-inline">
+              <{t}>建议图片尺寸30px * 30px,提高用户体验，增强品牌宣传效果。<{/t}></span>
+          </td>
+        </tr>
+        <{/if}>
+-->
+        
+
+        <tr>
+          <th><{t}>排序：<{/t}></th>
+          <td><input style="width:50px;" vtype="unsigned" class="inputstyle" value="<{if order_sort}> <{$order_sort}> <{else}>0<{/if}>" name="order_sort" class="_x_ipt"/>
+            <span class="notice-inline"><{t}>数字越小越靠前<{/t}></span></td>
+        </tr>
+      </table>
+    </div>
+    <{if $level==3}>
+    <div class=" division goods-selector-handle">
+      <label>
+        <input type="radio" name="selector" value="filter" <{if $filter['selector']=="filter"}>checked<{/if}> />&nbsp;范围选择商品
+      </label>
+      <label>
+        <input type="radio" name="selector" value="custom" <{if $filter['selector']=="custom"}>checked<{/if}> />&nbsp;自定义链接
+      </label>
+    </div>
+    <div class="division goods-selector">
+
+      <table width="100%" class='filter_interzone' data-extend = "filter" <{if $filter['selector']=="custom"}> style="display:none;" <{/if}>>
+          <tr>
+            <th><{t}>按价格区间筛选<{/t}></th>
+            <td><{input type="unsigned" name="filter[min_price]" value=$filter['min_price'] size="5"}> - <{input type="unsigned" name="filter[max_price]" size="5" value=$filter['max_price']}><{t}> 元<{/t}></td>
+        </tr>
+        <tr>
+            <th><{t}>按关键字筛选<{/t}></th>
+            <td><{input type="text" name="filter[search_keywords]" value=$filter['search_keywords']}>
+              &nbsp; <{help}><{t}>如果填写商品关键词，则只有商品名称中包含该关键词的商品才会出现在本虚拟分类。<{/t}><{/help}>
+            </td>
+        </tr>
+        <tr>
+          <th><{t}>按品牌筛选<{/t}></th>
+          <td><{input type="object" name="filter[brand_id]" object="brand" app="syscategory" select="checkbox" textcol="brand_name" filter="" multiple="true" emptytext="选择关联品牌" value=$filter['brand_id']}>
+          </td>
+        </tr>
+        <tr>
+          <th><{t}>选择商品类目<{/t}></th>
+          <td>
+            <select id="lv1" name="lv1[cat_id]">
+              <option value="-1">请选择</option>
+              <{foreach from=$selectNode item=selectNode}>
+                <option value="<{$selectNode.cat_id}>"><{$selectNode.cat_name}></option>
+              <{/foreach}>
+            </select>
+            <select id="lv2" name="lv2[cat_id]">
+              <!-- <option value="-1">请选择</option> -->
+            </select>
+            <select id="lv3" name="filter[cat_id]">
+              <!-- <option value="-1">请选择</option> -->
+            </select>
+          </td>
+        </tr>
+        <tr><td colspan="2"><em class="red">*上述筛选项添加为叠加条件，具有叠加效果。</em></td></tr>
+      </table>
+      
+      <table width="100%" class='filter_interzone' data-extend = "custom" <{if $filter['selector']=="filter"}> style="display:none;" <{/if}>>
+        <tr>
+          <th><{t}>自定义链接：<{/t}></th>
+            <td>
+            <em class="red">*</em>
+            <{input type="text" size=40 name="customUrl" value=$filter['customUrl'] vtype="required"}>
+            </td>
+        </tr>
+        <tr><td colspan="2"><em>*</em>此处请填写完整链接地址，以保证链接有效性。</td></tr>
+      </table>
+    </div>
+    <{/if}>
+</div>
+
+<div class="table-action">
+  <{button label="保存"|t:'syscategory'  type="submit" }>
+  <{if $is_leaf}>
+  <input type="hidden" name="is_leaf" value=1>
+   <{button class="btn-secondary " label="取消"|t:'syscategory' isclosedialogbtn="true"}>
+  <{else}>
+  <{button class="btn-secondary " label="取消"|t:'syscategory' isclosedialogbtn="true" onclick="W.page('?app=syscategory&ctl=admin_h5virtualcat&act=index')" }>
+  <{/if}>
+</div>
+
+<script>
+  $$('.goods-selector-handle input[type=radio]').addEvent('change',function(){
+    var radio = this;
+    if (!radio.checked)  return;
+    $$('.goods-selector [data-extend]').each(function(item){
+      if(item.get('data-extend')!=radio.value){
+        item.hide();
+      }else{
+        item.show();
+      }
+    });
+  });
+
+  var editData = JSON.decode('<{$catData}>');
+  var lv2, lv3;
+  if(editData) {
+    if(editData['lv1'] != undefined) {
+      $('lv1').getElement('option[value="'+ editData['lv1'].cat_id +'"]').set('selected', 'selected');
+    }
+    if(editData['lv2'] != undefined) {
+      lv2 =  editData['lv2'];
+    }
+    if(editData['lv3'] != undefined) {
+      lv3 =  editData['lv3'];
+    }
+  }
+  if($('lv1')){
+    $('lv1').addEvent('change',function(){
+      var catId = this.value;
+      if(catId > 0){
+        req('cat_id=' + catId, 'lv2');
+      } else {
+        var str = "<option value='-1'>请选择</option>";
+        $('lv2').set('html', str);
+        $('lv3').set('html', str);
+      }
+    }).fireEvent('change');
+
+    $('lv2').addEvent('change', function() {
+      var catId = this.value;
+      if(catId > 0){
+        req('cat_id=' + catId, 'lv3');
+      } else {
+        $('lv3').set('html', "<option value='-1'>请选择</option>");
+      }
+    });
+  }
+
+  function req(data, loadEle){
+    new Request({
+      url:'<{url action=toputil_ctl_themesAjax@getChildrenCatList}>',
+        onSuccess: function(rs){
+          var s = [];
+          if(rs) {
+            var catJSON=JSON.decode(rs);
+            var catList = catJSON.data.options;
+            var subCatStr = "";
+            subCatStr += '';
+            if(catList) {
+              for(var item in catList) {
+                subCatStr += "<option value='"+ catList[item].value +"'>"+ catList[item].text +"</option>";
+              }
+            }
+            if(loadEle == 'lv2'){
+              $('lv2').set('html', subCatStr);
+              if(lv2 != "" && lv2 != undefined) {
+                var selectEle = $('lv2').getElement('option[value="'+ lv2.cat_id +'"]');
+                if(selectEle != null) {
+                  selectEle.set('selected', 'selected');
+                }
+              }
+              req('cat_id=' + $('lv2').value, 'lv3');
+            }
+            else if(loadEle == 'lv3') {
+              $('lv3').setHTML(subCatStr);
+              if(lv3 != "" && lv3 != undefined) {
+                var selectEle = $('lv3').getElement('option[value="'+ lv3.cat_id +'"]');
+                if(selectEle != null) {
+                  selectEle.set('selected', 'selected');
+                }
+                req('cat_id=' + $('lv3').value);
+              }
+            }
+          }
+        }
+    }).post(data);
+  }
+
+    $E('#add-category-form input[name^=virtual_cat_name').addEvent('keydown',function(e){
+        if(e.key=='enter'){
+            e.stop();
+        }
+    });
+
+    $('add-category-form').store('target',{onComplete:function(){
+        if(gms=$('g_menu_sec_2')){
+            gms.empty();
+            gms.retrieve('update',$empty)();
+        }
+    }});
+
+    if($('easy-save-category')){
+        $('easy-save-category').addEvent('click',function(e){
+            e.stop();
+            var _form=this.form;
+
+            var cname=$E('#add-category-form input[name^=virtual_cat_name');
+            var value=cname.get('value').clean().trim();
+
+            var cid=$E('#add-category-form input[name^=virtual_cat_id');
+            if(cid) cid.remove();
+
+            if(!value)return MessageBox.error('<{t}>虚拟分类名称为不能为空.<{/t}>');
+            if(this.retrieve('tempname',[]).contains(value)){
+                if(!confirm('<{t}>您刚才已经添加了虚拟分类:<{/t}>"'+value+'"<{t}>\n要重复添加么?<{/t}>'))return;
+            }
+
+            this.retrieve('tempname',[]).include(value);
+
+            if(!$(_form).get('target')){
+                var _target={
+                    update:'messagebox'
+                }
+                _form.set('target',JSON.encode(_target));
+            }
+            _form.fireEvent('submit',e).erase('target');
+        });
+    }
+    $('add-category-form').store('target',{
+        onComplete:function(rs){
+            rs = JSON.decode(rs);
+            if($('add-category-form').getParent('.dialog') && rs.success)
+            $('add-category-form').getParent('.dialog').retrieve('instance').close();
+        }
+    });
+
+</script>
+</form>

@@ -1,0 +1,6 @@
+<ol class="cd-multi-steps text-bottom count">
+  <li class="visited"><a href="#">已下单，待付款<br><small class="text-muted"><{$trade.created_time|cdate}></small></a></li>
+  <li class="visited"><a href="#">已支付，待发货<br><small class="text-muted"><{if $trade.pay_time}><{$trade.pay_time|cdate}><{/if}></small></a></li>
+  <li class="visited"><a href="#">已发货，待收货<br><small class="text-muted"><{$trade.consign_time|cdate}></small></a></li>
+  <li class="visited"><a href="#">已完成<br><small class="text-muted"><{$trade.end_time|cdate}></small></a></li>
+</ol>

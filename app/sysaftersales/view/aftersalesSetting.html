@@ -1,0 +1,101 @@
+<div class="tableform tableform-tabs">
+<{tabber}>
+    <{tab name="退货设置"|t:'sysaftersales'}>
+    <form method="post" action="?app=sysaftersales&ctl=setting&act=save" id="refund_form">
+        <div class="clear division">
+            <table class="tableform" style="width: 99%">
+                <tbody>
+                    <tr>
+                        <th><{t}>开启退货时间限制:<{/t}></th> 
+                        <td>
+                            <{input type="bool" default=0 vtype="required" name="aftersales[status]" value=$refundSetting.status class="open_aftersalse"}>
+                            <span class="notice-inline"><{t}>开启后，您的会员必须在规定时间内提交退货申请<{/t}></span>
+                        </td>
+                    </tr>
+                    <tr class="refundSetting" <{if !$refundSetting.status}>style="display:none" <{/if}>>
+                        <th><{t}>退货时间限定:<{/t}></th> 
+                        <td>
+                            <input type="number" min="0" max="9999" required  name="aftersales[day]" value="<{$refundSetting.day}>" class="aftersales-setting">
+                            <span>天后，订单将不可进行退货申请</span> &nbsp;&nbsp;
+                            <{button app="sysaftersales" label="特殊品类设置"|t:'sysaftersales' class="btn-default category"}>
+                            <input type="hidden" name="aftersale[type]" value="refund"><br /><br /><span class="notice">设置为0时，则表示不允许退货</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <input type="hidden" name="aftersales[type]" value="refund">
+        </div>
+        <div class="table-action">
+            <{button type="submit" class="btn-primary" label=$__desktop="保存"|t:'sysaftersales'}>
+        </div>
+    </form>
+    <{/tab}>
+    
+    <{tab name="换货设置"|t:'sysaftersales'}>
+    <form method="post" action="?app=sysaftersales&ctl=setting&act=save" id="change_form">
+        <div class="clear division">
+            <table class="tableform" style="width: 99%">
+                <tbody>
+                    <tr>
+                        <th><{t}>开启换货时间限制:<{/t}></th> 
+                        <td>
+                            <{input type="bool" default=0 vtype=required name="aftersales[status]" value=$changingSetting.status class="open_aftersalse"}>
+                            <span class="notice-inline"><{t}>开启后，您的会员必须在规定时间内提交换货申请<{/t}></span>
+                        </td>
+                    </tr>
+                    <tr class="changingGoodsSetting" <{if !$changingSetting.status}> style="display:none"<{/if}>>
+                        <th><{t}>换货时间限定:<{/t}></th> 
+                        <td>
+                            <input type="number" required min="0" max="9999"  name="aftersales[day]" value="<{$changingSetting.day}>" class="aftersales-setting">
+                            <span>天后，订单将不可进行换货申请</span> &nbsp;&nbsp;<{button app="sysaftersales" label="特殊品类设置"|t:'sysaftersales' class="btn-default category"}>
+                            <input type="hidden" name="aftersale[type]" value="changing"><br /><br /><span class="notice">设置为0时，则表示不允许换货</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <input type="hidden" name="aftersales[type]" value="changing">
+        </div>
+        <div class="table-action">
+            <{button type="submit" class="btn-primary" label=$__desktop="保存"|t:'sysaftersales'}>
+        </div>
+    </form>
+    <{/tab}>
+<{/tabber}>
+</div>
+ 
+<script>
+    $$(".open_aftersalse").addEvent("click",function(e){
+        if(this.value==0){
+            $$(".aftersales-setting").getParent().getParent().hide();
+        }
+        else{
+            $$(".aftersales-setting").getParent().getParent().show();
+        }
+    });
+
+    $$('.category').addEvent('click', function(){
+        var aftersalesType = this.getParent().getElement('input[name="aftersale[type]"]').get('value');
+        new Dialog('?app=sysaftersales&ctl=setting&act=getCatList&aftersalesType=' + aftersalesType ,
+        {
+          title:'<{t}>特殊品类设置<{/t}>',
+          width: 700,
+        });
+    });
+    $$('.tab').addEvent('click', function(){
+        var typeTxt = this.getElement('span').get('text');
+        var timeSet = 0;
+        var ele = '';
+        if(typeTxt == "换货设置") {
+            timeSet = $('change_form').getElement('input[name="aftersales[status]"]:checked').get('value');
+            ele = '.changingGoodsSetting';
+        } else if(typeTxt == "退货设置") {
+            timeSet = $('refund_form').getElement('input[name="aftersales[status]"]:checked').get('value');
+            ele = '.refundSetting';
+        }
+        if(timeSet == 0) {
+            $$(ele).setStyle('display', 'none');
+        } else {
+            $$(ele).setStyle('display', 'table-row');
+        }
+    });
+</script>

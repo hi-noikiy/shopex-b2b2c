@@ -1,0 +1,15 @@
+<services>
+    <service id="desktop_finder.sysitem_mdl_item">
+        <class>sysitem_finder_item</class>
+    </service>
+    <service id="desktop_finder.sysitem_mdl_item_search_rule">
+        <class>sysitem_finder_search_rule</class>
+    </service>
+    <service id="desktop_finder.sysitem_mdl_search_shopweight">
+        <class>sysitem_finder_search_shopweight</class>
+    </service>
+    <!--清除初始化数据-->
+    <service id="desktop_debug_clean_data">
+        <class>sysitem_data_clean</class>
+    </service>
+</services>

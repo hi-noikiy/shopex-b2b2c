@@ -1,0 +1,12 @@
+<ol class="cd-multi-steps text-bottom count">
+  <{if $trade.pay_type == "online"}>
+  <li class="visited"><a href="#">已下单，待付款<br><small class="text-muted"><{$trade.created_time|cdate}></small></a></li>
+  <li class="visited"><a href="#">已支付，待发货<br><small class="text-muted"><{if $trade.pay_time}><{$trade.pay_time|cdate}><{/if}></small></a></li>
+  <li class="current"><em>已发货，待收货<br><small class="text-muted">&nbsp;</small></em></li>
+  <li><em>已完成<br><small class="text-muted">&nbsp;</small></em></li>
+  <{elseif $trade.pay_type == "offline"}>
+  <li class="visited"><a href="#">待发货(货到付款)<br><small class="text-muted"><{if $trade.pay_time}><{$trade.pay_time|cdate}><{/if}></small></a></li>
+  <li class="current"><em>已发货，待付款收货<br><small class="text-muted">&nbsp;</small></em></li>
+  <li><em>已完成<br><small class="text-muted">&nbsp;</small></em></li>
+  <{/if}>
+</ol>

@@ -1,0 +1,65 @@
+<?php
+return  array(
+    'columns'=> array(
+        'shop_id' => array(
+            'type' => 'table:shop@sysshop',
+            'required' => true,
+            'label' => app::get('sysitem')->_('店铺'),
+            'comment' => app::get('sysitem')->_('店铺id'),
+            'in_list' => true,
+            'default_in_list' => true,
+            'order' => 1,
+        ),
+        'guarantee_money' => array(
+            'type' => 'money',
+            'length' => 90,
+            'required' => true,
+            'label' => app::get('sysitem')->_('保证金额度'),
+            'comment' => app::get('sysitem')->_('保证金额度'),
+            'in_list' => true,
+            'default_in_list' => true,
+            'filtertype' => 'number',
+            'filterdefault' => true,
+            'order' => 2,
+        ),
+        'guarantee_money_balance' => array(
+            'type' => 'money',
+            'length' => 90,
+            'in_list' => true,
+            'default_in_list' => true,
+            'required' => true,
+            'default' => '0',
+            'label' => app::get('sysfinance')->_('保证金余额'),
+            'comment' => app::get('sysfinance')->_('保证金余额'),
+        ),
+        'account_status' => array(
+            'type' => array(
+                '0' => '正常',
+                '1' => '预警',
+                '2' => '欠缴',
+            ),
+            'in_list' => true,
+            'default_in_list' => true,
+            'required' => true,
+            'default' => '0',
+            'label' => app::get('sysfinance')->_('保证金账户状态'),
+            'comment' => app::get('sysfinance')->_('保证金账户状态'),
+        ),
+        'modified_time' => array(
+            'type' => 'last_modify',
+            'width' => 110,
+            'in_list' => true,
+            'orderby' => true,
+            'default_in_list' => true,
+            'label' => app::get('sysfinance')->_('最后更新时间'),
+            'comment' => app::get('sysfinance')->_('最后更新时间'),
+        ),
+    ),
+    'primary' => 'shop_id',
+    'index' => array (
+        'ind_shop_id' => ['columns' => ['shop_id']],
+        'ind_modified_time' => ['columns' => ['modified_time']],
+    ),
+    'comment' => app::get('sysfinance')->_('店铺保证金信息表'),
+);
+

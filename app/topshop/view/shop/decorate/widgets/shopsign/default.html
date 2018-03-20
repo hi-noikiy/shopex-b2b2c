@@ -1,0 +1,91 @@
+<div class="box box-default">
+<form class="form-horizontal" action="<{url action=topshop_ctl_shop_decorate@save widgets=shopsign dialog=default}>" method="post" id="shopsign_form" role="form" data-validate-onsuccess="ajaxSubmitShopsign">
+  <input type="hidden" name='widgets_id' value=<{$widgets_id}> >
+  <div class="box-body">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group text-center">
+          <label><{t}>店铺通栏图片<{/t}></label>
+          <div class="pad">
+            <a class="select-image center-block" data-toggle="modal" href="<{url action=topshop_ctl_shop_image@loadImageModal}>" data-target="#gallery_modal">
+              <input type="hidden" name="params[image_id]" value="<{$data.image_id}>">
+              <div class="img-put">
+                <img src="<{$data.image_id|storager:t}>">
+                <i class="glyphicon glyphicon-picture"></i>
+              </div>
+            </a>
+          </div>
+          <span class="help-block"><small>点击上传/修改</small></span>
+          <span class="help-block"><small><{t}>推荐尺寸<{/t}>:<{t}>高度<{/t}>100px;<{t}>宽度大于<{/t}>1200px</small></span>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div class="form-group">
+          <label class="col-sm-4 control-label"><{t}>是否显示店铺logo<{/t}>：</label>
+          <div class="col-sm-8">
+            <input type="hidden" name="params[show_shop_logo]" value="<{if $data.show_shop_logo == 'on' || !$data.show_shop_logo}>on<{else}>off<{/if}>">
+            <input class="switch-input" type="checkbox" <{if $data.show_shop_logo == 'on' || !$data.show_shop_logo}> checked <{/if}>>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-4 control-label"><{t}>是否显示店铺名称<{/t}>：</label>
+          <div class="col-sm-8">
+            <input type="hidden" name="params[show_shop_name]" value="<{if $data.show_shop_name == 'on' || !$data.show_shop_name}>on<{else}>off<{/if}>">
+            <input class="switch-input" type="checkbox" <{if $data.show_shop_name == 'on' || !$data.show_shop_name}> checked <{/if}>>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-4 control-label"><{t}>是否显示店铺描述<{/t}>：</label>
+          <div class="col-sm-8">
+            <input type="hidden" name="params[show_shop_desc]" value="<{if $data.show_shop_desc == 'on' || !$data.show_shop_desc}>on<{else}>off<{/if}>">
+            <input class="switch-input" type="checkbox" <{if $data.show_shop_desc == 'on' || !$data.show_shop_desc}> checked <{/if}>>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="box-footer">
+    <button type="submit" class="btn btn-primary">保存</button>
+    <button type="button" class="btn btn-default pull-right cancel" data-dismiss="modal">取消返回</button>
+  </div>
+</form>
+</div>
+
+<script>
+
+  $('#shopsign_form').Validator({
+    icons: {
+        valid:      'icon icon-checkmark-a',
+        invalid:    'icon icon-alert',
+        validating: 'icon icon-loading-c'
+      }
+  });
+
+  $('.cancel').click(function(){
+    location.href = "<{url action=topshop_ctl_shop_decorate@index}>";
+  })
+
+  $('.switch-input').on('switchChange.bootstrapSwitch', function(event, state) {
+    if(state == true){
+      $(this).parents('.form-group').find('input[type="hidden"]').val('on');
+    }else{
+      $(this).parents('.form-group').find('input[type="hidden"]').val('off');
+    }
+  });
+
+
+  function ajaxSubmitShopsign (e) {
+    var form = e.target;
+    e.preventDefault();
+    $.post(form.action, $(form).serialize(), function(rs) {
+      if(rs.error) {
+        $('#messagebox').message(rs.message);
+        return;
+      }
+      if(rs.success) {
+        $('#messagebox').message(rs.message, 'success');
+        setTimeout(function(){location.href=rs.redirect;}, 500);
+      }
+    });
+  }
+</script>

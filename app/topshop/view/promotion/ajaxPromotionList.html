@@ -1,0 +1,27 @@
+<div class="panel-heading">
+  <div class="clearfix">
+    <div class="pull-left">
+      <h2 class="panel-title">选择促销活动</h2>
+    </div>
+    <div class="pull-right">
+      <button id="choose_promotion" type="button" class="btn btn-primary">确定</button>
+      <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+    </div>
+  </div>
+</div>
+<div class="panel-body">
+  <{if $list}>
+    <ul class="shop-promotion-list">
+    <{foreach from=$list item=promotion}>
+      <li data-promotionid="<{$promotion.promotion_id}>" data-promotiontype="<{$promotion.promotion_type}>">
+        <div class="promotion-title"><span class="promotion-tag"><{if $promotion_type =='activity'}><{$promotion.promotion_type}><{else}><{$promotion.promotion_tag}><{/if}></span> <{$promotion.promotion_name}></div>
+        <div class="promotion-deadline"><{$promotion.start_time|cdate:'FDATE_STIME'}> - <{$promotion.end_time|cdate:'FDATE_STIME'}></div>
+      </li>
+    <{/foreach}>
+    </ul>
+  <{else}>
+    <div class="item-filter-row">
+      <div align="center">暂无进行中的活动</div>
+    </div>
+  <{/if}>
+</div>

@@ -1,0 +1,40 @@
+<{if $setting.list}>
+<div class="module-hd"><{$setting.class_name}><span><{$setting.class_detail}></span></div>
+<div class="module-bd">
+  <ul class="store-coupons store-vouchers widget-voucher clearfix">
+    <{foreach from=$setting.list item=item}>
+    <li class="quan">
+      <div class="coupons-type"></div>
+      <div class="coupons-title vouchers-title">
+        <span><{$item.deduct_money}></span>
+      </div>
+      <div class="store-info clearfix">
+        <div class="info-txt text-center">
+          <p><a href="#" title="">仅可购买<{$item.cat_name}>类目</a></p>
+          <p>支持<{$item.platform}></p>
+        </div>
+      </div>
+      <a href="" data-id="<{$item.voucher_id}>" class="get-coupons"><span>点击领取</span></a>
+    </li>
+    <{/foreach}>
+  </ul>
+</div>
+<{/if}>
+<script>
+  $('.widget-voucher').off('click', 'li > a');
+  $('.widget-voucher').on('click', 'li > a', function(e){
+    e.preventDefault();
+    $.get('<{url action=topc_ctl_member_voucher@getVoucher}>',
+      {
+      'voucher_id': $(this).attr('data-id'),
+    },
+    function(rs){
+        if(rs.success) {
+          Message.success(rs.message);
+        }
+        if(rs.error) {
+          Message.error(rs.message);
+        }
+    });
+  });
+</script>

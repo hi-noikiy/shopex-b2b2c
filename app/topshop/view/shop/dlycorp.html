@@ -1,0 +1,49 @@
+<div class="box box-default">
+  <div class="box-body">
+    <div class="table-responsive">
+      <table class="table no-margin">
+        <thead>
+          <tr>
+            <th>物流公司名称</th>
+            <th>是否启用</th>
+          </tr>
+        </thead>
+        <tbody>
+          <{foreach from=$corpData item=corp}>
+          <tr>
+            <td><{$corp.corp_name}></td>
+            <td>
+              <input data-id="<{$corp.corp_id}>" class="switch-input" type="checkbox"  <{if $corp.is_open}> checked <{/if}>>
+            </td>
+          </tr>
+          <{/foreach}>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $('.switch-input').on('switchChange.bootstrapSwitch', function(event, state) {
+    if(state == true){
+      var id = $(this).data('id');
+      var page = $(this).data('page');
+      var url = "<{url action=topshop_ctl_shop_dlycorp@signDlycorp}>";
+      $.post(url, {'corp_id': id,'pages':page}, function(rs){
+        if(rs.success && rs.success != true){
+          $('#messagebox').message(rs.message);
+        }
+      })
+    } else {
+      var id = $(this).data('id');
+      var url = "<{url action=topshop_ctl_shop_dlycorp@cancelDlycorp}>";
+      $.post(url, {'corp_id': id}, function(rs){
+        if(rs.success && rs.success != true){
+          $('#messagebox').message(rs.message);
+        }
+      })
+    }
+
+  });
+</script>
+

@@ -1,0 +1,223 @@
+<style>
+  .shopex-preview-image.shopex-fullscreen {
+    position: fixed;
+    z-index: 20;
+    background-color: #000;
+  }
+  .shopex-preview-header,
+  .shopex-preview-footer {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    z-index: 10;
+  }
+  .shopex-preview-header {
+    height: 44px;
+    top: 0;
+  }
+  .shopex-preview-footer {
+    height: 50px;
+    bottom: 0px;
+  }
+  .shopex-preview-header .shopex-preview-indicator {
+    display: block;
+    line-height: 25px;
+    color: #fff;
+    text-align: center;
+    margin: 15px auto 4px;
+    width: 70px;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 12px;
+    font-size: 16px;
+  }
+  .shopex-preview-image {
+    display: none;
+    -webkit-animation-duration: 0.5s;
+    animation-duration: 0.5s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+  }
+  .shopex-preview-image.shopex-preview-in {
+    -webkit-animation-name: fadeIn;
+    animation-name: fadeIn;
+  }
+  .shopex-preview-image.shopex-preview-out {
+    background: none;
+    -webkit-animation-name: fadeOut;
+    animation-name: fadeOut;
+  }
+  .shopex-preview-image.shopex-preview-out .shopex-preview-header,
+  .shopex-preview-image.shopex-preview-out .shopex-preview-footer {
+    display: none;
+  }
+  .shopex-zoom-scroller {
+    position: absolute;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    -webkit-backface-visibility: hidden;
+  }
+  .shopex-zoom {
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+  }
+  .shopex-slider .shopex-slider-group .shopex-slider-item img {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+  }
+  .shopex-android-4-1 .shopex-slider .shopex-slider-group .shopex-slider-item img {
+    width: 100%;
+  }
+  .shopex-android-4-1 .shopex-slider.shopex-preview-image .shopex-slider-group .shopex-slider-item {
+    display: inline-table;
+  }
+  .shopex-android-4-1 .shopex-slider.shopex-preview-image .shopex-zoom-scroller img {
+    display: table-cell;
+    vertical-align: middle;
+  }
+  .shopex-preview-loading {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    display: none;
+  }
+  .shopex-preview-loading.shopex-active {
+    display: block;
+  }
+  .shopex-preview-loading .shopex-spinner-white {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -25px;
+    margin-top: -25px;
+    height: 50px;
+    width: 50px;
+  }
+  .shopex-preview-image img.shopex-transitioning {
+    -webkit-transition: -webkit-transform 0.5s ease, opacity 0.5s ease;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+  }
+  @-webkit-keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  @-webkit-keyframes fadeOut {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+  @keyframes fadeOut {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+  p img {
+    max-width: 100%;
+    height: auto;
+  }
+</style>
+<header class="page-header">
+  <i class="header-left icon-func bbc-icon bbc-icon-back shopex-action-back"></i>
+  <div class="header-title"><{t}>选择红包<{/t}></div>
+</header>
+<section class="container body-padding-mini redpacketlist-container">
+<div class="shopex-scroll-wrapper bbc-pullrefresh-top ">
+  <div class="shopex-scroll">
+        <div class="shopex-table-view select-redpacket-list">
+        <{foreach from=$hongbao_list item=item}>
+          <section class="section-white shopex-radio bbc-radio redpacket-item">
+            <div class="redpacket-item-content">
+              <div class="redpacket-item-bg"></div>
+              <div class="box-display item-content">
+                <div class="redpacket-item-left box-item-flex1">
+                  <div class="redpacket-box-wrap">
+                    <div class="redpacket-box1"></div>
+                  </div>
+                </div>
+                <div class="redpacket-item-right box-item-flex1">
+                  <div class="money font-orange fontb"><{$item.money|cur}></div>
+                  <div class="fontS shopex-ellipsis"><{$item.name}></div>
+                  <div class="fonts font-gray-20">使用方法：在移动端支付时抵扣</div>
+                  <div class="fonts font-gray-20">过期时间：<{$item.end_time|cdate:FDATE_STIME}></div>
+                </div>
+              </div>
+            </div>
+            <span class="choose-icon <{if in_array($item.id,$active_hongbao_id)}>checked<{/if}>" data-id="<{$item.id}>">
+              <i class="bbc-icon bbc-icon-checked"></i>
+              <i class="bbc-icon bbc-icon-checked-none"></i>
+            </span>
+          </section>
+          <{/foreach}>
+        </div>
+    </div>
+    </div>
+    <div class="shopex-content-padded form-op-section action-bar-mini">
+      <button id="btn_save" type="button" class="shopex-btn shopex-btn-block shopex-btn-warning bbc-btn-warning">确定</button>
+    </div>
+</section>
+
+<script>
+  var count = 1;
+  var totalpage = "<{$totalPages}>";
+  var redirectUrl = "<{$rediret}>";
+  var totalPrice =  "<{$total}>";
+  shopex('.shopex-scroll-wrapper').scroll();
+  var listwrapper = document.body.querySelector('.select-redpacket-list');
+  $('.select-redpacket-list').on('tap', '.choose-icon', function(){
+    $(this).toggleClass('checked');
+  });
+
+  $('#btn_save').on('tap', function(){
+    var selected = $('.redpacketlist-container').find('.checked');
+    var selectedId = [];
+    var selectedMoney = 0;
+    selected.each(function(){
+      selectedId.push($(this).attr('data-id'));
+      $(this).parent().find('.money').text().substr(1);
+      selectedMoney += Number($(this).parent().find('.money').text().substr(1));
+    });
+    if(selectedMoney > totalPrice) {
+      shopex.alert('选择的红包总金额不能大于付款总金额');
+      return;
+    }
+    selectedId = selectedId.join(',');
+    $.post('<{url action="topwap_ctl_paycenter@saveHongbao"}>', {'hongbao_id': selectedId}, function(){
+      window.location.href = redirectUrl;
+    });
+  });
+</script>

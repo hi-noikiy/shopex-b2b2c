@@ -1,0 +1,36 @@
+<div class="box box-solid">
+  <div class="box-body no-padding">
+    <ul class="nav nav-pills nav-stacked">
+      <li class="active">
+        <a href="#">API列表</a>
+      </li>
+      <{if $activeGroupList.topapi}>
+      <{foreach from=$activeGroupList.topapi key=v item=list}>
+        <{if $list}>
+        <{foreach from=$list key=key item=item}>
+        <li>
+          <a href="<{url action=topdev_ctl_apis@info apitype=topapi method=$key}>">
+            <span class="label bg-green">聚合API</span>
+            <span class="label bg-orange"><{$v}></span>
+            <{$key}>
+            <span class="col-md-8 pull-right"><{$item.apidesc}></span>
+          </a>
+        </li>
+        <{/foreach}>
+        <{/if}>
+      <{/foreach}>
+      <{/if}>
+      <{if $activeGroupList.apis}>
+      <{foreach from=$activeGroupList.apis key=key item=item}>
+      <li>
+        <a href="<{url action=topdev_ctl_apis@info apitype=apis method=$key}>">
+          <span class="label bg-aqua">系统API</span>
+          <{$key}>
+          <span class="col-md-8 pull-right"><{$item.apidesc}></span>
+        </a>
+      </li>
+      <{/foreach}>
+      <{/if}>
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,49 @@
+<form method="post" action="<{$form_url}>" id="search-form">
+	<input type="hidden" name="issearch" value="1" />
+	<div class="gridlist-action">
+    <label>创建时间：</label>
+    <{input type="date" size=10 value="$time_start" name="time_start"}> &nbsp;至&nbsp; <{input type="date" value="$time_end" name="time_end" size=10}>
+    <label>&nbsp;&nbsp;购物券名称：</label>
+    <{input type='text' name="voucher_name" value="$voucher_name"}>
+		<label>&nbsp;&nbsp;所属商家：</label>
+    <{input type='text'  name="shop_name" value="$shop_name"}>
+		<label>&nbsp;&nbsp;补贴类型：</label>
+		<{html_options name='status' options=$subsidy_type selected=$status}>
+		&nbsp;&nbsp;
+		<{button type="button" id="search" app="desktop" label="检索"|t:'sysclearing'}>
+		&nbsp;
+		<{button type="button" id="export" app="desktop" label="导出"|t:'sysclearing' onclick="exportFunc()"}>
+	</div>
+</form>
+<script>
+var search = $("search");
+var form = $("search-form");
+search.addEvent('click',function(){
+	var href = form.get('action');
+	var isSearch,shop_name,voucher_name,status,timeStart,timeEnd;
+	isSearch = $$("input[name='issearch']").get('value');
+	voucher_name = $$("input[name='voucher_name']").get('value');
+	shop_name = $$("input[name='shop_name']").get('value');
+	status = $$("select[name='status']").get('value');
+  timeStart = $$("input[name='time_start']").get('value');
+  timeEnd = $$("input[name='time_end']").get('value');
+	var locationUrl = href+'&issearch='+isSearch+'&shop_name='+shop_name+'&voucher_name='+voucher_name+'&status='+status+'&time_start='+timeStart+'&time_end='+timeEnd;
+	W.page(locationUrl);
+});
+
+//导出 by Xdc
+function exportFunc()
+{
+	var exportFilter = <{$export_filter}>;
+	var dia = new Dialog('?app=importexport&ctl=admin_export&act=export_view&_params[mdl]=sysclearing_mdl_vouchersubsidy_detail',
+			{
+				title:'导出',
+				width:400,
+				height:170,
+				ajaxoptions:{
+					method:'post',
+					data:exportFilter
+				}
+			})
+}
+</script>

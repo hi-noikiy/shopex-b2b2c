@@ -1,0 +1,72 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+  <h4 class="modal-title" id="myModalLabel">日志详情</h4>
+</div>
+<form class="bg-white" role="form" id="cancel_form" data-validate-onsuccess="ajaxSubmit">
+  <div class="modal-body">
+      <div class="row form-group">
+        <input type="hidden" name="op_id" value="<{$op_id}>">
+        <label class="col-md-3 text-right">店铺名称：</label>
+        <div class="col-md-9"><{$shop_id|shopname}></div>
+      </div>
+      <{if $op_type=="recharge"}>
+      <div class="row form-group">
+        <input type="hidden" name="op_id" value="<{$op_id}>">
+        <label class="col-md-3 text-right">记录类型：</label>
+        <div class="col-md-9">充值</div>
+      </div>
+      <div class="row form-group">
+        <input type="hidden" name="op_id" value="<{$op_id}>">
+        <label class="col-md-3 text-right">充值金额：</label>
+        <div class="col-md-9"><{$money}></div>
+      </div>
+      <div class="row form-group" <{if !$transaction_id }>style="display:none" <{/if}>>
+        <input type="hidden" name="op_id" value="<{$op_id}>">
+        <label class="col-md-3 text-right">银行交易流水号:</label>
+        <div class="col-md-9"><{$transaction_id}></div>
+      </div>
+      <{elseif $op_type=='expense'}>
+      <div class="row form-group">
+        <input type="hidden" name="op_id" value="<{$op_id}>">
+        <label class="col-md-3 text-right">记录类型：</label>
+        <div class="col-md-9">扣款</div>
+      </div>
+
+      <div class="row form-group">
+        <input type="hidden" name="op_id" value="<{$op_id}>">
+        <label class="col-md-3 text-right">扣款金额：</label>
+        <div class="col-md-9"><{$money}></div>
+      </div>
+
+      <div class="row form-group" <{if !$rel_tid}>style="display:none" <{/if}> >
+        <input type="hidden" name="op_id" value="<{$op_id}>">
+        <label class="col-md-3 text-right">关联订单编号:</label>
+        <div class="col-md-9"><{$rel_tid}></div>
+      </div>
+
+      <div class="row form-group" <{if !$penalty_reason}>style="display:none" <{/if}>>
+        <input type="hidden" name="op_id" value="<{$op_id}>">
+        <label class="col-md-3 text-right">处罚理由:</label>
+        <div class="col-md-9"><{$penalty_reason}></div>
+      </div>
+
+      <div class="row form-group" <{if !$violation_desc}>style="display:none" <{/if}>>
+        <input type="hidden" name="op_id" value="<{$op_id}>">
+        <label class="col-md-3 text-right">违规描述:</label>
+        <div class="col-md-9"><{$violation_desc}></div>
+      </div>
+
+      <{/if}>
+
+      <div class="row form-group" <{if !$memo }>style="display:none" <{/if}> >
+        <input type="hidden" name="op_id" value="<{$op_id}>">
+        <label class="form-label text-right col-md-3">备注：</label>
+        <div class="col-md-9"><{$memo}></div>
+      </div>
+
+      <div class="row form-group" <{if !$created_time}>style="display:none"<{/if}>>
+        <label for="" class="text-right col-md-3">操作时间：</label>
+        <div class="col-md-9"><{$created_time|cdate}></div>
+      </div>
+  </div>
+</form>

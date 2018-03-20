@@ -1,0 +1,24 @@
+<table width="100%" class="table table-primary table-hover">
+  <tbody>
+    <{foreach from=$skusList item=sku key=key}>
+    <tr>
+      <td>
+        <div class="goods">
+          <a href="" target="_blank">
+            <{if $sku.image_default_id}>
+            <img src="<{$sku.image_default_id|storager:'s'}>" width="60" height="60" align="left" style="margin-right: 5px">
+            <{else}>
+            <img src="<{$image_default_id.S.default_image}>" width="60" height="60" align="left" style="margin-right: 5px">
+            <{/if}>
+            <span><{$sku.title}></span>
+            <span class="text-red"><{$sku.price}></span><br />
+            <span><{$sku.spec_info}></span>
+          </a>
+        </div>
+      </td>
+      <td><input type="text" name="sku_activity_price[<{$sku.item_id}>][<{$sku.sku_id}>]" data-sku-id="<{$sku.sku_id}>" data-item-id="<{$sku.item_id}>">&nbsp;<span>参考范围：<{$sku.price*$item.discount_min|cur}>~<{$sku.price*$item.discount_max|cur}></span></td>
+    </tr>
+    <{/foreach}>
+  </tbody>
+</table>
+

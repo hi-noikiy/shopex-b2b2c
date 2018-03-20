@@ -1,0 +1,117 @@
+<div class="box box-primary">
+<form class="form-horizontal" action="<{url action=topshop_ctl_shop_decorate@save widgets=nav dialog=default}>" method="post" role="form" id="index_nav_form" data-validate-onsuccess="ajaxSubmitIndexNav" >
+  <input type="hidden" name='widgets_id' value=<{$widgets_id}> >
+  <div class="box-body no-padding">
+    <div class="mailbox-controls with-border">
+      <a href="<{url action=topshop_ctl_shop_decorate@dialog widgets=nav dialog=add }>" class="btn btn-sm btn-default"><i class="fa fa-cog"></i> 编辑菜单</a>
+    </div>
+    <div data-spy="scroll" data-target="#navbar-example" data-offset="0">
+      <table class="table table-hover no-margin">
+        <thead>
+          <tr>
+            <th></th>
+            <th><{t}>导航名称<{/t}></th>
+            <th width="10%"><{t}>排序<{/t}></th>
+            <th></th>
+          </tr>
+        </thead>
+        <{if $data}>
+        <tbody>
+          <{foreach from=$data.params item=item name=name key=key}>
+          <{if $item.url || $item.cat_id }>
+          <tr>
+            <{if $item.url}>
+            <input type="hidden" name="params[link][<{$item.name}>][url]" value="<{$item.url}>">
+            <input type="hidden" name="params[link][<{$item.name}>][name]" value="<{$item.name}>">
+            <td></td>
+            <td><{$item.name}></td>
+            <td><input type="number" name="params[link][<{$item.name}>][order_sort]" value="<{$item.order_sort|default:'0'}>" class="form-control input-sm" ></td>
+            <td>
+              <a href="<{url action=topshop_ctl_shop_decorate@dialog widgets=nav dialog=add edit=link key=$item.name}>">编辑</a>
+              <a href="#" class="remove text-danger" >删除</a>
+            </td>
+            <{else}>
+            <input type="hidden" name="params[cat][<{$item.cat_id}>][cat_id]" value="<{$item.cat_id}>">
+            <td></td>
+            <td><{$data.shopCatName[$item.cat_id]}></td>
+            <td><input type="number" name="params[cat][<{$item.cat_id}>][order_sort]" value="<{$item.order_sort|default:'0'}>" class="form-control input-sm" ></td>
+            <td></td>
+            <{/if}>
+          </tr>
+          <{/if}>
+          <{if $item.children}>
+          <{foreach from=$item.children item=row name=name }>
+          <input type="hidden" name="params[cat][<{$key}>][children][<{$row.cat_id}>][cat_id]" value="<{$row.cat_id}>">
+          <tr>
+            <td></td>
+            <td>
+              <{if $item.cat_id}>
+              <i>&nbsp;&nbsp;&nbsp;</i>
+              <i class="icon icon-plot"></i>
+              <{/if}>
+              <{$data.shopCatName[$row.cat_id]}>
+            </td>
+            <td><input type="number" name="params[cat][<{$key}>][children][<{$row.cat_id}>][order_sort]" value="<{$row.order_sort|default:'0'}>" class="form-control input-sm" ></td>
+            <td></td>
+          </tr>
+          <{/foreach}>
+          <{/if}>
+
+          <{/foreach}>
+        </tbody>
+        <{else}>
+        <tbody id="none_cat">
+          <tr class="none-information">
+            <td colspan="5"><{t}>请先添加菜单<{/t}></td>
+          </tr>
+        </tbody>
+        <{/if}>
+      </table>
+    </div>
+  </div>
+  <div class="box-footer">
+    <button type="submit" class="btn btn-primary"><{t}>保存<{/t}></button>
+    <button type="button" class="btn btn-default cancel pull-right" data-dismiss="modal"><{t}>取消返回<{/t}></button>
+  </div>
+</form>
+</div>
+
+<script>
+  $('#index_nav_form').Validator({
+    icons: {
+      valid:      'icon icon-checkmark-a',
+      invalid:    'icon icon-alert',
+      validating: 'icon icon-loading-c'
+    }
+  });
+
+$(document).on('click', '.remove', function(e) {
+    e.preventDefault();
+    var parent = $(this).parents('tr');
+
+    Modal.confirm({msg: '确定要删除该导航吗？'}).on(function(e) {
+      if(e==true) {
+        parent.remove();
+      }
+    });
+});
+
+$('.cancel').click(function(){
+  location.href= "<{url action=topshop_ctl_shop_decorate@index}>";
+})
+
+function ajaxSubmitIndexNav (e) {
+  var form = e.target;
+  e.preventDefault();
+  $.post(form.action, $(form).serialize(), function(rs) {
+    if(rs.error) {
+      $('#messagebox').message(rs.message);
+      return;
+    }
+    if(rs.success) {
+      $('#messagebox').message(rs.message, 'success');
+      setTimeout(function(){location.href=rs.redirect;}, 500);
+    }
+  });
+}
+</script>

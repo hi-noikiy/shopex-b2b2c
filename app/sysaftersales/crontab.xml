@@ -1,0 +1,7 @@
+<cronentries>
+  <cron id="sysaftersales_tasks_aftersalescount">
+    <description>统计30天内售后次数</description>
+    <schedule>0 3 * * *</schedule>
+    <enabled>true</enabled>
+  </cron>
+</cronentries>

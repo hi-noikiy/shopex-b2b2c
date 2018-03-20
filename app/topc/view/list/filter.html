@@ -1,0 +1,30 @@
+<div class="filter">
+
+  <div class="filter-title">
+    <span class="highlight"><{if $screen.keyword}><{$screen.keyword}> - <{/if}></span>商品筛选
+  </div>
+
+  <div class="filter-list">
+
+    <{if $screen.lv1_cat}>
+    <!-- 类目 -->
+    <{include file="topc/list/filter/lv1cat.html"}>
+    <{/if}>
+
+    <{if $screen.cat}>
+    <!-- 类目 -->
+    <{include file="topc/list/filter/cat.html"}>
+    <{/if}>
+
+    <{if $screen.brand}>
+    <!-- 品牌 -->
+    <{include file="topc/list/filter/brand.html"}>
+    <{/if}>
+
+    <{if $screen.props}>
+    <!-- 自然属性 -->
+    <{include file="topc/list/filter/props.html"}>
+    <{/if}>
+
+  </div>
+</div>

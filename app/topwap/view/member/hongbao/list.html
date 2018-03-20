@@ -1,0 +1,29 @@
+<{foreach from=$list item=item}>
+<li>
+  <div class="redpacket-item-bg"></div>
+  <div class="box-display">
+    <div class="redpacket-item-left box-item-flex1">
+      <div class="redpacket-box-wrap">
+        <div class="redpacket-box1"></div>
+      </div>
+    </div>
+    <div class="redpacket-item-right box-item-flex1">
+      <div class="money font-orange fontb"><{$item.money|cur}></div>
+      <div class="fontS shopex-ellipsis"><{$item.name}></div>
+      <div class="fonts font-gray-20 shopex-ellipsis">使用方法：在<{if $item.used_platform == 'all'}>全平台<{elseif $item.used_platform == 'pc'}>电脑端<{else}>手机端<{/if}>支付时抵扣</div>
+      <div class="fonts font-gray-20">有效期：<{$item.start_time|cdate:FDATE_STIME}>&nbsp;至<{$item.end_time|cdate:FDATE_STIME}></div>
+      <{if $is_valid == 'used'}>
+      <!-- 已使用和已过期红包结构 -->
+      <div class="redpacket-status-box-wrap">
+        <div class="redpacket-status-box-content font-gray-40">已使用</div>
+      </div>
+      <{elseif $is_valid == 'expired'}>
+      <div class="redpacket-status-box-wrap">
+        <div class="redpacket-status-box-content font-gray-40">已过期</div>
+      </div>
+      <{/if}>
+      <!-- end -->
+    </div>
+  </div>
+</li>
+<{/foreach}>

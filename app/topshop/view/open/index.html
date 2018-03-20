@@ -1,0 +1,31 @@
+<{if $node}>
+<div class="alert alert-info alert-dismissible">
+  <h4> <i class="fa fa-map-pin" ></i> ShopEx节点：<{$node.node_id}></h4>
+</div>
+<{/if}>
+
+<div class="nav-tabs-custom">
+  <ul class="nav nav-tabs">
+    <{if $isOpen.developEnable}>
+    <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">绑定开发者</a></li>
+    <{/if}>
+    <{if $isOpen.shopexmatrixEnable}>
+    <li <{if !$isOpen.developEnable}>class="active"<{/if}>><a href="#tab_2" data-toggle="tab" aria-expanded="false">绑定Shopex体系</a></li>
+    <{/if}>
+  </ul>
+  <div class="tab-content">
+    <{if $isOpen.developEnable}>
+    <div class="tab-pane active" id="tab_1">
+      <{include file="topshop/open/develop.html"}>
+    </div>
+    <{/if}>
+    <{if $isOpen.shopexmatrixEnable}>
+    <div class="tab-pane <{if !$isOpen.developEnable}> active <{/if}>" id="tab_2">
+      <{include file="topshop/open/shopex_list.html"}>
+    </div>
+    <{/if}>
+    <{if !$isOpen.developEnable && !$isOpen.shopexmatrixEnable}>
+    <p class="help-block text-center">该功能暂未开放</p>
+    <{/if}>
+  </div>
+</div>

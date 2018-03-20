@@ -1,0 +1,30 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8">
+    <title>
+        <{$conf.installer.title}>
+    </title>
+    <script type='text/javascript'>
+    var _$, $;
+    _$ = $ = function(id) {
+        return document.getElementById(id);
+    };
+    </script>
+</head>
+
+<body>
+    <iframe id="frm1" style="visibility:hidden;" src="about:blank" frameborder="0" allowtransparency='true' scrolling='auto' width='100%' height='100%'></iframe>
+    <script>
+    (function() {
+        var fm = $('frm1');
+        fm.src = '<{$loginHtml}>';
+        fm.onload = function() {
+            fm.style.visibility = 'visible';
+            fm.onload = function() {};
+        };
+    })();
+    </script>
+</body>
+
+</html>

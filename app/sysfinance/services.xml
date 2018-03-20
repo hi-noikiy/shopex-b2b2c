@@ -1,0 +1,6 @@
+<services>
+    <service id="desktop_finder.sysfinance_mdl_guaranteeMoney">
+        <class>sysfinance_finder_guaranteeMoney</class> 
+    </service>
+</services>
+

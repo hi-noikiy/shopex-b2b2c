@@ -1,0 +1,92 @@
+
+  <div class="tableform">
+    
+    <table border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <th><{t}>选择商品类目<{/t}></th>
+        <td>
+          <select id="lv1" name="lv1catId">
+            <{foreach from=$setting.selectNode item=selectNode}>
+              <option value="<{$selectNode.virtual_cat_id}>"><{$selectNode.virtual_cat_name}></option>
+            <{/foreach}>
+          </select>
+          <select id="lv2" name="lv2catId">
+            <option value="-1">请选择</option>
+          </select>
+          <select id="lv3" name="lv3catId">
+            <option value="-1">请选择</option>
+          </select>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <script>
+    var lv1catId = '<{$setting.lv1catId}>';
+    var lv2catId = '<{$setting.lv2catId}>';
+    var lv3catId = '<{$setting.lv3catId}>';
+    var lv2, lv3;
+    if(lv1catId != "" && lv1catId != undefined ) {
+      $('lv1').getElement('option[value="'+ lv1catId +'"]').set('selected', 'selected');
+    }
+    if(lv2catId != "" && lv2catId != undefined) {
+      lv2 =  lv2catId;
+    }
+    if(lv3catId != "" && lv3catId != undefined) {
+      lv3 =  lv3catId;
+    }
+
+  $('lv1').addEvent('change',function(){
+    var catId = this.value;
+    req('cat_id=' + catId, 'lv2');
+    
+  }).fireEvent('change');
+
+  $('lv2').addEvent('change', function() {
+    var catId = this.value;
+    req('cat_id=' + catId, 'lv3');
+  });
+
+  function req(data, loadEle){
+    new Request({
+      url:'<{url action=toputil_ctl_themesAjax@getVirtualCatChildrenList}>',
+        onSuccess: function(rs){
+          var s = [];
+          if(rs) {
+            var catJSON=JSON.decode(rs);
+            var catList = catJSON.data;
+            var subCatStr = "";
+            if(catList) {
+              for(var i = 0; i < catList.length; i++) {
+                subCatStr += "<option value='"+ catList[i].virtual_cat_id +"'>"+ catList[i].virtual_cat_name +"</option>";
+              }
+            }
+            if(loadEle == 'lv2'){
+              $('lv2').setHTML(subCatStr == "" ? '<option value="-1">请选择</option>' : subCatStr);
+              if(lv2 != "" && lv2 != undefined) {
+                var selectEle = $('lv2').getElement('option[value="'+ lv2catId +'"]');
+                if(selectEle != null) {
+                  selectEle.set('selected', 'selected');
+                }
+              }
+              var catId = $('lv2').value;
+              if(catId && catId != "") {
+                req('cat_id=' + catId, 'lv3');
+              } else {
+                $('lv3').setHTML('<option value="-1">请选择</option>');
+              }
+            } else if(loadEle == 'lv3') {
+              $('lv3').setHTML(subCatStr == "" ? '<option value="-1">请选择</option>' : subCatStr);
+              if(lv3 != "" && lv3 != undefined) {
+                var selectEle = $('lv3').getElement('option[value="'+ lv3catId +'"]');
+                if(selectEle != null) {
+                  selectEle.set('selected', 'selected');
+                }
+              }
+            }
+          }
+        }
+    }).post(data);
+  }
+
+</script>

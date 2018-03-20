@@ -1,0 +1,64 @@
+<div id="linkselect_<{$domid}>" style="display:inline-block;vertical-align:top;">
+    <div>
+        <input type="text" name=<{$name}> value="<{$value}>" placeholder="url地址，也可以自定义">
+    </div>
+    <div>
+        <select class="x-select" id="<{$domid}>" name="<{$linktypename}>">
+            <option data-noobject=true value="">请选择页面</option>
+            <{foreach from=$linkoptions key=key item=item}>
+            <option value="<{$key}>" <{if !$item.obj}>data-noobject=true<{/if}> <{if $linktypevalue==$key}> selected=true <{/if}> ><{$item.name}></option>
+            <{/foreach}>
+        </select>
+    </div>
+    <div id="linkobj_<{$domid}>"></div>
+</div>
+<script>
+
+$('<{$domid}>').addEvent('change',function(){
+    var noobject = this.options[this.selectedIndex].get('data-noobject');
+    var linkkey = this.value;
+    // 不需要调用object情况下链接生成
+    if( noobject ){ //独立页面不需要参数的
+        $('linkobj_<{$domid}>').set('html','');
+        get_url_<{$domid}>('<{$platform}>', linkkey, '');
+    }else{ //需要后台ojbect选择框来选择对应主键的
+        $('linkselect_<{$domid}>').getElement('input[type=text]').value=''; //将id值置空
+
+        new Request.HTML({
+            method:'get',
+            update:$('linkobj_<{$domid}>'),
+            url:'?app=site&ctl=admin_utils_linkselect&act=ajax_get_object',
+            data:'callback=_callback_applink_<{$domid}>&linktype='+linkkey+'&name=<{$name}>&value=<{$value}>&plat=<{$platform}>',
+        }).send();
+    }
+});
+
+// 有object情况下的链接生成
+function _callback_applink_<{$domid}>(rs, el){
+    var linkkey = $('<{$domid}>').value;
+    get_url_<{$domid}>('<{$platform}>', linkkey, JSON.decode(rs).id);
+}
+
+/**
+ * 获取生成的链接
+ * @param  {string} plat     平台
+ * @param  {string} linktype 页面类型
+ * @param  {string} pk_id    object选择后的主键的值,一般为数字
+ * @return {string}          生成的链接
+ */
+function get_url_<{$domid}>(plat, linktype, pk_id){
+    new Request({
+        url:'?app=site&ctl=admin_utils_linkselect&act=ajax_get_url',
+        data:'platform='+plat+'&linktype='+linktype+'&pk_id='+pk_id,
+        method:'post',
+        onComplete:function(rs){
+            if(rs.length>0){
+                $('linkselect_<{$domid}>').getElement('input[type=text]').value=rs;
+            }else{
+                $('linkselect_<{$domid}>').getElement('input[type=text]').value='';
+            }
+        }
+    }).send();
+}
+
+</script>

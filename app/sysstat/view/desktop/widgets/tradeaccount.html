@@ -1,0 +1,15 @@
+<li>
+    <a href="<{url route='shopadmin' app='systrade' ctl='admin_trade' act='index'}>">
+        <span class="data-num"><{$tradedata.new_trade|default:0}></span> 昨日新增订单数(笔)
+    </a>
+</li>
+<li>
+    <a href="<{url route='shopadmin' app='systrade' ctl='admin_trade' act='index'}>">
+        <span class="data-num"><{$tradedata.new_fee|default:0}></span> 昨日新增订单金额(元)
+    </a>
+</li>
+<li>
+    <a href="<{url route='shopadmin' app='sysaftersales' ctl='refunds' act='index'}>">
+        <span class="data-num"><{$tradedata.refunds_num|default:0}></span> 退款订单数(笔)
+    </a>
+</li>

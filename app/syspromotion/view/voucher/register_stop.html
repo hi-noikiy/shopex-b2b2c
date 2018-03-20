@@ -1,0 +1,126 @@
+<form id="checkForm" class="tableform complain"  action="?app=syspromotion&ctl=admin_voucher_register&act=stop"  method="POST" >
+  <input type="hidden" name="voucher_register_id" value="<{$register.id}>">
+  <div class="division">
+    <table width="100%" border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <th><em><font color='red'>*</font></em><{t}>购物券名称：<{/t}></th>
+        <td><{$ruleInfo.voucher_name}> </td>
+      </tr>
+      <tr>
+        <th><em><font color='red'>*</font></em><{t}>购物券描述：<{/t}></th>
+        <td><{input type="textarea" disabled=true style=" width:50%" class="inputstyle" name="ruledata[voucher_desc]" value=$ruleInfo.voucher_desc rows="6"}></td>
+      </tr>
+      <tr>
+        <th><em><font color='red'>*</font></em><{t}>购物券金额：<{/t}></th>
+        <td>
+          满&nbsp;<{input type="text" disabled=true class="x-input" size=8 name="ruledata[limit_money]" value=$ruleInfo.limit_money}>
+          减&nbsp;<{input type="text" disabled=true size=8 name="ruledata[deduct_money]" value=$ruleInfo.deduct_money}>
+        </td>
+      </tr>
+      <tr>
+        <th><em><font color='red'>*</font></em><{t}>平台补贴百分比：<{/t}></th>
+        <td><{input type="text" disabled=true  name="ruledata[subsidy_proportion]" size=8 required="true" maxlength="20" vtype='required' value=$ruleInfo.subsidy_proportion}>&nbsp;%</td>
+      </tr>
+      <tr>
+        <th><em><font color='red'>*</font></em><{t}>购物券总数量：<{/t}></th>
+        <td>
+          <{input type="text" disabled=true size=8 name="ruledata[max_gen_quantity]" value=$ruleInfo.max_gen_quantity}>
+        </td>
+      </tr>
+      <{if $ruleInfo.shoptype}>
+      <tr>
+        <th><{t}>可报名的店铺类型：<{/t}></th>
+        <td>
+          <{foreach from=$shoptype item=item key=id}>
+          <{if $item.checked}>
+          <label><input type="checkbox" disabled=true vtype="" name="ruledata[shoptype][]" value="<{$id}>" <{if $item.checked}> checked<{/if}> class="act-custom"> <{$item.name}></label>
+          <{/if}>
+          <{/foreach}>
+        </td>
+      </tr>
+      <{/if}>
+      <{if $ruleInfo.limit_cat}>
+      <tr>
+        <th><em><font color='red'>*</font></em><{t}>参加购物券的类目：<{/t}></th>
+        <td>
+          <{foreach from=$cat item=item key=id}>
+            <{if $item.checked}>
+              <label><input type="checkbox" disabled=true vtype="" name="ruledata[limit_cat][]" value="<{$id}>" <{if $item.checked}> checked<{/if}> class="act-custom"> <{$item.cat_name}></label>
+            <{/if}>
+          <{/foreach}>
+        </td>
+      </tr>
+      <{/if}>
+      <tr>
+        <th><{t}>有效状态：<{/t}></th>
+        <td><font color='red'><{if $ruleInfo.valid_status && $ruleInfo.canuse_end_time >= time()}>有效<{else}>已失效 &nbsp;&nbsp;&nbsp;<{if $ruleInfo.valid_status && $ruleInfo.canuse_end_time < time() }>购物券活动已结束<{else}>平台终止该购物券<{/if}> <{/if}></font></td>
+      </tr>
+      <tr>
+        <th><{t}>适用平台：<{/t}></th>
+        <td><font color='red'><{ $ruleInfo.used_platform }></font></td>
+      </tr>
+    </table>
+  </div>
+</div>
+<div class="division">
+  <table width="100%" cellspacing="0" cellpadding="0">
+    <tbody>
+      <tr>
+        <th>报名商家:</th>
+        <td><{$shopdata.shop.shop_name}></td>
+      </tr>
+      <tr>
+        <th>商家店铺类型:</th>
+        <td><{$shopdata.shop.shoptype}></td>
+      </tr>
+      <tr>
+        <th>报名类目:</th>
+        <td>
+          <{foreach from=$register.cat_id item=item}>
+          <label><{$cat.$item.cat_name}>&nbsp;&nbsp;&nbsp;</label>
+          <{/foreach}>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="division">
+  <table width="100%" cellspacing="0" cellpadding="0">
+    <input type="hidden" name="voucher_id" id="pass" value="<{$register.voucher_id}>">
+    <input type="hidden" name="shop_id" id="pass" value="<{$register.shop_id}>">
+    <tbody>
+      <tr>
+        <th>终止:</th>
+        <td>
+          <div class="prop_type">
+            <label><input type="radio" name="status" id="pass" value="agree" checked>停止该商家参加购物券</label>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="table-action">
+  <{button type="submit" id='check-form-submit' label="提交"}>
+  <{button type="button btn-default" isclosedialogbtn="1" label="关闭"}>
+</div>
+</form>
+<script>
+  $('checkForm').store('target',{
+    onComplete:function(rs){
+      if(!rs) return;
+      rs = JSON.decode(rs);
+      if(rs.success){
+        if(window.finderGroup) window.finderGroup['<{$env.get.finder_id}>'].refresh();
+        if($('checkForm').getParent('.dialog')){
+          var Dlg = $('checkForm').getParent('.dialog').retrieve('instance');
+          if(Dlg.update){
+            Dlg.update.retrieve('instance').initContent();
+          }
+          Dlg.close();
+        }
+      }
+    }
+  });
+
+</script>

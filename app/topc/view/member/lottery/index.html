@@ -1,0 +1,129 @@
+<div class="membercenter-box lottery">
+  <div class="membercenter-box">
+    <div class="membercenter-box-hd">
+      <div class="membercenter-box-left">
+      我的奖品(<a href="<{url action=topc_ctl_member_point@point}>">查看积分记录</a>&nbsp;/&nbsp;<a href="<{url action=topc_ctl_member_hongbao@index}>">查看红包记录)</a>
+      </div>
+      <div class="fr" style="font-size: 12px;">
+      <span class="num">共<em><{$count}></em>条记录</span>
+        <{pagers data=$pagers type="mini"}>
+      </div>
+    </div>
+
+    <div class="membercenter-box-bd">
+      <table class="item-table" width="100%">
+        <colgroup>
+          <col class="table-col-4">
+          <col class="table-col-3">
+          <col class="table-col-3">
+          <col class="table-col-3">
+        </colgroup>
+        <thead>
+          <tr>
+            <td>获奖时间</td>
+            <td>奖品</td>
+            <td>来源</td>
+            <td>领取信息</td>
+          </tr>
+        </thead>
+        <tbody>
+          <{foreach from=$prizeList item=item}>
+          <tr>
+            <td><{$item.created_time|cdate:FDATE_FTIME}></td>
+            <td><{$item.prizeInfo.bonus_desc}></td>
+            <td><{$item.lottery_name}></td>
+            <{if $item.prizeInfo.is_delivery=="on"}>
+            <td>
+              <label data-region-id="<{$item.receiver_area}><{$item.receiver_city}>" data-result_id="<{$item.result_id}>" data-lottery_id="<{$item.lottery_id}>" data-addr="<{$item.addr}>" data-name="<{$item.receiver_name}>" data-mobile="<{$item.receiver_phone}>" data-zip="<{$item.receiver_zip}>" title="<{$item.receiver_area}>"></label>
+              <a href="javascript:void(0)" class="action-showinfo" <{if !$item.addr}>style="display: none;"<{/if}>>查看</a>
+              <a href="javascript:void(0);" class="btn btn-import action-write-info" data-id="<{$key}>" <{if $item.addr}>style="display:none;"<{/if}>><span><span>填写获奖信息</span></span></a>
+            </td>
+            <{else}>
+            <td></td>
+            <{/if}>
+          </tr>
+        <{/foreach}>
+        </tbody>
+      </table>
+    </div>
+  </div>
+    <{pagers data=$pagers}>
+</div>
+<div id="prize_info_dialog" style="display: none;">
+  <div class="prize-info-wrap">
+    <p><label>姓名：</label><span class="name"></span></p>
+    <p><label>联系方式：</label><span class="mobile"></span></p>
+    <p><label>地址：</label><span class="address"></span></p>
+    <p><label>邮编：</label><span class="zip"></span></p>
+    <p class="text-center"><button type="button" class="btn btn-import dialog-btn-close"><span><span>确定</span></span></button></p>
+  </div>
+</div>
+<script>
+  $('.lottery').on('click', '.action-write-info', function(e) {
+      e.preventDefault();
+      var dataEl = $(this).parent().find('label');
+      var lotteryid = dataEl.attr('data-lottery_id');
+      var resultid = dataEl.attr('data-result_id');
+      var that = $(this);
+      $.dialog.ajax('<{url action=topc_ctl_lottery@lottery_info_dialog}>', {
+        width: 500,
+        title:'填写获奖信息',
+        modal:true,
+        asyncOptions:{
+          type: 'post',
+          callback: function(xhr) {
+            new AreaWidget({
+              dataUrl:"<{$env.base_url}>/app/ectools/statics/scripts/region.json",
+              select:this.body.find('.area-select'),
+              initData:dataEl.data('region-id')
+            });
+            this.body.find('form').attr('action','<{url action=topc_ctl_member_lottery@saveAddr}>');
+            this.body.find('input[name=addr]').val(dataEl.data('addr'));
+            this.body.find('input[name=zip]').val(dataEl.data('zip'));
+            this.body.find('input[name=name]').val(dataEl.data('name'));
+            this.body.find('input[name=mobile]').val(dataEl.data('mobile'));
+            this.body.find('input[name=resultid]').val(dataEl.data('result_id'));
+            this.body.find('input[name=lotteryid]').val(dataEl.data('lottery_id'));
+            this.body.find('form').data('validateConfig', {
+              tips: {
+                      form: 'block'
+                    }
+            })
+            .find('[type=submit]').data('ajaxConfig', {
+              update: '#address_edit .step1',
+              callback: $.proxy(function(rs) {
+                if(rs.error) {
+                  Message.error(rs.message);
+                }
+                if(rs.success){
+                  Message.success('保存成功');
+                  that.hide();
+                  that.parent().find('.action-showinfo').show();
+                  dataEl.attr('data-addr',rs.addr);
+                  dataEl.attr('data-name',rs.name);
+                  dataEl.attr('data-mobile',rs.mobile);
+                  dataEl.attr('data-zip',rs.zip);
+                  dataEl.attr('data-result_id',rs.result_id);
+                  dataEl.attr('data-lottery_id',rs.lottery_id);
+                  dataEl.attr('title',rs.area + rs.addr);
+                  this.hide();
+                }
+              }, this)
+            });
+          }
+        }
+      });
+  });
+  $('.lottery').on('click', '.action-showinfo', function(e) {
+    e.preventDefault();
+    var dataEl = $(this).parent().find('label');
+    $('#prize_info_dialog').find('.name').text(dataEl.attr('data-name'));
+    $('#prize_info_dialog').find('.mobile').text(dataEl.attr('data-mobile'));
+    $('#prize_info_dialog').find('.address').text(dataEl.attr('title') + " " +dataEl.attr('data-addr'));
+    $('#prize_info_dialog').find('.zip').text(dataEl.attr('data-zip'));
+    $("#prize_info_dialog").dialog({
+      title: '获奖信息',
+      width: 400
+    });
+  });
+</script>

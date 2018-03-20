@@ -1,0 +1,119 @@
+<div class="row">
+<{if $shop_type !='self'}>
+  <div class="col-md-6">
+    <div class="box box-primary">
+      <div class="box-header with-border">
+        <h3 class="box-title">店铺动态评分</h3>
+      </div>
+      <div class="box-body">
+        <div>
+          <div class="progress-group">
+            <span class="progress-text">实物与描述相符</span>
+            <span class="progress-number"><b><{$countDsr.tally_dsr.num}></b>/5</span>
+
+            <div class="progress sm">
+              <div class="progress-bar progress-bar-aqua" style="width: <{$countDsr.tally_dsr.percentage}>"></div>
+            </div>
+          </div>
+          <div class="progress-group">
+            <span class="progress-text">服务质量</span>
+            <span class="progress-number"><b><{$countDsr.attitude_dsr.num}></b>/5</span>
+
+            <div class="progress sm">
+              <div class="progress-bar progress-bar-red" style="width: <{$countDsr.attitude_dsr.percentage}>"></div>
+            </div>
+          </div>
+          <div class="progress-group">
+            <span class="progress-text">发货速度</span>
+            <span class="progress-number"><b><{$countDsr.delivery_speed_dsr.num}></b>/5</span>
+
+            <div class="progress sm">
+              <div class="progress-bar progress-bar-green" style="width: <{$countDsr.delivery_speed_dsr.percentage}>"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="box-footer">
+        <p class="text-center">
+          <strong>行业平均分同比</strong>
+        </p>
+        <div class="row">
+          <div class="col-sm-4 col-xs-4">
+            <div class="description-block border-right">
+              <span class="description-percentage <{if $catDsrDiff.tally_dsr.trend == 'go-up'}>text-red<{elseif $catDsrDiff.tally_dsr.trend == 'go-down'}>text-green<{else}>text-yellow<{/if}>"><{if $catDsrDiff.tally_dsr.trend == 'go-up'}><i class="fa fa-caret-up"></i><{elseif $catDsrDiff.tally_dsr.trend == 'go-down'}><i class="fa fa-caret-down"></i><{else}><i class="fa fa-caret-left"></i><{/if}>&nbsp;<{$catDsrDiff.tally_dsr.percentage}></span><br>
+              <span class="description-text">描述相符</span>
+            </div>
+          </div>
+          <div class="col-sm-4 col-xs-4">
+            <div class="description-block border-right">
+              <span class="description-percentage <{if $catDsrDiff.attitude_dsr.trend == 'go-up'}>text-red<{elseif $catDsrDiff.attitude_dsr.trend == 'go-down'}>text-green<{else}>text-yellow<{/if}>"><{if $catDsrDiff.attitude_dsr.trend == 'go-up'}><i class="fa fa-caret-up"></i><{elseif $catDsrDiff.attitude_dsr.trend == 'go-down'}><i class="fa fa-caret-down"></i><{else}><i class="fa fa-caret-left"></i><{/if}>&nbsp;<{$catDsrDiff.attitude_dsr.percentage}></span><br>
+              <span class="description-text">服务质量</span>
+            </div>
+          </div>
+          <div class="col-sm-4 col-xs-4">
+            <div class="description-block">
+              <span class="description-percentage <{if $catDsrDiff.delivery_speed_dsr.trend == 'go-up'}>text-red<{elseif $catDsrDiff.delivery_speed_dsr.trend == 'go-down'}>text-green<{else}>text-yellow<{/if}>"><{if $catDsrDiff.delivery_speed_dsr.trend == 'go-up'}><i class="fa fa-caret-up"></i><{elseif $catDsrDiff.delivery_speed_dsr.trend == 'go-down'}><i class="fa fa-caret-down"></i><{else}><i class="fa fa-caret-left"></i><{/if}>&nbsp;<{$catDsrDiff.delivery_speed_dsr.percentage}></span><br>
+              <span class="description-text">发货速度</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<{/if}>
+<div class="<{if $shop_type !='self'}>col-md-6<{else}>col-md-12<{/if}> ">
+  <div class="box box-primary">
+    <div class="box-header with-border">
+      <h3 class="box-title">店铺近期评分状况</h3>
+    </div>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <td></td>
+          <td>最近1周</td>
+          <td>最近1个月</td>
+          <td>最近6个月</td>
+          <td>6个月前</td>
+          <td>总计</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>好评</td>
+          <td><{$count.week.good|default:'0'}></td>
+          <td><{$count.month.good|default:'0'}></td>
+          <td><{$count.sixMonth.good|default:'0'}></td>
+          <td><{$count.sixMonthAgo.good|default:'0'}></td>
+          <td><{$count.total.good|default:'0'}></td>
+        </tr>
+        <tr>
+          <td>中评</td>
+          <td><{$count.week.neutral|default:'0'}></td>
+          <td><{$count.month.neutral|default:'0'}></td>
+          <td><{$count.sixMonth.neutral|default:'0'}></td>
+          <td><{$count.sixMonthAgo.neutral|default:'0'}></td>
+          <td><{$count.total.neutral|default:'0'}></td>
+        </tr>
+        <tr>
+          <td>差评</td>
+          <td><{$count.week.bad|default:'0'}></td>
+          <td><{$count.month.bad|default:'0'}></td>
+          <td><{$count.sixMonth.bad|default:'0'}></td>
+          <td><{$count.sixMonthAgo.bad|default:'0'}></td>
+          <td><{$count.total.bad|default:'0'}></td>
+        </tr>
+        <tr>
+          <td>总计</td>
+          <td><{$count.week.total|default:'0'}></td>
+          <td><{$count.month.total|default:'0'}></td>
+          <td><{$count.sixMonth.total|default:'0'}></td>
+          <td><{$count.sixMonthAgo.total|default:'0'}></td>
+          <td><{$count.total.total|default:'0'}></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="excanvas.js"></script><![endif]-->
+</div>
+

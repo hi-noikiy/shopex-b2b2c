@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>店铺装修</title>
+  <{css app="topshop" src="bootstrap.css"}>
+  <{css app="topshop" src="decorate.css"}>
+  <{css app="topshop" src="font-awesome.css"}>
+  <style>
+    html,body {
+      height:100%;
+    }
+    body {
+      background: #FFF
+    }
+  </style>
+</head>
+<body>
+  <div class="decorate" data-hasWidgets='<{$decorate}>'>
+    <div class="decorate-widgets">
+      <ul class="decorate-widgets-list">
+        <li class="decorate-widgets-items" data-widget-name="goods"><i class="fa fa-th-large"><br>商品展示</i></li>
+        <li class="decorate-widgets-items" data-widget-name="nav"><i class="fa fa-bars"><br>文本导航</i></li>
+        <li class="decorate-widgets-items" data-widget-name="oneimg"><i class="fa fa-picture-o"><br>单图展示</i></li>
+        <li class="decorate-widgets-items" data-widget-name="slider"><i class="fa fa-film"><br>轮播图</i></li>
+        <li class="decorate-widgets-items" data-widget-name="coupon"><i class="fa fa-ticket"><br>优惠券</i></li>
+        <!-- <li class="decorate-widgets-items" data-widget-name="title"><i class="fa fa-text-width"><br>标题</i></li>
+        <li class="decorate-widgets-items" data-widget-name="imgnav"><i class="fa fa-picture-o"><br>图片导航</i></li>
+        <li class="decorate-widgets-items" data-widget-name="search"><i class="fa fa-search"><br>商品搜索</i></li>
+        <li class="decorate-widgets-items" data-widget-name="showcase"><i class="fa fa-columns"><br>橱窗</i></li>
+        <li class="decorate-widgets-items" data-widget-name="cutline"><i class="fa fa-ellipsis-h"><br>分隔线</i></li>
+        <li class="decorate-widgets-items" data-widget-name="cutgap"><i class="fa fa-arrows-v"><br>分割空间</i></li>
+        <li class="decorate-widgets-items" data-widget-name="storeinfo"><i class="fa fa-home"><br>店铺信息</i></li>
+        <li class="decorate-widgets-items" data-widget-name="announcement"><i class="fa fa-bullhorn"><br>店内公告</i></li>
+        <li class="decorate-widgets-items" data-widget-name="activity"><i class="fa fa-gift"><br>营销活动</i></li>
+        <li class="decorate-widgets-items" data-widget-name="goodsgroup"><i class="fa fa-th-list"><br>商品分组</i></li> -->
+      </ul>
+    </div>
+    <div class="decorate-control">
+      <div class="dd" id="decorate_control">
+        <ol class="dd-list">
+          <!-- 控制层 -->
+        </ol>
+      </div>
+    </div>
+    <div class="decorate-layout">
+      <div class="decorate-layout-header"></div>
+      <div class="decorate-layout-body">
+        <div class="decorate-layout-view">
+          <div class="shop-sign-edit select-image" data-toggle="modal" data-imgurl="" href="<{url action=topshop_ctl_shop_image@loadImageModal}>" data-target="#gallery_modal">编辑店招</div>
+          <div class="shop-sign">
+            <div class="shop-sign-cover"></div>
+            <div class="shop-sign-img">
+              <img src="../images/widgets_slider_04.jpg">
+            </div>
+            <div class="shop-sign-info">
+              <div class="shop-logo"><img src="<{$shop.shop_logo|storager}>" alt=""></div>
+              <div class="shop-name"><{$shop.shopname}><i class="fa fa-angle-right"></i></div>
+              <button class="shopex-btn shop-favorite-btn"><i class="fa fa-star-o"></i> 收藏</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 展示层 -->
+    </div>
+    <div class="decorate-form">
+      <!-- 编辑层 -->
+      <div class="decorate-form-tip">请选择挂件</div>
+    </div>
+  </div>
+  <div class="decorate-footbar"><button id="decorate_action_save" data-remote="<{url action=topshop_ctl_shop_appDecorate@save}>" data-type="app" class="btn btn-primary btn-flat">保存</button></div>
+
+  <!--图片选择器，弹出页面预留dialog-->
+  <div class="modal fade" id="gallery_modal" tabindex="-1" role="dialog">
+    <div class="panel panel-default modal-dialog" style="width: 1024px">
+      <div class="modal-content"></div>
+    </div>
+  </div>
+
+  <!--商品选择器，弹出页面预留dialog-->
+  <div class="modal fade" id="goods_modal" tabindex="-1" role="dialog">
+    <div class="panel panel-default modal-dialog" style="width: 1024px">
+      <div class="modal-content"></div>
+    </div>
+  </div>
+
+  <!--优惠券选择器，弹出页面预留dialog-->
+  <div class="modal fade" id="coupons_modal" tabindex="-1" role="dialog">
+    <div class="panel panel-default modal-dialog" style="width: 420px">
+      <div class="modal-content"></div>
+    </div>
+  </div>
+
+  <!--促销活动选择器，弹出页面预留dialog-->
+  <div class="modal fade" id="promotions_modal" tabindex="-1" role="dialog">
+    <div class="panel panel-default modal-dialog" style="width: 420px">
+      <div class="modal-content"></div>
+    </div>
+  </div>
+
+  <{if $debugStatus}>
+    <{script app="topshop" src="lib/jquery.js"}>
+    <{script app="topshop" src="lib/bootstrap.js"}>
+    <{script app="topshop" src="lib/bootstrap-modal.js"}>
+    <{script app="topwap" src="shopex.js"}>
+    <{script app="topshop" src="lib/template.art.js"}>
+    <{script app="topshop" src="lib/jquery.nestable.js"}>
+    <{script app="topshop" src="pageRenovation.js"}>
+  <{else}>
+    <{script app="topshop" src="lib/jquery.js"}>
+    <{script app="topshop" src="lib/decorate.min.js"}>
+    <script src='<{$env.app.topwap.res_url}>/scripts/shopex.js'></script>
+    <script src='<{$env.app.topshop.res_url}>/scripts/pageRenovation.js'></script>
+  <{/if}>
+
+
+
+  <script>
+    var sliderFormItem = '<div class="slider-item form-item"><div class="form-group"><div class="input-group"><input name="imgsrc"  type="text" class="form-control" readonly placeholder="图片地址"><span class="input-group-addon select-image" data-toggle="modal" data-imgurl="" href="<{url action=topshop_ctl_shop_image@loadImageModal}>" data-target="#gallery_modal">选择图片</span></div></div><div class="form-group"><input type="text" name="imglink" class="form-control" placeholder="图片链接"></div><div class="form-item-action action-remove"><i class="glyphicon glyphicon-remove"></i></div></div>',
+        navGoodsItem = '<div class="form-group form-item" data-itemtype="goods"><div class="input-group"><input name="navname" type="text" class="form-control" placeholder="栏目名称" minlength="1" maxlength="4"><span class="input-group-addon select-goods" href="<{url action=topshop_ctl_selector_item@loadSelectGoodsModal limit=16}>" data-item_id="<{$notEndItem}>" data-textcol="title,price" data-toggle="modal" data-target="#goods_modal" data-insertwhere="#selected_goods" data-fetchgoods="<{url action=topshop_ctl_selector_item@formatSelectedGoodsRow}>">选择商品</span></div><div class="form-item-action action-remove"><i class="glyphicon glyphicon-remove"></i></div></div>',
+        navLinkItem = '<div class="form-group form-item" data-itemtype="link"><div class="form-group"><input type="text" name="navname" class="form-control" placeholder="栏目名称"></div><div class="form-group"><input type="text" name="navlink" class="form-control" placeholder="链接地址"></div><div class="form-item-action action-remove"><i class="glyphicon glyphicon-remove"></i></div></div>',
+        navPromotionItem = '<div class="form-group form-item" data-itemtype="promotion"><div class="input-group"><input name="navname" type="text" class="form-control" placeholder="栏目名称"><span class="input-group-addon select-promotion" href="<{url action=topshop_ctl_promotion_promotions@ajaxPromotionList used_platform=3}>" data-promotion_id="" data-toggle="modal" data-target="#promotions_modal">选择活动</span></div><div class="form-item-action action-remove"><i class="glyphicon glyphicon-remove"></i></div></div>';
+  </script>
+
+  <!-- title -->
+  <script type="text/html" id="title">
+    <div class="decorate-layout-items" id="<%= wid %>" data-widgets="title">
+      <h2><%= title %></h2>
+    </div>
+  </script>
+  <script type="text/html" id="title_form">
+    <form role="form">
+      <div class="box-body">
+        <div class="form-group">
+          <label for="exampleInputEmail1">Email address</label>
+          <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Password</label>
+          <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputFile">File input</label>
+          <input type="file" id="exampleInputFile">
+          <p class="help-block">Example block-level help text here.</p>
+        </div>
+        <div class="checkbox">
+          <label>
+            <div class="icheckbox_minimal" aria-checked="false" aria-disabled="false" style="position: relative;">
+              <input type="checkbox" style="position: absolute; opacity: 0;">
+              <ins class="iCheck-helper"></ins>
+            </div> Check me out
+          </label>
+        </div>
+      </div>
+      <div class="box-footer">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+  </script>
+
+  <!-- goods -->
+  <script type="text/html" id="goods">
+    <div class="decorate-layout-items" id="<%= wid %>" data-widgets="goods">
+      <div class="widgets-goods-like">
+        <div class="section-title">
+          <% if(title != ''){ %>
+          <div class="title-txt"><%= title %></div>
+          <% }else{ %>
+          <div class="title-txt">展示标题</div>
+          <% } %>
+          <% if(list.length > 6){ %>
+          <a href="#"><i class="fa fa-angle-right"></i></a>
+          <% } %>
+        </div>
+        <ul class="pro-list-grid">
+          <% if(list.length > 0){ %>
+          <% for(var i=0; i<list.length; i++){ %>
+            <% if(i<6){ %>
+            <li>
+              <div class="thumb">
+                <div class="thumb-img">
+                  <a href="<%= list[i].goodslink %>"><img src="<%= list[i].imgurl %>" alt=""></a>
+                </div>
+                <div class="caption">
+                  <h1 class="goods-title"><span class="tag"><%= list[i].goodstag %></span><%= list[i].goodstitle %></h1>
+                  <div class="price">
+                    <div class="amount CNY"><%= list[i].price %></div>
+                    <div class="purchased">已有<%= list[i].soldnum %>人购买</div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <% } %>
+          <% } %>
+          <% }else{ %>
+            <li>
+              <div class="thumb">
+                <div class="thumb-img">
+                  <a href="#"><img src="http://placehold.it/180x180" alt=""></a>
+                </div>
+                <div class="caption">
+                  <h1 class="goods-title"><span class="tag">促销</span>商品标题</h1>
+                  <div class="price">
+                    <div class="amount CNY">¥ 30.00</div>
+                    <div class="purchased">已有5人购买</div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="thumb">
+                <div class="thumb-img">
+                  <a href="#"><img src="http://placehold.it/180x180" alt=""></a>
+                </div>
+                <div class="caption">
+                  <h1 class="goods-title"><span class="tag">促销</span>商品标题</h1>
+                  <div class="price">
+                    <div class="amount CNY">¥ 30.00</div>
+                    <div class="purchased">已有5人购买</div>
+                  </div>
+                </div>
+              </div>
+            </li>
+          <% } %>
+        </ul>
+      </div>
+    </div>
+  </script>
+  <script type="text/html" id="goods_form">
+    <div class="goods" data-id="<%= wid %>">
+      <h5>商品展示</h5>
+      <div class="form-group">
+        <input type="text" name="title" class="form-control" value="<%= title %>" placeholder="展示区域标题">
+      </div>
+      <div class="form-group">
+        <p class="help-block">已选择商品</p>
+        <div id="selected_goods">
+          <% if(list.length > 0){ %>
+          <table wdith="100%" class="table table-primary table-hover table-goods">
+            <tbody>
+              <% for(var i=0; i<list.length; i++){ %>
+              <tr data-itemid="<%= list[i].item_id %>">
+                <td>
+                  <input type="hidden" name="item_id[]" value="<%= list[i].item_id %>">
+                  <div class="goods">
+                    <a href="<%= list[i].goodslink %>" target="_blank">
+                      <img src="<%= list[i].imgurl %>" alt="">
+                      <span><%= list[i].goodstitle %></span>
+                      <span><%= list[i].price %></span>
+                    </a>
+                  </div>
+                </td>
+                <td><a class="item-del" href="#">删除</a></td>
+              </tr>
+              <% } %>
+            </tbody>
+          </table>
+          <% } %>
+        </div>
+      </div>
+      <div class="form-group">
+        <a class="btn btn-primary form-control select-goods" href="<{url action=topshop_ctl_selector_item@loadSelectGoodsModal limit=16}>" data-item_id="<{$notEndItem}>" data-limit="50" data-textcol="title,price" data-toggle="modal" data-target="#goods_modal" data-insertwhere="#selected_goods" data-fetchgoods="<{url action=topshop_ctl_selector_item@formatSelectedGoodsRow}>">选择商品</a>
+      </div>
+    </div>
+  </script>
+
+  <!-- nav -->
+  <script type="text/html" id="nav">
+    <div class="decorate-layout-items" id="<%= wid %>" data-widgets="nav">
+      <% if(list.length > 0){ %>
+      <div class="shop-nav">
+        <% for(var i=0; i<list.length; i++){ %>
+        <div class="shop-nav-item" data-goods="<%= list[i].goods %>"><a href="<%= list[i].link %>"><%= list[i].name %></a></div>
+        <% } %>
+      </div>
+      <% }else{ %>
+      <div class="shop-nav">
+        <div class="shop-nav-item">内容</div>
+        <div class="shop-nav-item">内容</div>
+        <div class="shop-nav-item">内容</div>
+        <div class="shop-nav-item">内容</div>
+        <div class="shop-nav-item">内容</div>
+      </div>
+      <% } %>
+    </div>
+  </script>
+  <script type="text/html" id="nav_form">
+    <div class="nav" data-id="<%= wid %>">
+      <h5>文本导航</h5>
+      <div class="nav-items-list">
+        <% if(list.length > 0){ %>
+          <% for(var i=0; i<list.length; i++){ %>
+          <div class="form-group form-item" data-itemtype="<%= list[i].type %>">
+            <% if(list[i].type == "goods"){ %>
+            <div class="input-group">
+              <input name="navname" type="text" class="form-control" value="<%= list[i].name %>" placeholder="栏目名称">
+              <span class="input-group-addon select-goods" href="<{url action=topshop_ctl_selector_item@loadSelectGoodsModal limit=16}>" data-item_id="<%= $json_string(list[i].item_ids) %>" data-textcol="title,price" data-toggle="modal" data-target="#goods_modal" data-fetchgoods="<{url action=topshop_ctl_selector_item@formatSelectedGoodsRow}>">选择商品</span>
+            </div>
+            <div class="form-item-action action-remove"><i class="glyphicon glyphicon-remove"></i></div>
+            <% } %>
+            <% if(list[i].type == "link"){ %>
+              <div class="form-group">
+                <input type="text" name="navname" class="form-control" value="<%= list[i].name %>" placeholder="栏目名称">
+              </div>
+              <div class="form-group">
+                <input type="text" name="navlink" class="form-control" value="<%= list[i].navlink %>" placeholder="链接地址">
+              </div>
+              <div class="form-item-action action-remove"><i class="glyphicon glyphicon-remove"></i></div>
+            <% } %>
+            <% if(list[i].type == "promotion"){ %>
+            <div class="input-group">
+              <input name="navname" type="text" class="form-control" value="<%= list[i].name %>" placeholder="栏目名称">
+              <span class="input-group-addon select-promotion" href="<{url action=topshop_ctl_promotion_promotions@ajaxPromotionList used_platform=3}>" data-promotion_id="<%= list[i].promotion_id %>" data-promotion_type="<%= list[i].promotion_type %>" data-toggle="modal" data-target="#promotions_modal">选择活动</span>
+            </div>
+            <div class="form-item-action action-remove"><i class="glyphicon glyphicon-remove"></i></div>
+            <% } %>
+          </div>
+          <% } %>
+        <% } %>
+      </div>
+      <h5 class="text-muted">请选择下列新增栏目类型</h5>
+      <div class="btn-group btn-group-justified">
+        <div class="btn-group" role="group">
+          <button class="btn btn-default action-add" data-itemtype="link">自定义链接</button>
+        </div>
+        <div class="btn-group" role="group">
+          <button class="btn btn-default action-add" data-itemtype="goods">产品索引</button>
+        </div>
+        <div class="btn-group" role="group">
+          <button class="btn btn-default action-add" data-itemtype="promotion">活动索引</button>
+        </div>
+      </div>
+    </div>
+  </script>
+
+  <!-- slider -->
+  <script type="text/html" id="slider">
+    <div class="decorate-layout-items" id="<%= wid %>" data-widgets="slider">
+      <% if(list && list.length > 0){ %>
+      <div class="shopex-slider">
+        <div class="shopex-slider-group shopex-slider-loop">
+          <div class="shopex-slider-item shopex-slider-item-duplicate">
+            <a href="<%= list[list.length-1].imglink %>">
+              <img src="<%= list[list.length-1].imgsrc %>">
+            </a>
+          </div>
+          <% for(var i=0; i<list.length; i++){ %>
+          <div class="shopex-slider-item">
+            <a href="<%= list[i].imglink %>">
+              <img src="<%= list[i].imgsrc %>">
+            </a>
+          </div>
+          <% } %>
+          <div class="shopex-slider-item shopex-slider-item-duplicate">
+            <a href="<%= list[0].imglink %>">
+              <img src="<%= list[0].imgsrc %>">
+            </a>
+          </div>
+        </div>
+        <div class="shopex-slider-indicator">
+          <% for(var i=0; i<list.length; i++){ %>
+            <div class="shopex-indicator <% if(i==0){ %>shopex-active<% } %>"></div>
+          <% } %>
+        </div>
+      </div>
+      <% }else{ %>
+        <div class="shopex-slider">
+          <div class="shopex-slider-group shopex-slider-loop">
+            <div class="shopex-slider-item shopex-slider-item-duplicate">
+              <a href="#">
+                <img src="http://placehold.it/320x120">
+              </a>
+            </div>
+            <div class="shopex-slider-item">
+              <a href="#">
+                <img src="http://placehold.it/320x120">
+              </a>
+            </div>
+            <div class="shopex-slider-item">
+              <a href="#">
+                <img src="http://placehold.it/320x120">
+              </a>
+            </div>
+            <div class="shopex-slider-item shopex-slider-item-duplicate">
+              <a href="#">
+                <img src="http://placehold.it/320x120">
+              </a>
+            </div>
+          </div>
+          <div class="shopex-slider-indicator">
+            <div class="shopex-indicator shopex-active"></div>
+            <div class="shopex-indicator"></div>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </script>
+  <script type="text/html" id="slider_form">
+    <div class="slider" data-id="<%= wid %>">
+      <h5>轮播图</h5>
+      <div class="slider-items-list">
+        <% if(list && list.length > 0){ %>
+          <% for(var i=0; i<list.length; i++){ %>
+          <div class="slider-item form-item">
+            <div class="form-group">
+              <div class="input-group">
+                <input name="imgsrc" type="text" readonly class="form-control" value="<%= list[i].imgsrc %>" placeholder="图片地址">
+                <span class="input-group-addon select-image" data-toggle="modal" data-imgurl="<%= list[i].imgurl %>" href="<{url action=topshop_ctl_shop_image@loadImageModal}>" data-target="#gallery_modal">选择图片</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <input type="text" name="imglink" class="form-control" value="<%= list[i].imglink %>" placeholder="图片链接">
+            </div>
+            <% if(i!=0){ %>
+            <div class="form-item-action action-remove"><i class="glyphicon glyphicon-remove"></i></div>
+            <% } %>
+          </div>
+          <% } %>
+        <% }else{ %>
+          <div class="slider-item form-item">
+            <div class="form-group">
+              <div class="input-group">
+                <input name="imgsrc" type="text" readonly class="form-control" placeholder="图片地址">
+                <span class="input-group-addon select-image" data-toggle="modal" data-imgurl="" href="<{url action=topshop_ctl_shop_image@loadImageModal}>" data-target="#gallery_modal">选择图片</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <input type="text" name="imglink" class="form-control" placeholder="图片链接">
+            </div>
+          </div>
+        <% } %>
+      </div>
+      <button class="btn btn-default btn-block action-add">添加</button>
+    </div>
+  </script>
+
+  <!-- imgnav -->
+  <script type="text/html" id="imgnav">
+    <div class="decorate-layout-items" id="<%= wid %>" data-widgets="imgnav">
+      <ul>
+        <li>1231313</li>
+      </ul>
+    </div>
+  </script>
+  <script type="text/html" id="imgnav_form">
+    <form role="form">
+      <div class="box-body">
+        <div class="form-group">
+          <label for="exampleInputEmail1">Email address</label>
+          <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Password</label>
+          <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputFile">File input</label>
+          <input type="file" id="exampleInputFile">
+          <p class="help-block">Example block-level help text here.</p>
+        </div>
+        <div class="checkbox">
+          <label>
+            <div class="icheckbox_minimal" aria-checked="false" aria-disabled="false" style="position: relative;">
+              <input type="checkbox" style="position: absolute; opacity: 0;">
+              <ins class="iCheck-helper"></ins>
+            </div> Check me out
+          </label>
+        </div>
+      </div>
+      <!-- /.box-body -->
+      <div class="box-footer">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+  </script>
+
+  <!-- oneimg -->
+  <script type="text/html" id="oneimg">
+    <div class="decorate-layout-items" id="<%= wid %>" data-widgets="oneimg">
+      <% if(imgsrc!=""){ %>
+        <div class="img-block"><a href="<%= imglink %>"><img src="<%= imgsrc %>"></a></div>
+      <% }else{ %>
+        <div class="img-block"><a href="<%= imglink %>"><img src="http://placehold.it/320x60"></a></div>
+      <% } %>
+    </div>
+  </script>
+  <script type="text/html" id="oneimg_form">
+    <form class="oneimg" data-id="<%= wid %>">
+      <h5>单图展示</h5>
+      <div class="form-group">
+        <div class="input-group">
+          <input name="imgsrc" type="text" readonly class="form-control" value="<%= imgsrc %>" placeholder="图片地址">
+          <span class="input-group-addon select-image" data-imgurl="<%= imgurl %>" data-toggle="modal" href="<{url action=topshop_ctl_shop_image@loadImageModal}>" data-target="#gallery_modal">选择图片</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <input type="text" name="imglink" class="form-control" value="<%= imglink %>" placeholder="图片链接">
+      </div>
+    </form>
+  </script>
+
+  <!-- search -->
+  <script type="text/html" id="search">
+    <div class="decorate-layout-items" id="<%= wid %>" data-widgets="search">
+      <ul>
+        <li>1231313</li>
+      </ul>
+    </div>
+  </script>
+  <script type="text/html" id="search_form">
+    <form role="form">
+      <div class="box-body">
+        <div class="form-group">
+          <label for="exampleInputEmail1">Email address</label>
+          <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Password</label>
+          <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputFile">File input</label>
+          <input type="file" id="exampleInputFile">
+          <p class="help-block">Example block-level help text here.</p>
+        </div>
+        <div class="checkbox">
+          <label>
+            <div class="icheckbox_minimal" aria-checked="false" aria-disabled="false" style="position: relative;">
+              <input type="checkbox" style="position: absolute; opacity: 0;">
+              <ins class="iCheck-helper"></ins>
+            </div> Check me out
+          </label>
+        </div>
+      </div>
+      <!-- /.box-body -->
+      <div class="box-footer">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+  </script>
+
+  <!-- search -->
+  <script type="text/html" id="search">
+    <div class="decorate-layout-items" id="<%= wid %>" data-widgets="search">
+      <ul>
+        <li>1231313</li>
+      </ul>
+    </div>
+  </script>
+  <script type="text/html" id="search_form">
+    <form role="form">
+      <div class="box-body">
+        <div class="form-group">
+          <label for="exampleInputEmail1">Email address</label>
+          <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Password</label>
+          <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputFile">File input</label>
+          <input type="file" id="exampleInputFile">
+          <p class="help-block">Example block-level help text here.</p>
+        </div>
+        <div class="checkbox">
+          <label>
+            <div class="icheckbox_minimal" aria-checked="false" aria-disabled="false" style="position: relative;">
+              <input type="checkbox" style="position: absolute; opacity: 0;">
+              <ins class="iCheck-helper"></ins>
+            </div> Check me out
+          </label>
+        </div>
+      </div>
+      <!-- /.box-body -->
+      <div class="box-footer">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+  </script>
+
+  <!-- showcase -->
+  <script type="text/html" id="showcase">
+    <div class="decorate-layout-items" id="<%= wid %>" data-widgets="showcase">
+      <ul>
+        <li>1231313</li>
+      </ul>
+    </div>
+  </script>
+  <script type="text/html" id="showcase_form">
+    <form role="form">
+      <div class="box-body">
+        <div class="form-group">
+          <label for="exampleInputEmail1">Email address</label>
+          <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Password</label>
+          <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputFile">File input</label>
+          <input type="file" id="exampleInputFile">
+          <p class="help-block">Example block-level help text here.</p>
+        </div>
+        <div class="checkbox">
+          <label>
+            <div class="icheckbox_minimal" aria-checked="false" aria-disabled="false" style="position: relative;">
+              <input type="checkbox" style="position: absolute; opacity: 0;">
+              <ins class="iCheck-helper"></ins>
+            </div> Check me out
+          </label>
+        </div>
+      </div>
+      <!-- /.box-body -->
+      <div class="box-footer">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+  </script>
+
+  <!-- cutline -->
+  <script type="text/html" id="cutline">
+    <div class="decorate-layout-items" id="<%= wid %>" data-widgets="cutline">
+      <ul>
+        <li>1231313</li>
+      </ul>
+    </div>
+  </script>
+  <script type="text/html" id="cutline_form">
+    <form role="form">
+      <div class="box-body">
+        <div class="form-group">
+          <label for="exampleInputEmail1">Email address</label>
+          <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Password</label>
+          <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputFile">File input</label>
+          <input type="file" id="exampleInputFile">
+          <p class="help-block">Example block-level help text here.</p>
+        </div>
+        <div class="checkbox">
+          <label>
+            <div class="icheckbox_minimal" aria-checked="false" aria-disabled="false" style="position: relative;">
+              <input type="checkbox" style="position: absolute; opacity: 0;">
+              <ins class="iCheck-helper"></ins>
+            </div> Check me out
+          </label>
+        </div>
+      </div>
+      <!-- /.box-body -->
+      <div class="box-footer">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+  </script>
+
+  <!-- cutgap -->
+  <script type="text/html" id="cutgap">
+    <div class="decorate-layout-items" id="<%= wid %>" data-widgets="cutgap">
+      <ul>
+        <li>1231313</li>
+      </ul>
+    </div>
+  </script>
+  <script type="text/html" id="cutgap_form">
+    <form role="form">
+      <div class="box-body">
+        <div class="form-group">
+          <label for="exampleInputEmail1">Email address</label>
+          <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Password</label>
+          <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputFile">File input</label>
+          <input type="file" id="exampleInputFile">
+          <p class="help-block">Example block-level help text here.</p>
+        </div>
+        <div class="checkbox">
+          <label>
+            <div class="icheckbox_minimal" aria-checked="false" aria-disabled="false" style="position: relative;">
+              <input type="checkbox" style="position: absolute; opacity: 0;">
+              <ins class="iCheck-helper"></ins>
+            </div> Check me out
+          </label>
+        </div>
+      </div>
+      <!-- /.box-body -->
+      <div class="box-footer">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+  </script>
+
+  <!-- storeinfo -->
+  <script type="text/html" id="storeinfo">
+    <div class="decorate-layout-items" id="<%= wid %>" data-widgets="storeinfo">
+      <ul>
+        <li>1231313</li>
+      </ul>
+    </div>
+  </script>
+  <script type="text/html" id="storeinfo_form">
+    <form role="form">
+      <div class="box-body">
+        <div class="form-group">
+          <label for="exampleInputEmail1">Email address</label>
+          <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Password</label>
+          <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputFile">File input</label>
+          <input type="file" id="exampleInputFile">
+          <p class="help-block">Example block-level help text here.</p>
+        </div>
+        <div class="checkbox">
+          <label>
+            <div class="icheckbox_minimal" aria-checked="false" aria-disabled="false" style="position: relative;">
+              <input type="checkbox" style="position: absolute; opacity: 0;">
+              <ins class="iCheck-helper"></ins>
+            </div> Check me out
+          </label>
+        </div>
+      </div>
+      <!-- /.box-body -->
+      <div class="box-footer">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+  </script>
+
+  <!-- announcement -->
+  <script type="text/html" id="announcement">
+    <div class="decorate-layout-items" id="<%= wid %>" data-widgets="announcement">
+      <ul>
+        <li>1231313</li>
+      </ul>
+    </div>
+  </script>
+  <script type="text/html" id="announcement_form">
+    <form role="form">
+      <div class="box-body">
+        <div class="form-group">
+          <label for="exampleInputEmail1">Email address</label>
+          <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Password</label>
+          <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputFile">File input</label>
+          <input type="file" id="exampleInputFile">
+          <p class="help-block">Example block-level help text here.</p>
+        </div>
+        <div class="checkbox">
+          <label>
+            <div class="icheckbox_minimal" aria-checked="false" aria-disabled="false" style="position: relative;">
+              <input type="checkbox" style="position: absolute; opacity: 0;">
+              <ins class="iCheck-helper"></ins>
+            </div> Check me out
+          </label>
+        </div>
+      </div>
+      <!-- /.box-body -->
+      <div class="box-footer">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+  </script>
+
+  <!-- coupon -->
+  <script type="text/html" id="coupon">
+    <div class="decorate-layout-items" id="<%= wid %>" data-widgets="coupon">
+      <section class="section-white">
+        <div class="section-title">
+          <div class="title-txt">优惠券</div>
+          <% if(morelink){ %>
+          <div class="more-link"><a href="<%= morelink %>">更多优惠券 <i class="bbc-icon bbc-icon-forward"></i></a></div>
+          <% } %>
+        </div>
+        <div class="section-container coupon-list coupons-inline">
+          <% if(list.length>0){ %>
+          <% for (var i = 0; i < list.length; i++) { %>
+          <div class="coupon-item coupon-data" data-id="<%= list[i].coupon_id %>">
+            <div data-denomination="coupon" class="coupon-denomination"><%= list[i].amount %></div>
+            <div class="coupon-rule"><%= list[i].rule %></div>
+          </div>
+          <% } %>
+          <% }else{ %>
+          <% for (var i = 0; i < 3; i++) { %>
+          <div class="coupon-item coupon-data" data-id="8" data-shopid="2">
+            <div data-denomination="coupon" class="coupon-denomination">￥599</div>
+            <div class="coupon-rule">599元优惠券</div>
+          </div>
+          <% } %>
+          <% } %>
+        </div>
+      </section>
+    </div>
+  </script>
+  <script type="text/html" id="coupon_form">
+    <div class="coupon" data-id="<%= wid %>">
+      <h5>可领取优惠券展示</h5>
+      <div class="form-group">
+        <p class="help-block">已选择优惠券</p>
+        <div id="selected_coupons">
+          <% if(list.length > 0){ %>
+            <ul class="shop-coupon-list form-list">
+            <% for(var i=0; i<list.length; i++){ %>
+            <li data-couponid="<%= list[i].coupon_id %>">
+              <div class="coupon-amount"><%= list[i].amount %></div>
+              <div class="coupon-rule"><%= list[i].rule %></div>
+              <div class="coupon-deadline"><%= list[i].deadline %></div>
+              <div class="coupon-del"><i class="fa fa-times"></i></div>
+            </li>
+            <% } %>
+            </ul>
+          <% } %>
+        </div>
+      </div>
+      <div class="form-group">
+        <a class="btn btn-primary form-control select-coupons" href="<{url action=topshop_ctl_promotion_coupon@ajaxCouponList
+ pages=1 page_size=10 platform=app}>" data-coupon_ids="" data-toggle="modal" data-target="#coupons_modal" data-insertwhere="#selected_coupons">选择优惠券</a>
+      </div>
+    </div>
+  </script>
+
+  <!-- activity -->
+  <script type="text/html" id="activity">
+    <div class="decorate-layout-items" id="<%= wid %>" data-widgets="activity">
+      <ul>
+        <li>1231313</li>
+      </ul>
+    </div>
+  </script>
+  <script type="text/html" id="activity_form">
+    <form role="form">
+      <div class="box-body">
+        <div class="form-group">
+          <label for="exampleInputEmail1">Email address</label>
+          <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Password</label>
+          <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputFile">File input</label>
+          <input type="file" id="exampleInputFile">
+          <p class="help-block">Example block-level help text here.</p>
+        </div>
+        <div class="checkbox">
+          <label>
+            <div class="icheckbox_minimal" aria-checked="false" aria-disabled="false" style="position: relative;">
+              <input type="checkbox" style="position: absolute; opacity: 0;">
+              <ins class="iCheck-helper"></ins>
+            </div> Check me out
+          </label>
+        </div>
+      </div>
+      <!-- /.box-body -->
+      <div class="box-footer">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+  </script>
+
+  <!-- goodsgroup -->
+  <script type="text/html" id="goodsgroup">
+    <div class="decorate-layout-items" id="<%= wid %>" data-widgets="goodsgroup">
+      <ul>
+        <li>1231313</li>
+      </ul>
+    </div>
+  </script>
+  <script type="text/html" id="goodsgroup_form">
+    <form role="form">
+      <div class="box-body">
+        <div class="form-group">
+          <label for="exampleInputEmail1">Email address</label>
+          <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Password</label>
+          <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputFile">File input</label>
+          <input type="file" id="exampleInputFile">
+          <p class="help-block">Example block-level help text here.</p>
+        </div>
+        <div class="checkbox">
+          <label>
+            <div class="icheckbox_minimal" aria-checked="false" aria-disabled="false" style="position: relative;">
+              <input type="checkbox" style="position: absolute; opacity: 0;">
+              <ins class="iCheck-helper"></ins>
+            </div> Check me out
+          </label>
+        </div>
+      </div>
+      <!-- /.box-body -->
+      <div class="box-footer">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+  </script>
+</body>
+</html>

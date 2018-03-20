@@ -1,0 +1,103 @@
+<form action="<{url action=topshop_ctl_shop_decorate@save widgets=showitems dialog=add}>" method="post" id="goods_form" role="form" data-validate-onsuccess="ajaxSubmitNewGoodsSelect" >
+  <input type="hidden" name='widgets_id' value=<{$widgets_id}> >
+  <input type="hidden" name="showdialog" value="default" >
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="nav-tabs-custom" id="tabs">
+        <ul id="myTab" class="nav nav-tabs" role="tablist">
+          <li class="active"><a href="#scope" role="tab" data-toggle="tab">范围选择商品</a></li>
+          <!--<li class=""><a href="#precise" role="tab" data-toggle="tab">精确选择商品</a></li>-->
+        </ul>
+        <div id="myTabContent" class="tab-content">
+          <div class="tab-pane fade active in" id="scope">
+            <div class="form-group">
+              <label><{t}>关键字<{/t}></label>
+              <input type="text" name="params[goods_keywords]" value="<{$data.params.filter.goods_keywords}>" class="form-control" placeholder="<{t}>商品名称关键字<{/t}>">
+            </div>
+            <div class="form-group">
+              <label>店铺分类</label>
+              <select name="params[shopCatIds][]" multiple id="act-selectshopcat" class="form-control" size="10" >
+                <{foreach from=$data.shopCatList item=shop_cat}>
+                <{if $shop_cat.children}>
+                <optgroup label='<{$shop_cat.cat_name}>'>
+                  <{else}>
+                  <option value='<{$shop_cat.cat_id}>' <{if in_array($shop_cat.cat_id,$data.params.filter.shopCatIds) }> selected=selected <{/if}>><{$shop_cat.cat_name}></option>
+                  <{/if}>
+
+                  <{if $shop_cat.children}>
+                  <{foreach from=$shop_cat.children item=shop_cat_children}>
+                  <option value='<{$shop_cat_children.cat_id}>' <{if in_array($shop_cat_children.cat_id,$data.params.filter.shopCatIds)}> selected <{/if}>><{$shop_cat_children.cat_name}></option>
+                  <{/foreach}>
+                  <{/if}>
+
+                  <{if $shop_cat.children}>
+                </optgroup>
+                <{/if}>
+
+                <{/foreach}>
+              </select>
+            </div>
+          </div>
+          <!--
+          <div class="tab-pane fade" id="precise">
+            暂未实现
+          </div>
+          -->
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="box box-default">
+        <div class="box-body">
+          <div class="form-group">
+            <label><{t}>栏目名称<{/t}></label>
+            <input type="hidden" name="params[name]" value="<{$data.params.title}>" maxlength="30" class="form-control" placeholder="<{t}>展示栏目名称<{/t}>" required>
+            <input type="text" name="params[title]" value="<{$data.params.title}>" maxlength="30" class="form-control" placeholder="<{t}>展示栏目名称<{/t}>" required>
+          </div>
+          <div class="form-group">
+            <label><{t}>展示商品数量<{/t}></label>
+            <input type="number" name="params[num]" value="<{$data.params.num|default:8}>" class="form-control" placeholder="<{t}>整数<{/t}>"  required>
+          </div>
+          <div class="form-group">
+            <label><{t}>展示排序<{/t}></label>
+            <input type="number" name="params[order_sort]" value="<{$data.params.order_sort|default:0}>" class="form-control" placeholder="<{t}>整数<{/t}>" value="0" required>
+          </div>
+        </div>
+        <div class="box-footer">
+          <button type="submit" class="btn btn-primary"><{t}>保存<{/t}></button>
+          <button type="button" class="btn btn-default pull-right cancel"><{t}>取消返回<{/t}></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<script>
+  $('#goods_form').Validator({
+      icons: {
+          valid:      'icon icon-checkmark-a',
+          invalid:    'icon icon-alert',
+          validating: 'icon icon-loading-c'
+      }
+  });
+
+  $('.cancel').click(function(){
+    location.href= "<{url action=topshop_ctl_shop_decorate@dialog widgets=showitems dialog=default }>";
+  })
+
+  function ajaxSubmitNewGoodsSelect (e) {
+    var form = e.target;
+    e.preventDefault();
+    $.post(form.action, $(form).serialize(), function(rs) {
+      if(rs.error) {
+        $('#messagebox').message(rs.message);
+        return;
+      }
+      if(rs.success) {
+        $('#messagebox').message(rs.message, 'success');
+        setTimeout(function(){location.href=rs.redirect;}, 500);
+      }
+    });
+  }
+</script>
+

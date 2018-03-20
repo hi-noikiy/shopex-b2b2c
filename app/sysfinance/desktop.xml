@@ -1,0 +1,22 @@
+<desktop>
+
+    <permissions>
+        <permission id="guaranteeMoney" display='true' parent="0"  workground='sysfinance.workground.finance'>保证金管理列表</permission>
+        <permission id="guaranteeMoney_recharge" display='true' parent='guaranteeMoney' workground='sysfinance.workground.finance'>保证金充值</permission>
+        <permission id="guaranteeMoney_expense" display='true' parent='guaranteeMoney' workground='sysfinance.workground.finance'>保证金扣款</permission>
+        <permission id="guaranteeMoney_adjustment" display='true' parent='guaranteeMoney' workground='sysfinance.workground.finance'>保证金额度调整</permission>
+    </permissions>
+
+
+    <workground name="财务" id="sysfinance.workground.finance" controller="admin_settlement" action="index" order='90'>
+        <menugroup name="平台保证金">
+            <menu controller='admin_guaranteeMoney' action='index' permission='guaranteeMoney' display='true' order="50">保证金管理</menu>
+            <menu controller='admin_guaranteeMoney' action='recharge' permission='guaranteeMoney_recharge' display='false' order="60">保证金充值</menu>
+            <menu controller='admin_guaranteeMoney' action='expense' permission='guaranteeMoney_expense' display='false' order="70">保证金扣款</menu>
+            <menu controller='admin_guaranteeMoney' action='setGuaranteeMoney' permission='guaranteeMoney_adjustment' display='false' order="80">保证金额度调整</menu>
+        </menugroup>
+        
+    </workground>
+
+
+</desktop>

@@ -1,0 +1,61 @@
+<div class="content-padded bg-white">
+  <div class="content-vertical-padded box-display">
+    <div class="img-block" style="width:20%; margin-right: 1rem"><img src="<{$logo|storager}>" height="220" width="220" alt=""></div>
+    <div class="box-item-flex1">
+      <div><{$name}></div>
+      <div class="fontS font-gray-20"><{$desc}></div>
+    </div>
+  </div>
+  <div>
+    <button onClick="javascript:APPCommon.openApp()" class="shopex-btn shopex-btn-warning shopex-btn-block bbc-btn-warning android-btn content-top-padded">APP下载</button>
+  </div>
+  <div class="img-block content-top-padded">
+    <img src="<{$ad_url|storager}>" alt="">
+  </div>
+</div>
+<script>
+  var androidUrl = '<{$android_url}>';
+  var iosUrl     = '<{$ios_url}>';
+  var weixinUrl = '<{url action=topwap_ctl_app@wxDownloadBoot}>'
+  var APPCommon = {
+    schema: 'bbc://',
+    iphoneDownUrl: iosUrl,
+    androidDownUrl: androidUrl,
+    openApp: function(){
+        var this_  =  this;
+        //微信
+        if(this_.isWeixin()){
+            location.href = weixinUrl;
+        }else{//非微信浏览器
+            if (navigator.userAgent.match(/(iPhone|iPod|iPad);?/i) && iosUrl) {
+                var loadDateTime = new Date();
+                window.setTimeout(function() {
+                    var timeOutDateTime = new Date();
+                    if (timeOutDateTime - loadDateTime < 5000) {
+                        window.location = this_.iphoneDownUrl;//ios下载地址
+                    } else {
+                        window.close();
+                    }
+                },25);
+                window.location = this.schema;
+            }else if (navigator.userAgent.match(/android/i) && androidUrl) {
+                try {
+                    window.location = this_.schema;
+                    setTimeout(function(){
+                        window.location=this_.androidDownUrl; //android下载地址
+ 
+                    },500);
+                } catch(e) {}
+            }
+        }
+    },
+    isWeixin: function(){//判断是否是微信
+        var ua = navigator.userAgent.toLowerCase();
+        if (ua.match(/MicroMessenger/i) == "micromessenger") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+  };
+</script>

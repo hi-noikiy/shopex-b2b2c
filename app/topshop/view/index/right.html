@@ -1,0 +1,70 @@
+<div class="box box-primary" style="min-height: 254px;">
+  <div class="box-header">
+    <h3 class="box-title">通知</h3>
+
+    <div class="box-tools">
+      <a href="<{url action=topshop_ctl_shop_notice@index}>" class="btn btn-box-tool" data-widget="more" data-toggle="tooltip" title="" data-original-title="更多">
+        <i class="fa fa-ellipsis-v"></i></a>
+    </div>
+  </div>
+  <!-- /.box-header -->
+  <div class="box-body table-responsive no-padding">
+    <table class="table table-hover">
+      <tbody>
+        <{if $shopnotice.noticeList}>
+        <{foreach from=$shopnotice.noticeList item=item key=key}>
+        <{if $key <6}>
+        <tr>
+          <td><{$item.notice_title}></td>
+          <td width="130"><{$item.createtime|cdate:'FDATE_STIME'}></td>
+        </tr>
+        <{/if}>
+        <{/foreach}>
+        <{else}>
+        <tr>
+          <td rowspan="5">
+            <p class="help-block text-center">暂无数据</p>
+          </td>
+        </tr>
+        <{/if}>
+      </tbody>
+    </table>
+  </div>
+  <!-- /.box-body -->
+</div>
+<!-- /.box -->
+
+<div class="box box-success" style="min-height: 254px;">
+  <div class="box-header">
+    <h3 class="box-title">昨日销量排行</h3>
+
+    <div class="box-tools">
+      <a href="<{url action=topshop_ctl_sysstat_sysstat@index}>" class="btn btn-box-tool" data-widget="more" data-toggle="tooltip" title="" data-original-title="更多">
+        <i class="fa fa-ellipsis-v"></i></a>
+    </div>
+  </div>
+  <!-- /.box-header -->
+  <div class="box-body table-responsive no-padding">
+    <table class="table table-hover table-visialign">
+      <tbody>
+        <{if $topFiveItem}>
+        <{foreach from=$topFiveItem item=items key=key}>
+        <tr>
+          <td width="30"><h3 class="no-margin"><{$key+1}></h3></td>
+          <td><{$items.title}></td>
+          <td width="120"><{$items.amountnum|default:0}></td>
+        </tr>
+        <{/foreach}>
+        <{else}>
+        <tr>
+          <td rowspan="5">
+            <p class="help-block text-center">暂无数据</p>
+          </td>
+        </tr>
+        <{/if}>
+      </tbody>
+    </table>
+  </div>
+  <!-- /.box-body -->
+</div>
+<!-- /.box -->

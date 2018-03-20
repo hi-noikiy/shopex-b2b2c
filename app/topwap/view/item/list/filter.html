@@ -1,0 +1,41 @@
+<div class="section-white section-container filters-header">
+  <div class="filters-op reset-filters-options" >重置</div>
+  <div class="section-init">筛选</div>
+  <div id="offCanvasHide" class="filters-op">确定</div>
+</div>
+<div id="offCanvasSideScroll" class="shopex-scroll-wrapper" style="top:50px;">
+  <div class="shopex-scroll">
+    <div class="filters-options shopex-content-padded clearfix" style="height: auto;">
+      <span data-name="sf" data-value="1" class="<{if $activeFilter.is_selfshop == '1' }>checked<{/if}>" >自营</span>
+    </div>
+    
+    <{if $filter.brand}>
+    <{assign var="brandcount" value=$filter.brand|count}>
+    <div class="filters-options shopex-content-padded clearfix">
+      <div class="clearfix"><div class="shopex-pull-left">品牌:&nbsp;</div><label class="font-red fontS shopex-pull-left options-choose"></label><{if $brandcount > 3}><i class="shopex-pull-right shopex-icon shopex-icon-arrowdown action-all"></i><{/if}></div>
+      <{foreach from=$filter.brand item=brand_row name=name  }>
+      <span data-name="brand_id" data-value="<{$brand_row.brand_id}>" class="<{if $activeFilter.brand_id}>checked<{/if}>" ><{$brand_row.brand_name}></span>
+      <{/foreach}>
+    </div>
+    <{/if}>
+    
+    <{if $filter.cat}>
+    <{assign var="catcount" value=$filter.cat|count}>
+    <div class="filters-options shopex-content-padded clearfix">
+      <div class="clearfix"><div class="shopex-pull-left">类目:&nbsp;</div> <label class="font-red fontS shopex-pull-left options-choose"></label><{if $catcount > 3}><i class="shopex-pull-right shopex-icon shopex-icon-arrowdown action-all"></i><{/if}></div>
+      <{foreach from=$filter.cat item=cat_row name=name }>
+      <span data-name="cat_id" data-value="<{$cat_row.cat_id}>" class="<{if $activeFilter.cat_id}>checked<{/if}>" ><{$cat_row.cat_name}> </span>
+      <{/foreach}>
+    </div>
+    <{/if}>
+
+    <{foreach from=$filter.props item=row name=name}>
+    <div class="filters-options shopex-content-padded clearfix">
+    <div class="clearfix"><div class="shopex-pull-left options-name"><{$row.prop_name}>:&nbsp;</div> <label class="font-red fontS shopex-pull-left options-choose"><{if $row.prop_count > 3}></label><i class="shopex-pull-right shopex-icon shopex-icon-arrowdown action-all"><{/if}></i></div>
+     <{foreach from=$row.prop_value item=item }>
+      <span data-name="prop_index" data-value="<{$item.prop_index}>" class="<{if $activeFilter.prop_index}>checked<{/if}>" ><{$item.prop_value}> </span>
+      <{/foreach}>
+    </div>
+    <{/foreach}>
+  </div>
+</div>

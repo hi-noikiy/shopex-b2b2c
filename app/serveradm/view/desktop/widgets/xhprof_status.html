@@ -1,0 +1,17 @@
+<p class="lead">XHPROF</p>
+<div class="table-responsive">
+    <table class="table">
+        <tbody>
+            <{if $xhprof}>
+                <tr>
+                    <th style="width:50%><a href=" ?app=serveradm&ctl=admin_xhprof&act=index ">查看</a></th>
+    				<td>v</td>
+    			</tr>
+			<{else}>
+    			<td><{t}>你悲剧了,你没有安装XHProf扩展<{/t}></td>
+			<{/if}>
+ 
+        </tbody>
+    </table>
+</div>
+
